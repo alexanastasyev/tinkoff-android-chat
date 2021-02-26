@@ -6,9 +6,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import java.util.ArrayList
 
 
 class SecondActivity : AppCompatActivity() {
@@ -16,12 +16,7 @@ class SecondActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
-
-        Log.i("MyResult", "Second activity started")
-
         startIntentService()
-
-        Log.i("MyResult", "Second activity sent intent to IntentService")
     }
 
     private fun startIntentService() {
@@ -31,10 +26,10 @@ class SecondActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        registerBroadcastReceiver()
+        makeFilterAndRegisterBroadcastReceiver()
     }
 
-    private fun registerBroadcastReceiver() {
+    private fun makeFilterAndRegisterBroadcastReceiver() {
         val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)
         val actionName = getString(R.string.my_action_name)
         val filter = IntentFilter(actionName)
@@ -54,30 +49,22 @@ class SecondActivity : AppCompatActivity() {
     private var myReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
-            Log.i("MyResult", "Broadcast Receiver received intent")
-
             saveResultAndFinishActivity(intent)
         }
 
         private fun saveResultAndFinishActivity(intent: Intent?) {
-
             val result = getResultStringFromIntent(intent)
             saveResult(result)
             finish()
         }
 
-        private fun getResultStringFromIntent(intent: Intent?): String {
-            return intent?.getStringExtra(getResultKeyFromResources()).toString()
+        private fun getResultStringFromIntent(intent: Intent?): ArrayList<String>? {
+            return intent?.getStringArrayListExtra(getString(R.string.result_key))
         }
 
-        private fun saveResult(result: String) {
-
+        private fun saveResult(result: ArrayList<String>?) {
             val intent = Intent().putExtra(getResultKeyFromResources(), result)
-
-            Log.i("MyResult", "Broadcast Receiver finishes Second activity")
-
             setResult(Activity.RESULT_OK, intent)
-
         }
     }
 
