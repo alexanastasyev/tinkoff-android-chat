@@ -12,7 +12,9 @@ import org.w3c.dom.Text
 
 class MainActivity : AppCompatActivity() {
 
-    private val REQUEST_CODE = 100
+    companion object {
+        private const val REQUEST_CODE = 100
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,11 +37,21 @@ class MainActivity : AppCompatActivity() {
 
             Log.i("MyResult", "First activity got result from second activity")
 
-            val result = data?.getIntExtra("res", 0)
+            val result = getResultStringFromIntent(data)
 
             Log.i("MyResult", "Result: $result")
 
+            setResultInUi()
         }
+    }
+
+    private fun setResultInUi() {
+       // TODO("Not yet implemented")
+    }
+
+    private fun getResultStringFromIntent(intent: Intent?) : String {
+        val resultKey = getString(R.string.result_key)
+        return intent?.getStringExtra(resultKey).toString()
     }
 
 }

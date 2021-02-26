@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".SecondActivity$AsyncService" />
+        <service android:name="AsyncService" />
 
     </application>
 

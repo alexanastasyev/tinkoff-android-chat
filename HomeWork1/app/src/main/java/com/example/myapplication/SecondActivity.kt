@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.app.Activity
-import android.app.IntentService
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,57 +13,77 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 class SecondActivity : AppCompatActivity() {
 
-    var filter = IntentFilter("my.custom.ACTION")
-
-    var myReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            Log.i("MyResult", "Broadcast Receiver received intent")
-
-            val result = intent?.getIntExtra("res", 0)
-            val intent = Intent().putExtra("res", result)
-
-            Log.i("MyResult", "Broadcast Receiver finishes Second activity")
-            setResult(Activity.RESULT_OK, intent)
-            finish()
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_second)
 
         Log.i("MyResult", "Second activity started")
 
-        val intent = Intent(this, AsyncService::class.java)
-        startService(intent)
+        startIntentService()
 
         Log.i("MyResult", "Second activity sent intent to IntentService")
     }
 
+    private fun startIntentService() {
+        val intent = Intent(this, AsyncService::class.java)
+        startService(intent)
+    }
+
     override fun onStart() {
         super.onStart()
+        registerBroadcastReceiver()
+    }
+
+    private fun registerBroadcastReceiver() {
         val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)
+        val actionName = getString(R.string.my_action_name)
+        val filter = IntentFilter(actionName)
         localBroadcastReceiver.registerReceiver(myReceiver, filter)
     }
 
     override fun onStop() {
-        val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)
-        localBroadcastReceiver.unregisterReceiver(myReceiver)
+        unregisterBroadcastReceiver()
         super.onStop()
     }
 
-    class AsyncService(name: String = "myService") : IntentService(name) {
-        override fun onHandleIntent(intent: Intent?) {
-            Log.i("MyResult", "IntentService started")
+    private fun unregisterBroadcastReceiver() {
+        val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)
+        localBroadcastReceiver.unregisterReceiver(myReceiver)
+    }
 
-            // TODO("Long operation")
-            val result = 12345
+    private var myReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 
-            val intent = Intent("my.custom.ACTION").putExtra("res", result)
-            val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)
-            localBroadcastReceiver.sendBroadcast(intent)
-            Log.i("MyResult", "IntentService sent intent to broadcast")
+        override fun onReceive(context: Context?, intent: Intent?) {
+            Log.i("MyResult", "Broadcast Receiver received intent")
+
+            saveResultAndFinishActivity(intent)
+        }
+
+        private fun saveResultAndFinishActivity(intent: Intent?) {
+
+            val result = getResultStringFromIntent(intent)
+            saveResult(result)
+            finish()
+        }
+
+        private fun getResultStringFromIntent(intent: Intent?): String {
+            return intent?.getStringExtra(getResultKeyFromResources()).toString()
+        }
+
+        private fun saveResult(result: String) {
+
+            val intent = Intent().putExtra(getResultKeyFromResources(), result)
+
+            Log.i("MyResult", "Broadcast Receiver finishes Second activity")
+
+            setResult(Activity.RESULT_OK, intent)
+
         }
     }
 
+    private fun getResultKeyFromResources(): String {
+        return getString(R.string.result_key)
+    }
+
 }
+
