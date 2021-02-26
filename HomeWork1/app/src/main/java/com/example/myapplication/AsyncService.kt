@@ -18,7 +18,6 @@ class AsyncService(name: String = "myService") : IntentService(name) {
 
     private fun checkPermissionAndGetContacts(): ArrayList<String> {
         var contacts = arrayListOf<String>()
-
         if (isSdkVersionEnough()) {
             if (isPermissionGranted(this, READ_CONTACTS)) {
                 contacts = getContacts()
@@ -43,7 +42,7 @@ class AsyncService(name: String = "myService") : IntentService(name) {
     }
 
     private fun sendResultToBroadcastReceiver(result: ArrayList<String>) {
-        val actionName = getString(R.string.my_action_name)
+        val actionName = getString(R.string.action_send_contacts)
         val resultKey = getString(R.string.result_key)
         val intent = Intent(actionName).putExtra(resultKey, result)
         val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)

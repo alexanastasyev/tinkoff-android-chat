@@ -30,7 +30,7 @@ class SecondActivity : AppCompatActivity() {
 
     private fun makeFilterAndRegisterBroadcastReceiver() {
         val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)
-        val actionName = getString(R.string.my_action_name)
+        val actionName = getString(R.string.action_send_contacts)
         val filter = IntentFilter(actionName)
         localBroadcastReceiver.registerReceiver(broadcastReceiver, filter)
     }

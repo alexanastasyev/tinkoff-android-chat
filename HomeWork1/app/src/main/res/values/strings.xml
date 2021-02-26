@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Contacts</string>
     <string name="result_key">res</string>
-    <string name="my_action_name">my.custom.ACTION</string>
+    <string name="action_send_contacts">send.CONTACTS</string>
 </resources>

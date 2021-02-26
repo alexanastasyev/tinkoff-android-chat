@@ -9,6 +9,7 @@ import android.Manifest.permission.READ_CONTACTS
 import android.widget.TextView
 import com.example.myapplication.PermissionChecker.isPermissionGranted
 import com.example.myapplication.PermissionChecker.isSdkVersionEnough
+import java.lang.StringBuilder
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestContactsPermissionAndStartSecondActivity() {
         if (isSdkVersionEnough()) {
-            if (isPermissionGranted(this, READ_CONTACTS)) {
+            if (!isPermissionGranted(this, READ_CONTACTS)) {
                 requestPermissions(arrayOf(READ_CONTACTS), REQUEST_CODE_FOR_PERMISSIONS)
             } else {
                 startSecondActivity()
@@ -53,8 +54,16 @@ class MainActivity : AppCompatActivity() {
 
     private fun setResultInUi(result: ArrayList<String>?) {
         if (result != null) {
+
+            val stringBuilder = StringBuilder()
+            for (item in result) {
+                stringBuilder.append(item).append("\n")
+            }
+
+            val formattedResult = stringBuilder.toString()
+
             val textView: TextView = findViewById(R.id.textView)
-            textView.text = result.toString()
+            textView.text = formattedResult
         }
     }
 
