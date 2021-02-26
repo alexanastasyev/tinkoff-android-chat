@@ -54,14 +54,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun setResultInUi(result: ArrayList<String>?) {
         if (result != null) {
-
             val stringBuilder = StringBuilder()
             for (item in result) {
                 stringBuilder.append(item).append("\n")
             }
-
             val formattedResult = stringBuilder.toString()
-
             val textView: TextView = findViewById(R.id.textView)
             textView.text = formattedResult
         }

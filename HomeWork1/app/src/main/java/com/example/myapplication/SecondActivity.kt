@@ -52,12 +52,12 @@ class SecondActivity : AppCompatActivity() {
         }
 
         private fun saveResultAndFinishActivity(intent: Intent?) {
-            val result = getStringFromIntent(intent)
+            val result = getResultFromIntent(intent)
             saveResult(result)
             finish()
         }
 
-        private fun getStringFromIntent(intent: Intent?): ArrayList<String>? {
+        private fun getResultFromIntent(intent: Intent?): ArrayList<String>? {
             return intent?.getStringArrayListExtra(getString(R.string.result_key))
         }
 
@@ -67,4 +67,3 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 }
-
