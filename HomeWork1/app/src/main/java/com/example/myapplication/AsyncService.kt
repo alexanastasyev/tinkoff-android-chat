@@ -2,12 +2,12 @@ package com.example.myapplication
 
 import android.app.IntentService
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.database.Cursor
-import android.os.Build
 import android.provider.ContactsContract
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import android.Manifest.permission.READ_CONTACTS
+import com.example.myapplication.PermissionChecker.isPermissionGranted
+import com.example.myapplication.PermissionChecker.isSdkVersionEnough
 
 class AsyncService(name: String = "myService") : IntentService(name) {
 
@@ -16,19 +16,18 @@ class AsyncService(name: String = "myService") : IntentService(name) {
         sendResultToBroadcastReceiver(result)
     }
 
-
-    private fun checkPermissionAndGetContacts() : ArrayList<String> {
+    private fun checkPermissionAndGetContacts(): ArrayList<String> {
         var contacts = arrayListOf<String>()
 
-        // Check the SDK version and whether the permission is already granted or not.
-        // TODO("Ask mentor how to put it into function")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            contacts = getContacts()
+        if (isSdkVersionEnough()) {
+            if (isPermissionGranted(this, READ_CONTACTS)) {
+                contacts = getContacts()
+            }
         }
         return contacts
     }
 
-    private fun getContacts() : ArrayList<String> {
+    private fun getContacts(): ArrayList<String> {
         val contentResolver = contentResolver
         val people: Cursor? = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null)
         val contacts = arrayListOf<String>()

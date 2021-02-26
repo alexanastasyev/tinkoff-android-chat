@@ -3,17 +3,18 @@ package com.example.myapplication
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest.permission.READ_CONTACTS
 import android.widget.TextView
+import com.example.myapplication.PermissionChecker.isPermissionGranted
+import com.example.myapplication.PermissionChecker.isSdkVersionEnough
 
 class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val REQUEST_CODE_FOR_ACTIVITY = 100
-        private const val REQUEST_CODE_FOR_PERMISSION = 200
+        private const val REQUEST_CODE_FOR_PERMISSIONS = 200
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,19 +24,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestContactsPermissionAndStartSecondActivity() {
-        // Check the SDK version and whether the permission is already granted or not.
-        // TODO("Ask mentor how to put it into function")
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(arrayOf(READ_CONTACTS), REQUEST_CODE_FOR_PERMISSION)
-        } else {
-            startSecondActivity()
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQUEST_CODE_FOR_PERMISSION) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (isSdkVersionEnough()) {
+            if (isPermissionGranted(this, READ_CONTACTS)) {
+                requestPermissions(arrayOf(READ_CONTACTS), REQUEST_CODE_FOR_PERMISSIONS)
+            } else {
                 startSecondActivity()
             }
         }
@@ -49,21 +41,29 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            val result = getResultStringFromIntent(data)
+            val result = getResultFromIntent(data)
             setResultInUi(result)
         }
     }
 
-    private fun setResultInUi(result: ArrayList<String>?) {
-       if (result != null) {
-           val textView : TextView = findViewById(R.id.textView)
-           textView.text = result.toString()
-       }
-    }
-
-    private fun getResultStringFromIntent(intent: Intent?) : ArrayList<String>? {
+    private fun getResultFromIntent(intent: Intent?): ArrayList<String>? {
         val resultKey = getString(R.string.result_key)
         return intent?.getStringArrayListExtra(resultKey)
     }
 
+    private fun setResultInUi(result: ArrayList<String>?) {
+        if (result != null) {
+            val textView: TextView = findViewById(R.id.textView)
+            textView.text = result.toString()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_CODE_FOR_PERMISSIONS) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startSecondActivity()
+            }
+        }
+    }
 }

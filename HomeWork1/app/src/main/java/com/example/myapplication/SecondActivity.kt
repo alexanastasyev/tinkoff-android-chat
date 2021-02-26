@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import java.util.ArrayList
 
-
 class SecondActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +32,7 @@ class SecondActivity : AppCompatActivity() {
         val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)
         val actionName = getString(R.string.my_action_name)
         val filter = IntentFilter(actionName)
-        localBroadcastReceiver.registerReceiver(myReceiver, filter)
+        localBroadcastReceiver.registerReceiver(broadcastReceiver, filter)
     }
 
     override fun onStop() {
@@ -43,34 +42,29 @@ class SecondActivity : AppCompatActivity() {
 
     private fun unregisterBroadcastReceiver() {
         val localBroadcastReceiver = LocalBroadcastManager.getInstance(this)
-        localBroadcastReceiver.unregisterReceiver(myReceiver)
+        localBroadcastReceiver.unregisterReceiver(broadcastReceiver)
     }
 
-    private var myReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             saveResultAndFinishActivity(intent)
         }
 
         private fun saveResultAndFinishActivity(intent: Intent?) {
-            val result = getResultStringFromIntent(intent)
+            val result = getStringFromIntent(intent)
             saveResult(result)
             finish()
         }
 
-        private fun getResultStringFromIntent(intent: Intent?): ArrayList<String>? {
+        private fun getStringFromIntent(intent: Intent?): ArrayList<String>? {
             return intent?.getStringArrayListExtra(getString(R.string.result_key))
         }
 
         private fun saveResult(result: ArrayList<String>?) {
-            val intent = Intent().putExtra(getResultKeyFromResources(), result)
+            val intent = Intent().putExtra(getString(R.string.result_key), result)
             setResult(Activity.RESULT_OK, intent)
         }
     }
-
-    private fun getResultKeyFromResources(): String {
-        return getString(R.string.result_key)
-    }
-
 }
 
