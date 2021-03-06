@@ -13,7 +13,7 @@ import android.widget.TextView
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 
-class CustomViewGroup @JvmOverloads constructor(
+class MessageViewGroup @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,

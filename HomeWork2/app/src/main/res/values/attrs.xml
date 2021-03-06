@@ -12,6 +12,15 @@
             <enum name="FACE_NEUTRAL" value="0x1F610" />
             <enum name="FACE_WITH_SUNGLASSES" value="0x1F60E" />
             <enum name="FACE_CRYING" value="0x1F622" />
+            <enum name="FACE_WITH_TONGUE" value="0x1F61B" />
+            <enum name="FACE_WITH_RAISED_EYEBROW" value="0x1F928" />
+            <enum name="FACE_SMIRKING" value="0x1F60F" />
+            <enum name="FACE_RELIEVED" value="0x1F60C" />
+            <enum name="FACE_COWBOY_HAT" value="0x1F920" />
+            <enum name="FACE_ASTONISHED" value="0x1F632" />
+            <enum name="FACE_WEARY" value="0x1F629" />
+            <enum name="SKULL" value="0x1F480" />
+
             <enum name="SIGN_PLUS" value="0x2795" />
         </attr>
         <attr name="emoji_amount" format="integer" />

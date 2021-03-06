@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:parentTag="com.example.homework2.CustomViewGroup">
+    tools:parentTag="com.example.homework2.MessageViewGroup">
 
     <ImageView
         android:id="@+id/avatarView"
@@ -39,7 +39,7 @@
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
             app:emoji="FACE_SMILING"
-            app:emoji_amount="0" />
+            app:emoji_amount="5" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
@@ -59,12 +59,12 @@
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
             app:emoji="FACE_KISSING"
-            app:emoji_amount="10" />
+            app:emoji_amount="20" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
             app:emoji="FACE_NEUTRAL"
-            app:emoji_amount="1" />
+            app:emoji_amount="50" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
@@ -74,7 +74,47 @@
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
             app:emoji="FACE_CRYING"
+            app:emoji_amount="300" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji="FACE_WITH_TONGUE"
+            app:emoji_amount="40" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji="FACE_WITH_RAISED_EYEBROW"
+            app:emoji_amount="350" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji="FACE_SMIRKING"
             app:emoji_amount="1" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji="FACE_RELIEVED"
+            app:emoji_amount="1" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji="FACE_COWBOY_HAT"
+            app:emoji_amount="0" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji="FACE_ASTONISHED"
+            app:emoji_amount="80" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji="FACE_WEARY"
+            app:emoji_amount="10" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji="SKULL"
+            app:emoji_amount="100" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
