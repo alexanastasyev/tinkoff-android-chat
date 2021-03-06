@@ -35,7 +35,7 @@ class MessageViewGroup @JvmOverloads constructor(
         avatarImageView = findViewById(R.id.avatarView)
         messageText = findViewById(R.id.messageText)
         name = findViewById(R.id.name)
-        flexBoxLayout = findViewById(R.id.flexBox)
+        flexBoxLayout = findViewById(R.id.flexBoxLayout)
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

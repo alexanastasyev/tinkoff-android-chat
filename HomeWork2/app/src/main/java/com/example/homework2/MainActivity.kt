@@ -9,7 +9,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        findViewById<FlexBoxLayout>(R.id.flexBox).children.forEach { child ->
+        findViewById<FlexBoxLayout>(R.id.flexBoxLayout).children.forEach { child ->
             child.setOnClickListener {
                 child.isSelected = !child.isSelected
             }
