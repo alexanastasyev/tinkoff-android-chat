@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="EmojiView">
+        <attr name="text_color" format="color" />
+        <attr name="size" format="dimension" />
+        <attr name="emoji" format="enum">
+            <enum name="FACE_SMILING" value="0x1F600" />
+            <enum name="FACE_LAUGHING" value="0x1F602" />
+            <enum name="FACE_WINKING" value="0x1F609" />
+            <enum name="FACE_IN_LOVE" value="0x1F60D" />
+            <enum name="FACE_KISSING" value="0x1F618" />
+            <enum name="FACE_NEUTRAL" value="0x1F610" />
+            <enum name="FACE_WITH_SUNGLASSES" value="0x1F60E" />
+            <enum name="FACE_CRYING" value="0x1F622" />
+            <enum name="SIGN_PLUS" value="0x2795" />
+        </attr>
+        <attr name="emoji_amount" format="integer" />
+    </declare-styleable>
+</resources>

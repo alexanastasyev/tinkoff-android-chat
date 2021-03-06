@@ -39,21 +39,22 @@ class EmojiView @JvmOverloads constructor(
     private var contentWidth = 0
     private var contentHeight = 0
     private var textHeight = 0
+    private var textWidth = 0
     private var modeWidth = AT_MOST
     private var modeHeight = AT_MOST
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.EmojiView).apply {
             textSize = getDimensionPixelSize(
-                R.styleable.EmojiView_cl_text_size, context.spToPx(
+                R.styleable.EmojiView_size, context.spToPx(
                     DEFAULT_FONT_SIZE_PX
                 )
             )
-            val textColor = getColor(R.styleable.EmojiView_cl_text_color, Color.BLACK)
+            val textColor = getColor(R.styleable.EmojiView_text_color, DEFAULT_COLOR)
             textPaint.color = textColor
-            val emojiCode = getInt(R.styleable.EmojiView_cl_emoji, DEFAULT_EMOJI)
+            val emojiCode = getInt(R.styleable.EmojiView_emoji, DEFAULT_EMOJI)
             val emoji = getEmojiByUnicode(emojiCode)
-            val amount = getInt(R.styleable.EmojiView_cl_amount, DEFAULT_AMOUNT)
+            val amount = getInt(R.styleable.EmojiView_emoji_amount, DEFAULT_AMOUNT)
             if (amount >= 0) {
                 this@EmojiView.text = "$emoji $amount"
             } else {
@@ -65,34 +66,21 @@ class EmojiView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         textPaint.getTextBounds(text, 0, text.length, textBounds)
-        val textWidth = textBounds.width()
+        textWidth = textBounds.width()
         textHeight = textBounds.height()
         contentWidth = textWidth + paddingStart + paddingEnd
         contentHeight = textHeight + paddingTop + paddingBottom
 
-        modeWidth = MeasureSpec.getMode(widthMeasureSpec)
-        modeHeight = MeasureSpec.getMode(heightMeasureSpec)
+        modeWidth = getMode(widthMeasureSpec)
+        modeHeight = getMode(heightMeasureSpec)
 
         setMeasuredDimension(contentWidth + paddingLeft + paddingRight, contentHeight + paddingTop + paddingBottom)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-
-        val x = when(modeWidth) {
-            AT_MOST -> width / 2F //textBounds.centerX().toFloat() + paddingStart
-            EXACTLY -> width / 2F
-            UNSPECIFIED -> width / 2F
-            else -> width / 2F
-        }
-
-        val y = when(modeHeight) {
-            AT_MOST -> height / 2F + textHeight / 3.5F //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
-            EXACTLY -> height / 2F + textHeight //+ (textHeight / 4F)
-            UNSPECIFIED -> height / 2F + textHeight //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
-            else -> height / 2F + textHeight //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
-        }
-
-        textPoint.set(x, y)
+        val textX = width / 2F
+        val textY = height / 2F + textHeight / 3.5F
+        textPoint.set(textX, textY)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -117,6 +105,7 @@ class EmojiView @JvmOverloads constructor(
         private const val DEFAULT_EMOJI = 0x1F600
         private const val DEFAULT_AMOUNT = 0
         private const val DEFAULT_FONT_SIZE_PX = 14F
+        private const val DEFAULT_COLOR = Color.BLACK
         private val DRAWABLES_STATE = IntArray(1) {android.R.attr.state_selected}
     }
 }

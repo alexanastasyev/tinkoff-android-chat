@@ -6,21 +6,20 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
-import androidx.core.view.marginLeft
-import androidx.core.view.marginRight
 
-class FlexboxLayout @JvmOverloads constructor(
+class FlexBoxLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
+    private var parentWidth = 0
+    private val layoutRect = Rect()
+
     init {
         setWillNotDraw(true)
     }
-
-    var displayWidth = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         var currentWidth = 0
@@ -29,7 +28,7 @@ class FlexboxLayout @JvmOverloads constructor(
         var contentWidth = 0
         var contentHeight = 0
 
-        displayWidth = MeasureSpec.getSize(widthMeasureSpec)
+        parentWidth = MeasureSpec.getSize(widthMeasureSpec)
 
         children.forEach {
 
@@ -39,12 +38,14 @@ class FlexboxLayout @JvmOverloads constructor(
             val childrenHeight = it.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin
             val childrenWidth = it.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin
 
-            if (currentWidth + childrenWidth > displayWidth) {
+            if (currentWidth + childrenWidth > parentWidth) {
                 contentWidth = maxOf(contentWidth, currentWidth)
                 currentWidth = 0
                 currentHeight = maxOf(currentHeight, childrenHeight)
                 contentHeight += currentHeight
                 currentHeight = 0
+
+                // Here we moved to a new line
                 currentWidth += childrenWidth
                 contentWidth = maxOf(contentWidth, currentWidth)
             } else {
@@ -60,24 +61,21 @@ class FlexboxLayout @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
 
-        var busyWidth = 0;
-        var busyHeight = 0
+        var currentWidth = 0
+        var currentHeight = 0
 
         children.forEach {
             val layoutParams = it.layoutParams as MarginLayoutParams
-            var rect = Rect()
-
-            if (busyWidth + it.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin > displayWidth) {
-                busyHeight += it.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin
-                busyWidth = 0
+            if (currentWidth + it.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin > parentWidth) {
+                currentHeight += it.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin
+                currentWidth = 0
             }
-
-            rect.left = busyWidth + layoutParams.leftMargin
-            rect.top = busyHeight + layoutParams.topMargin
-            rect.right = rect.left + it.measuredWidth + layoutParams.rightMargin
-            rect.bottom = rect.top + it.measuredHeight + layoutParams.bottomMargin
-            it.layout(rect)
-            busyWidth += it.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin
+            layoutRect.left = currentWidth + layoutParams.leftMargin
+            layoutRect.top = currentHeight + layoutParams.topMargin
+            layoutRect.right = layoutRect.left + it.measuredWidth + layoutParams.rightMargin
+            layoutRect.bottom = layoutRect.top + it.measuredHeight + layoutParams.bottomMargin
+            it.layout(layoutRect)
+            currentWidth += it.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin
         }
     }
 

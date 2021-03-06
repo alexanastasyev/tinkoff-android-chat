@@ -10,96 +10,77 @@
         android:id="@+id/avatarView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/avatar" />
+        android:src="@drawable/avatar"
+        android:contentDescription="@string/avatar_picture" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
-        android:layout_marginLeft="16dp"
-        android:text="Name Surname" />
+        android:layout_marginStart="16dp"
+        android:text="@string/name_example" />
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/messageText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Example of multiline message. It is an example of message that has a few lines. More then two, please. Yeah, now it's okey." />
+        android:text="@string/message_example" />
 
-    <com.example.homework2.FlexboxLayout
-        android:id="@+id/flexbox"
+    <com.example.homework2.FlexBoxLayout
+        android:id="@+id/flexBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintTop_toBottomOf="@id/messageText"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="LOVE"
-            app:cl_amount="5" />
+            app:emoji="FACE_SMILING"
+            app:emoji_amount="0" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="NEUTRAL"
-            app:cl_amount="5" />
+            app:emoji="FACE_LAUGHING"
+            app:emoji_amount="1" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="SUNGLASSES"
-            app:cl_amount="5" />
+            app:emoji="FACE_WINKING"
+            app:emoji_amount="10" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="NEUTRAL"
-            app:cl_amount="5" />
+            app:emoji="FACE_IN_LOVE"
+            app:emoji_amount="100" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="SUNGLASSES"
-            app:cl_amount="5" />
+            app:emoji="FACE_KISSING"
+            app:emoji_amount="10" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="SUNGLASSES"
-            app:cl_amount="5" />
+            app:emoji="FACE_NEUTRAL"
+            app:emoji_amount="1" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="LAUGH"
-            app:cl_amount="10" />
+            app:emoji="FACE_WITH_SUNGLASSES"
+            app:emoji_amount="0" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="CRY"
-            app:cl_amount="50" />
+            app:emoji="FACE_CRYING"
+            app:emoji_amount="1" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="SMILE"
-            app:cl_amount="10" />
+            app:emoji="SIGN_PLUS"
+            app:emoji_amount="-1" />
 
-        <com.example.homework2.EmojiView
-            style="@style/EmojiViewStyle"
-            app:cl_emoji="LAUGH"
-            app:cl_amount="10" />
-
-        <com.example.homework2.EmojiView
-            style="@style/EmojiViewStyle"
-            app:cl_emoji="NEUTRAL"
-            app:cl_amount="5" />
-
-        <com.example.homework2.EmojiView
-            style="@style/EmojiViewStyle"
-            app:cl_emoji="NEUTRAL"
-            app:cl_amount="5" />
-
-        <com.example.homework2.EmojiView
-            style="@style/EmojiViewStyle"
-            app:cl_emoji="PLUS"
-            app:cl_amount="-1" />
-
-    </com.example.homework2.FlexboxLayout>
+    </com.example.homework2.FlexBoxLayout>
 
 </merge>
