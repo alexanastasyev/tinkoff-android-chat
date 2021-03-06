@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="EmojiView">
+        <attr name="cl_foreground" format="reference" />
+        <attr name="cl_text_color" format="color" />
+        <attr name="cl_emoji" format="enum">
+            <enum name="SMILE" value="0x1F600" />
+            <enum name="LAUGH" value="0x1F602" />
+            <enum name="WINK" value="0x1F609" />
+            <enum name="LOVE" value="0x1F60D" />
+            <enum name="KISS" value="0x1F618" />
+            <enum name="NEUTRAL" value="0x1F610" />
+            <enum name="SUNGLASSES" value="0x1F60E" />
+            <enum name="CRY" value="0x1F622" />
+            <enum name="PLUS" value="0x2795" />
+        </attr>
+        <attr name="cl_amount" format="integer" />
+        <attr name="cl_text_size" format="dimension" />
+    </declare-styleable>
+</resources>

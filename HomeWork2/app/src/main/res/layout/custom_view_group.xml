@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="com.example.homework2.CustomViewGroup">
+
+    <ImageView
+        android:id="@+id/avatarView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/avatar" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:layout_marginLeft="16dp"
+        android:text="Name Surname" />
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Example of multiline message. It is an example of message that has a few lines. More then two, please. Yeah, now it's okey." />
+
+    <com.example.homework2.FlexboxLayout
+        android:id="@+id/flexbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="LAUGH"
+            app:cl_amount="10" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="CRY"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="SMILE"
+            app:cl_amount="10" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="LOVE"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="NEUTRAL"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="SUNGLASSES"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="LAUGH"
+            app:cl_amount="10" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="CRY"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="SMILE"
+            app:cl_amount="10" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="LOVE"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="NEUTRAL"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="SUNGLASSES"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="PLUS"
+            app:cl_amount="-1" />
+
+    </com.example.homework2.FlexboxLayout>
+
+</merge>
