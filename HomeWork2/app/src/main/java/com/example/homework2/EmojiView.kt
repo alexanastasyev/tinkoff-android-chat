@@ -73,7 +73,7 @@ class EmojiView @JvmOverloads constructor(
         modeWidth = MeasureSpec.getMode(widthMeasureSpec)
         modeHeight = MeasureSpec.getMode(heightMeasureSpec)
 
-        setMeasuredDimension(contentWidth, contentHeight)
+        setMeasuredDimension(contentWidth + paddingLeft + paddingRight, contentHeight + paddingTop + paddingBottom)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -86,10 +86,10 @@ class EmojiView @JvmOverloads constructor(
         }
 
         val y = when(modeHeight) {
-            AT_MOST -> height / 2F + paddingTop //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
-            EXACTLY -> height / 2F + paddingTop //+ (textHeight / 4F)
-            UNSPECIFIED -> height / 2F + paddingTop //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
-            else -> height / 2F + paddingTop //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
+            AT_MOST -> height / 2F + textHeight / 3.5F //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
+            EXACTLY -> height / 2F + textHeight //+ (textHeight / 4F)
+            UNSPECIFIED -> height / 2F + textHeight //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
+            else -> height / 2F + textHeight //(textBounds.height() + paddingTop).toFloat() //- textHeight / 5F
         }
 
         textPoint.set(x, y)

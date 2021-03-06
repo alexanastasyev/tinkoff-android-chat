@@ -23,20 +23,6 @@ class FlexboxLayout @JvmOverloads constructor(
     var displayWidth = 0
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-//        var currentWidth = 0
-//        var currentHeight = 0
-//
-//        children.forEach {
-//            val layoutParams = it.layoutParams as MarginLayoutParams
-//            measureChildWithMargins(it, widthMeasureSpec, currentWidth, heightMeasureSpec, 0)
-//            val childrenHeight = it.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin
-//            val childrenWidth = it.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin
-//            currentHeight = childrenHeight
-//            currentWidth += childrenWidth
-//        }
-//
-//        setMeasuredDimension(currentWidth, currentHeight)
-
         var currentWidth = 0
         var currentHeight = 0
 
@@ -46,6 +32,7 @@ class FlexboxLayout @JvmOverloads constructor(
         displayWidth = MeasureSpec.getSize(widthMeasureSpec)
 
         children.forEach {
+
             val layoutParams = it.layoutParams as MarginLayoutParams
             measureChildWithMargins(it, widthMeasureSpec, currentWidth, heightMeasureSpec, currentHeight)
 
@@ -55,29 +42,23 @@ class FlexboxLayout @JvmOverloads constructor(
             if (currentWidth + childrenWidth > displayWidth) {
                 contentWidth = maxOf(contentWidth, currentWidth)
                 currentWidth = 0
+                currentHeight = maxOf(currentHeight, childrenHeight)
                 contentHeight += currentHeight
+                currentHeight = 0
+                currentWidth += childrenWidth
+                contentWidth = maxOf(contentWidth, currentWidth)
             } else {
                 currentWidth += childrenWidth
                 contentWidth = maxOf(contentWidth, currentWidth)
                 currentHeight = maxOf(currentHeight, childrenHeight)
                 contentHeight = maxOf(contentHeight, currentHeight)
             }
-
         }
 
         setMeasuredDimension(contentWidth, contentHeight)
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-//        children.forEach {
-//            val layoutParams = it.layoutParams as MarginLayoutParams
-//            var rect = Rect()
-//            rect.left = layoutParams.leftMargin
-//            rect.top = layoutParams.topMargin
-//            rect.right = rect.left + it.measuredWidth
-//            rect.bottom = rect.top + it.measuredHeight
-//            it.layout(rect)
-//        }
 
         var busyWidth = 0;
         var busyHeight = 0
@@ -86,11 +67,11 @@ class FlexboxLayout @JvmOverloads constructor(
             val layoutParams = it.layoutParams as MarginLayoutParams
             var rect = Rect()
 
-
             if (busyWidth + it.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin > displayWidth) {
                 busyHeight += it.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin
                 busyWidth = 0
             }
+
             rect.left = busyWidth + layoutParams.leftMargin
             rect.top = busyHeight + layoutParams.topMargin
             rect.right = rect.left + it.measuredWidth + layoutParams.rightMargin

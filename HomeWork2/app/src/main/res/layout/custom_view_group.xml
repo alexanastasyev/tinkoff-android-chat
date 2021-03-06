@@ -37,21 +37,6 @@
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="LAUGH"
-            app:cl_amount="10" />
-
-        <com.example.homework2.EmojiView
-            style="@style/EmojiViewStyle"
-            app:cl_emoji="CRY"
-            app:cl_amount="5" />
-
-        <com.example.homework2.EmojiView
-            style="@style/EmojiViewStyle"
-            app:cl_emoji="SMILE"
-            app:cl_amount="10" />
-
-        <com.example.homework2.EmojiView
-            style="@style/EmojiViewStyle"
             app:cl_emoji="LOVE"
             app:cl_amount="5" />
 
@@ -67,13 +52,28 @@
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
+            app:cl_emoji="NEUTRAL"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="SUNGLASSES"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:cl_emoji="SUNGLASSES"
+            app:cl_amount="5" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
             app:cl_emoji="LAUGH"
             app:cl_amount="10" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
             app:cl_emoji="CRY"
-            app:cl_amount="5" />
+            app:cl_amount="50" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
@@ -82,8 +82,8 @@
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="LOVE"
-            app:cl_amount="5" />
+            app:cl_emoji="LAUGH"
+            app:cl_amount="10" />
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
@@ -92,7 +92,7 @@
 
         <com.example.homework2.EmojiView
             style="@style/EmojiViewStyle"
-            app:cl_emoji="SUNGLASSES"
+            app:cl_emoji="NEUTRAL"
             app:cl_amount="5" />
 
         <com.example.homework2.EmojiView
