@@ -26,13 +26,33 @@ class EmojiView @JvmOverloads constructor(
             }
         }
 
-    private var text: String = getEmojiByUnicode(DEFAULT_EMOJI) + DEFAULT_AMOUNT
+    var emoji: String = getEmojiByUnicode(DEFAULT_EMOJI_CODE)
         set(value) {
             if (field != value) {
                 field = value
+                refreshText(emoji, amount)
                 requestLayout()
             }
         }
+
+    private fun refreshText(emoji: String, amount: Int) {
+        if (amount >= 0) {
+            this@EmojiView.text = "$emoji $amount"
+        } else {
+            this@EmojiView.text = emoji
+        }
+    }
+
+    var amount: Int = DEFAULT_AMOUNT
+        set(value) {
+            if (field != value) {
+                field = value
+                refreshText(emoji, amount)
+                requestLayout()
+            }
+        }
+
+    private var text: String = ""
 
     private val textPoint = PointF()
     private val textBounds = Rect()
@@ -52,14 +72,10 @@ class EmojiView @JvmOverloads constructor(
             )
             val textColor = getColor(R.styleable.EmojiView_text_color, DEFAULT_COLOR)
             textPaint.color = textColor
-            val emojiCode = getInt(R.styleable.EmojiView_emoji, DEFAULT_EMOJI)
-            val emoji = getEmojiByUnicode(emojiCode)
-            val amount = getInt(R.styleable.EmojiView_emoji_amount, DEFAULT_AMOUNT)
-            if (amount >= 0) {
-                this@EmojiView.text = "$emoji $amount"
-            } else {
-                this@EmojiView.text = emoji
-            }
+            val emojiCode = getInt(R.styleable.EmojiView_emoji, DEFAULT_EMOJI_CODE)
+            emoji = getEmojiByUnicode(emojiCode)
+            amount = getInt(R.styleable.EmojiView_emoji_amount, DEFAULT_AMOUNT)
+            refreshText(emoji, amount)
             recycle()
         }
     }
@@ -79,6 +95,8 @@ class EmojiView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val textX = width / 2F
+
+        // When we use an emoji, we have to to move it down on (textHeight / 3.5) to place it in the middle.
         val textY = height / 2F + textHeight / 3.5F
         textPoint.set(textX, textY)
     }
@@ -97,15 +115,33 @@ class EmojiView @JvmOverloads constructor(
         return drawableState
     }
 
-    private fun getEmojiByUnicode(unicode: Int): String {
-        return String(Character.toChars(unicode))
-    }
-
     companion object {
-        private const val DEFAULT_EMOJI = 0x1F600
+        private const val DEFAULT_EMOJI_CODE = 0x1F600
         private const val DEFAULT_AMOUNT = 0
         private const val DEFAULT_FONT_SIZE_PX = 14F
         private const val DEFAULT_COLOR = Color.BLACK
         private val DRAWABLES_STATE = IntArray(1) {android.R.attr.state_selected}
+
+        private fun getEmojiByUnicode(unicode: Int): String {
+            return String(Character.toChars(unicode))
+        }
+
+        val EMOJI_FACE_SMILING = getEmojiByUnicode(0x1F600)
+        val EMOJI_FACE_LAUGHING = getEmojiByUnicode(0x1F602)
+        val EMOJI_FACE_WINKING = getEmojiByUnicode(0x1F609)
+        val EMOJI_FACE_IN_LOVE = getEmojiByUnicode(0x1F60D)
+        val EMOJI_FACE_KISSING = getEmojiByUnicode(0x1F618)
+        val FACE_NEUTRAL = getEmojiByUnicode(0x1F610)
+        val FACE_WITH_SUNGLASSES = getEmojiByUnicode(0x1F60E)
+        val FACE_CRYING = getEmojiByUnicode(0x1F622)
+        val FACE_WITH_TONGUE = getEmojiByUnicode(0x1F61B)
+        val FACE_WITH_RAISED_EYEBROW = getEmojiByUnicode(0x1F928)
+        val FACE_SMIRKING = getEmojiByUnicode(0x1F60F)
+        val FACE_RELIEVED = getEmojiByUnicode(0x1F60C)
+        val FACE_COWBOY_HAT = getEmojiByUnicode(0x1F920)
+        val FACE_ASTONISHED = getEmojiByUnicode(0x1F632)
+        val FACE_WEARY = getEmojiByUnicode(0x1F629)
+        val SKULL = getEmojiByUnicode(0x1F480)
+        val SIGN_PLUS = getEmojiByUnicode(0x2795)
     }
 }

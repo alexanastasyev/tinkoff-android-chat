@@ -2,6 +2,7 @@ package com.example.homework2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import androidx.core.view.children
 
 class MainActivity : AppCompatActivity() {
