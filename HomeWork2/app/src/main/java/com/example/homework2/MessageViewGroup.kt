@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
@@ -24,11 +25,14 @@ class MessageViewGroup @JvmOverloads constructor(
     private val messageText: TextView
     private val name: TextView
     private val flexBoxLayout: FlexBoxLayout
-
     private val avatarImageViewRect = Rect()
     private val messageTextRect = Rect()
     private val nameRect = Rect()
     private val flexBoxLayoutRect = Rect()
+
+    companion object {
+        private const val AVATAR_SIZE = 90F
+    }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.custom_view_group, this, true)
@@ -36,10 +40,11 @@ class MessageViewGroup @JvmOverloads constructor(
         messageText = findViewById(R.id.messageText)
         name = findViewById(R.id.name)
         flexBoxLayout = findViewById(R.id.flexBoxLayout)
+        layoutParams = LinearLayout.LayoutParams(dpToPx(AVATAR_SIZE, resources), dpToPx(AVATAR_SIZE, resources))
+        avatarImageView.layoutParams = layoutParams
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-
         val avatarImageViewLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
         val messageTextLayoutParams = messageText.layoutParams as MarginLayoutParams
         val nameLayoutParams = name.layoutParams as MarginLayoutParams

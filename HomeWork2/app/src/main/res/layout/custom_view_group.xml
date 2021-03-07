@@ -9,8 +9,6 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatarView"
         android:src="@drawable/avatar"
-        android:maxWidth="64dp"
-        android:maxHeight="64dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/avatar_picture" />

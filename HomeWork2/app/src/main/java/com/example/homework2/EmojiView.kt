@@ -53,7 +53,6 @@ class EmojiView @JvmOverloads constructor(
         }
 
     private var text: String = ""
-
     private val textPoint = PointF()
     private val textBounds = Rect()
     private var contentWidth = 0
@@ -86,16 +85,13 @@ class EmojiView @JvmOverloads constructor(
         textHeight = textBounds.height()
         contentWidth = textWidth + paddingStart + paddingEnd
         contentHeight = textHeight + paddingTop + paddingBottom
-
         modeWidth = getMode(widthMeasureSpec)
         modeHeight = getMode(heightMeasureSpec)
-
         setMeasuredDimension(contentWidth + paddingLeft + paddingRight, contentHeight + paddingTop + paddingBottom)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val textX = width / 2F
-
         // When we use an emoji, we have to to move it down on (textHeight / 3.5) to place it in the middle.
         val textY = height / 2F + textHeight / 3.5F
         textPoint.set(textX, textY)
@@ -122,10 +118,6 @@ class EmojiView @JvmOverloads constructor(
         private const val DEFAULT_COLOR = Color.BLACK
         private val DRAWABLES_STATE = IntArray(1) {android.R.attr.state_selected}
 
-        private fun getEmojiByUnicode(unicode: Int): String {
-            return String(Character.toChars(unicode))
-        }
-
         val EMOJI_FACE_SMILING = getEmojiByUnicode(0x1F600)
         val EMOJI_FACE_LAUGHING = getEmojiByUnicode(0x1F602)
         val EMOJI_FACE_WINKING = getEmojiByUnicode(0x1F609)
@@ -143,5 +135,9 @@ class EmojiView @JvmOverloads constructor(
         val FACE_WEARY = getEmojiByUnicode(0x1F629)
         val SKULL = getEmojiByUnicode(0x1F480)
         val SIGN_PLUS = getEmojiByUnicode(0x2795)
+
+        private fun getEmojiByUnicode(unicode: Int): String {
+            return String(Character.toChars(unicode))
+        }
     }
 }
