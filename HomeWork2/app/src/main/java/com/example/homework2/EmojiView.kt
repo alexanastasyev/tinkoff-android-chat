@@ -30,12 +30,12 @@ class EmojiView @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                refreshText(emoji, amount)
+                refreshText()
                 requestLayout()
             }
         }
 
-    private fun refreshText(emoji: String, amount: Int) {
+    private fun refreshText() {
         if (amount >= 0) {
             this@EmojiView.text = "$emoji $amount"
         } else {
@@ -47,7 +47,7 @@ class EmojiView @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                refreshText(emoji, amount)
+                refreshText()
                 requestLayout()
             }
         }
@@ -74,7 +74,7 @@ class EmojiView @JvmOverloads constructor(
             val emojiCode = getInt(R.styleable.EmojiView_emoji, DEFAULT_EMOJI_CODE)
             emoji = getEmojiByUnicode(emojiCode)
             amount = getInt(R.styleable.EmojiView_emoji_amount, DEFAULT_AMOUNT)
-            refreshText(emoji, amount)
+            refreshText()
             recycle()
         }
     }
@@ -137,7 +137,7 @@ class EmojiView @JvmOverloads constructor(
         val EMOJI_SKULL = getEmojiByUnicode(0x1F480)
         val EMOJI_SIGN_PLUS = getEmojiByUnicode(0x2795)
 
-        private fun getEmojiByUnicode(unicode: Int): String {
+        fun getEmojiByUnicode(unicode: Int): String {
             return String(Character.toChars(unicode))
         }
     }
