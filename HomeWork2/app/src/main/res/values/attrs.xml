@@ -20,7 +20,6 @@
             <enum name="FACE_ASTONISHED" value="0x1F632" />
             <enum name="FACE_WEARY" value="0x1F629" />
             <enum name="SKULL" value="0x1F480" />
-
             <enum name="SIGN_PLUS" value="0x2795" />
         </attr>
         <attr name="emoji_amount" format="integer" />

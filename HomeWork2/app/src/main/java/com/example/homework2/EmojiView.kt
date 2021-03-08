@@ -92,6 +92,7 @@ class EmojiView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val textX = width / 2F
+
         // When we use an emoji, we have to to move it down on (textHeight / 3.5) to place it in the middle.
         val textY = height / 2F + textHeight / 3.5F
         textPoint.set(textX, textY)
@@ -123,18 +124,18 @@ class EmojiView @JvmOverloads constructor(
         val EMOJI_FACE_WINKING = getEmojiByUnicode(0x1F609)
         val EMOJI_FACE_IN_LOVE = getEmojiByUnicode(0x1F60D)
         val EMOJI_FACE_KISSING = getEmojiByUnicode(0x1F618)
-        val FACE_NEUTRAL = getEmojiByUnicode(0x1F610)
-        val FACE_WITH_SUNGLASSES = getEmojiByUnicode(0x1F60E)
-        val FACE_CRYING = getEmojiByUnicode(0x1F622)
-        val FACE_WITH_TONGUE = getEmojiByUnicode(0x1F61B)
-        val FACE_WITH_RAISED_EYEBROW = getEmojiByUnicode(0x1F928)
-        val FACE_SMIRKING = getEmojiByUnicode(0x1F60F)
-        val FACE_RELIEVED = getEmojiByUnicode(0x1F60C)
-        val FACE_COWBOY_HAT = getEmojiByUnicode(0x1F920)
-        val FACE_ASTONISHED = getEmojiByUnicode(0x1F632)
-        val FACE_WEARY = getEmojiByUnicode(0x1F629)
-        val SKULL = getEmojiByUnicode(0x1F480)
-        val SIGN_PLUS = getEmojiByUnicode(0x2795)
+        val EMOJI_FACE_NEUTRAL = getEmojiByUnicode(0x1F610)
+        val EMOJI_FACE_WITH_SUNGLASSES = getEmojiByUnicode(0x1F60E)
+        val EMOJI_FACE_CRYING = getEmojiByUnicode(0x1F622)
+        val EMOJI_FACE_WITH_TONGUE = getEmojiByUnicode(0x1F61B)
+        val EMOJI_FACE_WITH_RAISED_EYEBROW = getEmojiByUnicode(0x1F928)
+        val EMOJI_FACE_SMIRKING = getEmojiByUnicode(0x1F60F)
+        val EMOJI_FACE_RELIEVED = getEmojiByUnicode(0x1F60C)
+        val EMOJI_FACE_COWBOY_HAT = getEmojiByUnicode(0x1F920)
+        val EMOJI_FACE_ASTONISHED = getEmojiByUnicode(0x1F632)
+        val EMOJI_FACE_WEARY = getEmojiByUnicode(0x1F629)
+        val EMOJI_SKULL = getEmojiByUnicode(0x1F480)
+        val EMOJI_SIGN_PLUS = getEmojiByUnicode(0x2795)
 
         private fun getEmojiByUnicode(unicode: Int): String {
             return String(Character.toChars(unicode))
