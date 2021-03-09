@@ -13,6 +13,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.children
 import androidx.core.view.marginLeft
@@ -27,17 +28,15 @@ class MessageViewGroup @JvmOverloads constructor(
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
     private val avatarImageView: ImageView
-    private val messageText: TextView
-    private val name: TextView
+    private val constraintLayout: ConstraintLayout
     private val flexBoxLayout: FlexBoxLayout
 
     private val avatarImageViewRect = Rect()
-    private val messageTextRect = Rect()
-    private val nameRect = Rect()
+    private val constraintLayoutRect = Rect()
     private val flexBoxLayoutRect = Rect()
 
     companion object {
-        private const val AVATAR_SIZE = 90F
+        private const val AVATAR_SIZE = 50F
 
         private const val AVATAR_IMAGE_KEY = "avatar"
         private const val NAME_KEY = "name"
@@ -51,9 +50,8 @@ class MessageViewGroup @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.custom_view_group, this, true)
 
         avatarImageView = findViewById(R.id.avatarView)
-        messageText = findViewById(R.id.messageText)
-        name = findViewById(R.id.name)
         flexBoxLayout = findViewById(R.id.flexBoxLayout)
+        constraintLayout = findViewById(R.id.constraintLayout)
 
         setAvatarSize()
     }
@@ -70,23 +68,18 @@ class MessageViewGroup @JvmOverloads constructor(
         val avatarImageViewHeight = avatarImageView.measuredHeight + avatarImageViewLayoutParams.topMargin + avatarImageViewLayoutParams.bottomMargin
         val avatarImageViewWidth = avatarImageView.measuredWidth + avatarImageViewLayoutParams.leftMargin + avatarImageViewLayoutParams.rightMargin
 
-        val nameLayoutParams = name.layoutParams as MarginLayoutParams
-        measureChildWithMargins(name, widthMeasureSpec, avatarImageViewWidth, heightMeasureSpec, 0)
-        val nameHeight = name.measuredHeight + nameLayoutParams.topMargin + nameLayoutParams.bottomMargin
-        val nameWidth = name.measuredWidth + nameLayoutParams.leftMargin + nameLayoutParams.rightMargin
-
-        val messageTextLayoutParams = messageText.layoutParams as MarginLayoutParams
-        measureChildWithMargins(messageText, widthMeasureSpec, avatarImageViewWidth, heightMeasureSpec, nameHeight)
-        val messageTextHeight = messageText.measuredHeight + messageTextLayoutParams.topMargin + messageTextLayoutParams.bottomMargin
-        val messageTextWidth = messageText.measuredWidth + messageTextLayoutParams.leftMargin + messageTextLayoutParams.rightMargin
+        val constraintLayoutParams = constraintLayout.layoutParams as MarginLayoutParams
+        measureChildWithMargins(constraintLayout, widthMeasureSpec, avatarImageViewWidth, heightMeasureSpec, 0)
+        val constraintLayoutHeight = constraintLayout.measuredHeight + constraintLayoutParams.topMargin + constraintLayoutParams.bottomMargin
+        val constraintLayoutWidth = constraintLayout.measuredWidth + constraintLayoutParams.leftMargin + constraintLayoutParams.rightMargin
 
         val flexBoxLayoutParams = flexBoxLayout.layoutParams as MarginLayoutParams
-        measureChildWithMargins(flexBoxLayout, widthMeasureSpec, 0, heightMeasureSpec, maxOf(avatarImageViewHeight, (nameHeight + messageTextHeight)))
+        measureChildWithMargins(flexBoxLayout, widthMeasureSpec, 0, heightMeasureSpec, maxOf(avatarImageViewHeight, constraintLayoutHeight))
         val flexBoxLayoutHeight = flexBoxLayout.measuredHeight + flexBoxLayoutParams.topMargin + flexBoxLayoutParams.bottomMargin
         val flexBoxLayoutWidth = flexBoxLayout.measuredWidth + flexBoxLayoutParams.leftMargin + flexBoxLayoutParams.rightMargin
 
-        val contentWidth = maxOf((avatarImageViewWidth + messageTextWidth + nameWidth), flexBoxLayoutWidth) + paddingLeft + paddingRight
-        val contentHeight = maxOf(avatarImageViewHeight, messageTextHeight + nameHeight) + flexBoxLayoutHeight + paddingTop + paddingBottom
+        val contentWidth = maxOf((avatarImageViewWidth + constraintLayoutWidth), flexBoxLayoutWidth) + paddingLeft + paddingRight
+        val contentHeight = maxOf(avatarImageViewHeight, constraintLayoutHeight) + flexBoxLayoutHeight + paddingTop + paddingBottom
 
         setMeasuredDimension(
             resolveSize(contentWidth,  widthMeasureSpec),
@@ -96,8 +89,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         val avatarLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
-        val textLayoutParams = messageText.layoutParams as MarginLayoutParams
-        val nameLayoutParams = name.layoutParams as MarginLayoutParams
+        val constraintLayoutParams = constraintLayout.layoutParams as MarginLayoutParams
         val flexBoxLayoutParams = flexBoxLayout.layoutParams as MarginLayoutParams
 
         avatarImageViewRect.left = avatarLayoutParams.leftMargin + paddingLeft
@@ -106,20 +98,14 @@ class MessageViewGroup @JvmOverloads constructor(
         avatarImageViewRect.bottom = avatarImageViewRect.top + avatarImageView.measuredHeight
         avatarImageView.layout(avatarImageViewRect)
 
-        nameRect.left = name.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight
-        nameRect.top = nameLayoutParams.topMargin + paddingTop
-        nameRect.right = nameRect.left + name.measuredWidth
-        nameRect.bottom = nameRect.top + name.measuredHeight
-        name.layout(nameRect)
-
-        messageTextRect.left = messageText.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight
-        messageTextRect.top = textLayoutParams.topMargin + name.measuredHeight + paddingTop
-        messageTextRect.right = messageTextRect.left + messageText.measuredWidth
-        messageTextRect.bottom = messageTextRect.top + messageText.measuredHeight
-        messageText.layout(messageTextRect)
+        constraintLayoutRect.left = constraintLayout.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight
+        constraintLayoutRect.top = constraintLayoutParams.topMargin + paddingTop
+        constraintLayoutRect.right = constraintLayoutRect.left + constraintLayout.measuredWidth
+        constraintLayoutRect.bottom = constraintLayoutRect.top + constraintLayout.measuredHeight
+        constraintLayout.layout(constraintLayoutRect)
 
         flexBoxLayoutRect.left = flexBoxLayoutParams.leftMargin + paddingLeft
-        flexBoxLayoutRect.top = maxOf(avatarImageViewRect.bottom, messageTextRect.bottom) + flexBoxLayoutParams.topMargin
+        flexBoxLayoutRect.top = maxOf(avatarImageViewRect.bottom, constraintLayoutRect.bottom) + flexBoxLayoutParams.topMargin
         flexBoxLayoutRect.right = flexBoxLayoutRect.left + flexBoxLayout.measuredWidth
         flexBoxLayoutRect.bottom = flexBoxLayoutRect.top + flexBoxLayout.measuredHeight
         flexBoxLayout.layout(flexBoxLayoutRect)

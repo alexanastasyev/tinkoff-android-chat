@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="EmojiViewStyle">
+    <style name="EmojiViewStyle" parent="Widget.AppCompat.TextView">
         <item name="android:padding">2dp</item>
         <item name="android:background">@drawable/emoji_view_bg</item>
         <item name="android:layout_margin">4dp</item>
