@@ -92,10 +92,13 @@ class EmojiView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val textX = width / 2F
-
-        // When we use an emoji, we have to to move it down on (textHeight / 3.5) to place it in the middle.
-        val textY = height / 2F + textHeight / 3.5F
+        val textY = height / 2F + getDisplacementOfTextWithEmoji(textHeight)
         textPoint.set(textX, textY)
+    }
+
+    private fun getDisplacementOfTextWithEmoji(textHeight: Number) : Float {
+        val displacementFactor = 3.5F
+        return textHeight.toFloat() / displacementFactor
     }
 
     override fun onDraw(canvas: Canvas) {

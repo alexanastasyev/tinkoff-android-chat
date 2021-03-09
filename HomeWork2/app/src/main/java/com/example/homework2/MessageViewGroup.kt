@@ -30,6 +30,7 @@ class MessageViewGroup @JvmOverloads constructor(
     private val messageText: TextView
     private val name: TextView
     private val flexBoxLayout: FlexBoxLayout
+
     private val avatarImageViewRect = Rect()
     private val messageTextRect = Rect()
     private val nameRect = Rect()
@@ -48,68 +49,77 @@ class MessageViewGroup @JvmOverloads constructor(
 
     init {
         LayoutInflater.from(context).inflate(R.layout.custom_view_group, this, true)
+
         avatarImageView = findViewById(R.id.avatarView)
         messageText = findViewById(R.id.messageText)
         name = findViewById(R.id.name)
         flexBoxLayout = findViewById(R.id.flexBoxLayout)
+
+        setAvatarSize()
+    }
+
+    private fun setAvatarSize() {
         layoutParams = LinearLayout.LayoutParams(dpToPx(AVATAR_SIZE, resources), dpToPx(AVATAR_SIZE, resources))
         avatarImageView.layoutParams = layoutParams
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        val avatarImageViewLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
-        val messageTextLayoutParams = messageText.layoutParams as MarginLayoutParams
-        val nameLayoutParams = name.layoutParams as MarginLayoutParams
-        val flexBoxLayoutParams = flexBoxLayout.layoutParams as MarginLayoutParams
 
+        val avatarImageViewLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
         measureChildWithMargins(avatarImageView, widthMeasureSpec, 0, heightMeasureSpec, 0)
         val avatarImageViewHeight = avatarImageView.measuredHeight + avatarImageViewLayoutParams.topMargin + avatarImageViewLayoutParams.bottomMargin
         val avatarImageViewWidth = avatarImageView.measuredWidth + avatarImageViewLayoutParams.leftMargin + avatarImageViewLayoutParams.rightMargin
 
+        val nameLayoutParams = name.layoutParams as MarginLayoutParams
         measureChildWithMargins(name, widthMeasureSpec, avatarImageViewWidth, heightMeasureSpec, 0)
         val nameHeight = name.measuredHeight + nameLayoutParams.topMargin + nameLayoutParams.bottomMargin
         val nameWidth = name.measuredWidth + nameLayoutParams.leftMargin + nameLayoutParams.rightMargin
 
+        val messageTextLayoutParams = messageText.layoutParams as MarginLayoutParams
         measureChildWithMargins(messageText, widthMeasureSpec, avatarImageViewWidth, heightMeasureSpec, nameHeight)
         val messageTextHeight = messageText.measuredHeight + messageTextLayoutParams.topMargin + messageTextLayoutParams.bottomMargin
         val messageTextWidth = messageText.measuredWidth + messageTextLayoutParams.leftMargin + messageTextLayoutParams.rightMargin
 
+        val flexBoxLayoutParams = flexBoxLayout.layoutParams as MarginLayoutParams
         measureChildWithMargins(flexBoxLayout, widthMeasureSpec, 0, heightMeasureSpec, maxOf(avatarImageViewHeight, (nameHeight + messageTextHeight)))
         val flexBoxLayoutHeight = flexBoxLayout.measuredHeight + flexBoxLayoutParams.topMargin + flexBoxLayoutParams.bottomMargin
         val flexBoxLayoutWidth = flexBoxLayout.measuredWidth + flexBoxLayoutParams.leftMargin + flexBoxLayoutParams.rightMargin
 
+        val contentWidth = maxOf((avatarImageViewWidth + messageTextWidth + nameWidth), flexBoxLayoutWidth) + paddingLeft + paddingRight
+        val contentHeight = maxOf(avatarImageViewHeight, messageTextHeight + nameHeight) + flexBoxLayoutHeight + paddingTop + paddingBottom
+
         setMeasuredDimension(
-            resolveSize(maxOf((avatarImageViewWidth + messageTextWidth + nameWidth), flexBoxLayoutWidth) + paddingLeft + paddingRight,  widthMeasureSpec),
-            resolveSize(maxOf(avatarImageViewHeight, messageTextHeight + nameHeight) + flexBoxLayoutHeight + paddingTop + 2 * paddingBottom, heightMeasureSpec)
+            resolveSize(contentWidth,  widthMeasureSpec),
+            resolveSize(contentHeight, heightMeasureSpec)
         )
     }
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
-        val imageViewLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
+        val avatarLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
         val textLayoutParams = messageText.layoutParams as MarginLayoutParams
         val nameLayoutParams = name.layoutParams as MarginLayoutParams
         val flexBoxLayoutParams = flexBoxLayout.layoutParams as MarginLayoutParams
 
-        avatarImageViewRect.left = imageViewLayoutParams.leftMargin + paddingLeft
-        avatarImageViewRect.top = imageViewLayoutParams.topMargin + paddingTop
+        avatarImageViewRect.left = avatarLayoutParams.leftMargin + paddingLeft
+        avatarImageViewRect.top = avatarLayoutParams.topMargin + paddingTop
         avatarImageViewRect.right = avatarImageViewRect.left + avatarImageView.measuredWidth
         avatarImageViewRect.bottom = avatarImageViewRect.top + avatarImageView.measuredHeight
         avatarImageView.layout(avatarImageViewRect)
 
-        nameRect.left = name.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight + paddingLeft
+        nameRect.left = name.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight
         nameRect.top = nameLayoutParams.topMargin + paddingTop
         nameRect.right = nameRect.left + name.measuredWidth
         nameRect.bottom = nameRect.top + name.measuredHeight
         name.layout(nameRect)
 
-        messageTextRect.left = messageText.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight + paddingLeft
+        messageTextRect.left = messageText.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight
         messageTextRect.top = textLayoutParams.topMargin + name.measuredHeight + paddingTop
         messageTextRect.right = messageTextRect.left + messageText.measuredWidth
         messageTextRect.bottom = messageTextRect.top + messageText.measuredHeight
         messageText.layout(messageTextRect)
 
         flexBoxLayoutRect.left = flexBoxLayoutParams.leftMargin + paddingLeft
-        flexBoxLayoutRect.top = maxOf(avatarImageViewRect.bottom, messageTextRect.bottom) + flexBoxLayoutParams.topMargin + paddingTop
+        flexBoxLayoutRect.top = maxOf(avatarImageViewRect.bottom, messageTextRect.bottom) + flexBoxLayoutParams.topMargin
         flexBoxLayoutRect.right = flexBoxLayoutRect.left + flexBoxLayout.measuredWidth
         flexBoxLayoutRect.bottom = flexBoxLayoutRect.top + flexBoxLayout.measuredHeight
         flexBoxLayout.layout(flexBoxLayoutRect)
@@ -130,18 +140,33 @@ class MessageViewGroup @JvmOverloads constructor(
     fun saveState(): Bundle {
         val outState = Bundle()
 
-        val circleImageView: CircleImageView = findViewById(R.id.avatarView)
-        val imageDrawable = circleImageView.drawable
-        val imageBitmap = imageDrawable.toBitmap()
-        outState.putParcelable(AVATAR_IMAGE_KEY, imageBitmap)
+        val avatarImageView: CircleImageView = findViewById(R.id.avatarView)
+        outState.putParcelable(AVATAR_IMAGE_KEY, saveImage(avatarImageView))
 
         val nameView: TextView = findViewById(R.id.name)
-        outState.putString(NAME_KEY, nameView.text.toString())
+        outState.putString(NAME_KEY, saveText(nameView))
 
         val messageTextView: TextView = findViewById(R.id.messageText)
-        outState.putString(MESSAGE_TEXT_KEY, messageTextView.text.toString())
+        outState.putString(MESSAGE_TEXT_KEY, saveText(messageTextView))
 
         val flexBoxLayout: FlexBoxLayout = findViewById(R.id.flexBoxLayout)
+        outState.putStringArray(EMOJIES_ARRAY_KEY, saveEmojies(flexBoxLayout))
+        outState.putIntArray(AMOUNTS_ARRAY_KEY, saveEmojiesAmounts(flexBoxLayout))
+        outState.putBooleanArray(EMOJIES_STATE_SELECTED_KEY, saveEmojiesStates(flexBoxLayout))
+
+        return outState
+    }
+
+    private fun saveImage(imageView: ImageView): Bitmap {
+        val imageDrawable = imageView.drawable
+        return imageDrawable.toBitmap()
+    }
+
+    private fun saveText(textView: TextView): String {
+        return textView.text.toString()
+    }
+
+    private fun saveEmojies(flexBoxLayout: FlexBoxLayout): Array<String?> {
         val emojiesAmount = flexBoxLayout.childCount
         val emojies = arrayOfNulls<String>(emojiesAmount)
         var i = 0
@@ -151,26 +176,32 @@ class MessageViewGroup @JvmOverloads constructor(
             emojies[i] = emoji
             i++
         }
-        outState.putStringArray(EMOJIES_ARRAY_KEY, emojies)
+        return emojies
+    }
+
+    private fun saveEmojiesAmounts(flexBoxLayout: FlexBoxLayout): IntArray {
+        val emojiesAmount = flexBoxLayout.childCount
         val amounts = IntArray(emojiesAmount)
-        i = 0
+        var i = 0
         flexBoxLayout.children.forEach {
             val emojiView: EmojiView = it as EmojiView
             val amount = emojiView.amount
             amounts[i] = amount
             i++
         }
-        outState.putIntArray(AMOUNTS_ARRAY_KEY, amounts)
-        val emojiesAreSelected = BooleanArray(emojiesAmount)
-        i = 0
+        return amounts
+    }
+
+    private fun saveEmojiesStates(flexBoxLayout: FlexBoxLayout): BooleanArray {
+        val emojiesAmount = flexBoxLayout.childCount
+        val emojiesStates = BooleanArray(emojiesAmount)
+        var i = 0
         flexBoxLayout.children.forEach {
             val emojiView: EmojiView = it as EmojiView
-            emojiesAreSelected[i] = emojiView.isSelected
+            emojiesStates[i] = emojiView.isSelected
             i++
         }
-        outState.putBooleanArray(EMOJIES_STATE_SELECTED_KEY, emojiesAreSelected)
-
-        return outState
+        return emojiesStates
     }
 
     fun restoreState(savedInstanceState: Bundle?) {
@@ -180,29 +211,61 @@ class MessageViewGroup @JvmOverloads constructor(
 
         val circleImageView: CircleImageView = findViewById(R.id.avatarView)
         val imageBitmap = savedInstanceState.getParcelable<Bitmap>(AVATAR_IMAGE_KEY)
-        circleImageView.setImageBitmap(imageBitmap)
+        restoreImage(imageBitmap, circleImageView)
 
         val nameView: TextView = findViewById(R.id.name)
-        nameView.text = savedInstanceState.getString(NAME_KEY)
+        val name = savedInstanceState.getString(NAME_KEY)
+        restoreText(name, nameView)
 
         val messageTextView: TextView = findViewById(R.id.messageText)
-        messageTextView.text = savedInstanceState.getString(MESSAGE_TEXT_KEY)
+        val messageText = savedInstanceState.getString(MESSAGE_TEXT_KEY)
+        restoreText(messageText, messageTextView)
 
         val flexBoxLayout: FlexBoxLayout = findViewById(R.id.flexBoxLayout)
         val emojies = savedInstanceState.getStringArray(EMOJIES_ARRAY_KEY) ?: return
+        restoreEmojies(emojies, flexBoxLayout)
+
+        val emojiesAmounts = savedInstanceState.getIntArray(AMOUNTS_ARRAY_KEY) ?: return
+        restoreEmojiesAmounts(emojiesAmounts, flexBoxLayout)
+
+        val emojiesStates = savedInstanceState.getBooleanArray(EMOJIES_STATE_SELECTED_KEY) ?: return
+        restoreEmojiesStates(emojiesStates, flexBoxLayout)
+    }
+
+    private fun restoreImage(image: Bitmap?, imageView: ImageView) {
+        imageView.setImageBitmap(image)
+    }
+
+    private fun restoreText(text: String?, textView: TextView) {
+        textView.text = text
+    }
+
+    private fun restoreEmojies(emojies: Array<String>, flexBoxLayout: FlexBoxLayout) {
         for (i in emojies.indices) {
             val emojiView: EmojiView = flexBoxLayout.getChildAt(i) as EmojiView
             emojiView.emoji = emojies[i]
         }
-        val amounts = savedInstanceState.getIntArray(AMOUNTS_ARRAY_KEY) ?: return
+    }
+
+    private fun restoreEmojiesAmounts(amounts: IntArray, flexBoxLayout: FlexBoxLayout) {
         for (i in amounts.indices) {
             val emojiView: EmojiView = flexBoxLayout.getChildAt(i) as EmojiView
             emojiView.amount = amounts[i]
         }
-        val emojiesAreSelected = savedInstanceState.getBooleanArray(EMOJIES_STATE_SELECTED_KEY) ?: return
-        for (i in emojiesAreSelected.indices) {
+    }
+
+    private fun restoreEmojiesStates(states: BooleanArray, flexBoxLayout: FlexBoxLayout) {
+        for (i in states.indices) {
             val emojiView: EmojiView = flexBoxLayout.getChildAt(i) as EmojiView
-            emojiView.isSelected = emojiesAreSelected[i]
+            emojiView.isSelected = states[i]
+        }
+    }
+
+    fun setOnCLickListenerForEmojiViews() {
+        findViewById<FlexBoxLayout>(R.id.flexBoxLayout).children.forEach { child ->
+            child.setOnClickListener {
+                child.isSelected = !child.isSelected
+            }
         }
     }
 }
