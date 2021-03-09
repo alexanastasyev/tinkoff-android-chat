@@ -42,9 +42,9 @@ class MessageViewGroup @JvmOverloads constructor(
         private const val AVATAR_IMAGE_KEY = "avatar"
         private const val NAME_KEY = "name"
         private const val MESSAGE_TEXT_KEY = "message"
-        private const val EMOJIES_ARRAY_KEY = "emojies"
+        private const val EMOJIS_ARRAY_KEY = "emojis"
         private const val AMOUNTS_ARRAY_KEY = "amounts"
-        private const val EMOJIES_STATE_SELECTED_KEY = "selected"
+        private const val emojis_STATE_SELECTED_KEY = "selected"
     }
 
     init {
@@ -150,9 +150,9 @@ class MessageViewGroup @JvmOverloads constructor(
         outState.putString(MESSAGE_TEXT_KEY, saveText(messageTextView))
 
         val flexBoxLayout: FlexBoxLayout = findViewById(R.id.flexBoxLayout)
-        outState.putStringArray(EMOJIES_ARRAY_KEY, saveEmojies(flexBoxLayout))
-        outState.putIntArray(AMOUNTS_ARRAY_KEY, saveEmojiesAmounts(flexBoxLayout))
-        outState.putBooleanArray(EMOJIES_STATE_SELECTED_KEY, saveEmojiesStates(flexBoxLayout))
+        outState.putSerializable(EMOJIS_ARRAY_KEY, saveEmojis(flexBoxLayout))
+        outState.putIntArray(AMOUNTS_ARRAY_KEY, saveEmojisAmounts(flexBoxLayout))
+        outState.putBooleanArray(emojis_STATE_SELECTED_KEY, saveEmojisStates(flexBoxLayout))
 
         return outState
     }
@@ -166,22 +166,22 @@ class MessageViewGroup @JvmOverloads constructor(
         return textView.text.toString()
     }
 
-    private fun saveEmojies(flexBoxLayout: FlexBoxLayout): Array<String?> {
-        val emojiesAmount = flexBoxLayout.childCount
-        val emojies = arrayOfNulls<String>(emojiesAmount)
+    private fun saveEmojis(flexBoxLayout: FlexBoxLayout): Array<Emoji?> {
+        val emojisAmount = flexBoxLayout.childCount
+        val emojis = arrayOfNulls<Emoji>(emojisAmount)
         var i = 0
         flexBoxLayout.children.forEach {
             val emojiView: EmojiView = it as EmojiView
             val emoji = emojiView.emoji
-            emojies[i] = emoji
+            emojis[i] = emoji
             i++
         }
-        return emojies
+        return emojis
     }
 
-    private fun saveEmojiesAmounts(flexBoxLayout: FlexBoxLayout): IntArray {
-        val emojiesAmount = flexBoxLayout.childCount
-        val amounts = IntArray(emojiesAmount)
+    private fun saveEmojisAmounts(flexBoxLayout: FlexBoxLayout): IntArray {
+        val emojisAmount = flexBoxLayout.childCount
+        val amounts = IntArray(emojisAmount)
         var i = 0
         flexBoxLayout.children.forEach {
             val emojiView: EmojiView = it as EmojiView
@@ -192,16 +192,16 @@ class MessageViewGroup @JvmOverloads constructor(
         return amounts
     }
 
-    private fun saveEmojiesStates(flexBoxLayout: FlexBoxLayout): BooleanArray {
-        val emojiesAmount = flexBoxLayout.childCount
-        val emojiesStates = BooleanArray(emojiesAmount)
+    private fun saveEmojisStates(flexBoxLayout: FlexBoxLayout): BooleanArray {
+        val emojisAmount = flexBoxLayout.childCount
+        val emojisStates = BooleanArray(emojisAmount)
         var i = 0
         flexBoxLayout.children.forEach {
             val emojiView: EmojiView = it as EmojiView
-            emojiesStates[i] = emojiView.isSelected
+            emojisStates[i] = emojiView.isSelected
             i++
         }
-        return emojiesStates
+        return emojisStates
     }
 
     fun restoreState(savedInstanceState: Bundle?) {
@@ -222,14 +222,14 @@ class MessageViewGroup @JvmOverloads constructor(
         restoreText(messageText, messageTextView)
 
         val flexBoxLayout: FlexBoxLayout = findViewById(R.id.flexBoxLayout)
-        val emojies = savedInstanceState.getStringArray(EMOJIES_ARRAY_KEY) ?: return
-        restoreEmojies(emojies, flexBoxLayout)
+        val emojis = savedInstanceState.getSerializable(EMOJIS_ARRAY_KEY) as Array<Emoji>
+        restoreEmojis(emojis, flexBoxLayout)
 
-        val emojiesAmounts = savedInstanceState.getIntArray(AMOUNTS_ARRAY_KEY) ?: return
-        restoreEmojiesAmounts(emojiesAmounts, flexBoxLayout)
+        val emojisAmounts = savedInstanceState.getIntArray(AMOUNTS_ARRAY_KEY) ?: return
+        restoreEmojisAmounts(emojisAmounts, flexBoxLayout)
 
-        val emojiesStates = savedInstanceState.getBooleanArray(EMOJIES_STATE_SELECTED_KEY) ?: return
-        restoreEmojiesStates(emojiesStates, flexBoxLayout)
+        val emojisStates = savedInstanceState.getBooleanArray(emojis_STATE_SELECTED_KEY) ?: return
+        restoreEmojisStates(emojisStates, flexBoxLayout)
     }
 
     private fun restoreImage(image: Bitmap?, imageView: ImageView) {
@@ -240,21 +240,21 @@ class MessageViewGroup @JvmOverloads constructor(
         textView.text = text
     }
 
-    private fun restoreEmojies(emojies: Array<String>, flexBoxLayout: FlexBoxLayout) {
-        for (i in emojies.indices) {
+    private fun restoreEmojis(emojis: Array<Emoji>, flexBoxLayout: FlexBoxLayout) {
+        for (i in emojis.indices) {
             val emojiView: EmojiView = flexBoxLayout.getChildAt(i) as EmojiView
-            emojiView.emoji = emojies[i]
+            emojiView.emoji = emojis[i]
         }
     }
 
-    private fun restoreEmojiesAmounts(amounts: IntArray, flexBoxLayout: FlexBoxLayout) {
+    private fun restoreEmojisAmounts(amounts: IntArray, flexBoxLayout: FlexBoxLayout) {
         for (i in amounts.indices) {
             val emojiView: EmojiView = flexBoxLayout.getChildAt(i) as EmojiView
             emojiView.amount = amounts[i]
         }
     }
 
-    private fun restoreEmojiesStates(states: BooleanArray, flexBoxLayout: FlexBoxLayout) {
+    private fun restoreEmojisStates(states: BooleanArray, flexBoxLayout: FlexBoxLayout) {
         for (i in states.indices) {
             val emojiView: EmojiView = flexBoxLayout.getChildAt(i) as EmojiView
             emojiView.isSelected = states[i]
@@ -262,9 +262,9 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     fun setOnCLickListenerForEmojiViews() {
-        findViewById<FlexBoxLayout>(R.id.flexBoxLayout).children.forEach { child ->
-            child.setOnClickListener {
-                child.isSelected = !child.isSelected
+        findViewById<FlexBoxLayout>(R.id.flexBoxLayout).children.forEach { emojiView ->
+            emojiView.setOnClickListener {
+                emojiView.isSelected = !emojiView.isSelected
             }
         }
     }

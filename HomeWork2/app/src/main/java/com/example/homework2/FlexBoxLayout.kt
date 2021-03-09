@@ -6,8 +6,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
-import androidx.core.view.marginLeft
-import androidx.core.view.marginRight
 
 class FlexBoxLayout @JvmOverloads constructor(
     context: Context,

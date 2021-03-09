@@ -4,23 +4,23 @@
         <attr name="text_color" format="color" />
         <attr name="size" format="dimension" />
         <attr name="emoji" format="enum">
-            <enum name="FACE_SMILING" value="0x1F600" />
-            <enum name="FACE_LAUGHING" value="0x1F602" />
-            <enum name="FACE_WINKING" value="0x1F609" />
-            <enum name="FACE_IN_LOVE" value="0x1F60D" />
-            <enum name="FACE_KISSING" value="0x1F618" />
-            <enum name="FACE_NEUTRAL" value="0x1F610" />
-            <enum name="FACE_WITH_SUNGLASSES" value="0x1F60E" />
-            <enum name="FACE_CRYING" value="0x1F622" />
-            <enum name="FACE_WITH_TONGUE" value="0x1F61B" />
-            <enum name="FACE_WITH_RAISED_EYEBROW" value="0x1F928" />
-            <enum name="FACE_SMIRKING" value="0x1F60F" />
-            <enum name="FACE_RELIEVED" value="0x1F60C" />
-            <enum name="FACE_COWBOY_HAT" value="0x1F920" />
-            <enum name="FACE_ASTONISHED" value="0x1F632" />
-            <enum name="FACE_WEARY" value="0x1F629" />
-            <enum name="SKULL" value="0x1F480" />
-            <enum name="SIGN_PLUS" value="0x2795" />
+            <enum name="FACE_SMILING" value="0" />
+            <enum name="FACE_LAUGHING" value="1" />
+            <enum name="FACE_WINKING" value="2" />
+            <enum name="FACE_IN_LOVE" value="3" />
+            <enum name="FACE_KISSING" value="4" />
+            <enum name="FACE_NEUTRAL" value="5" />
+            <enum name="FACE_WITH_SUNGLASSES" value="6" />
+            <enum name="FACE_CRYING" value="7" />
+            <enum name="FACE_WITH_TONGUE" value="8" />
+            <enum name="FACE_WITH_RAISED_EYEBROW" value="9" />
+            <enum name="FACE_SMIRKING" value="10" />
+            <enum name="FACE_RELIEVED" value="11" />
+            <enum name="FACE_COWBOY_HAT" value="12" />
+            <enum name="FACE_ASTONISHED" value="13" />
+            <enum name="FACE_WEARY" value="14" />
+            <enum name="SKULL" value="15" />
+            <enum name="SIGN_PLUS" value="16" />
         </attr>
         <attr name="emoji_amount" format="integer" />
     </declare-styleable>

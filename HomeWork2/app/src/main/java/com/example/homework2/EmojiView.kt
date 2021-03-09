@@ -26,7 +26,7 @@ class EmojiView @JvmOverloads constructor(
             }
         }
 
-    var emoji: String = getEmojiByUnicode(DEFAULT_EMOJI_CODE)
+    var emoji: Emoji = DEFAULT_EMOJI
         set(value) {
             if (field != value) {
                 field = value
@@ -39,7 +39,7 @@ class EmojiView @JvmOverloads constructor(
         if (amount >= 0) {
             this@EmojiView.text = "$emoji $amount"
         } else {
-            this@EmojiView.text = emoji
+            this@EmojiView.text = emoji.toString()
         }
     }
 
@@ -71,8 +71,8 @@ class EmojiView @JvmOverloads constructor(
             )
             val textColor = getColor(R.styleable.EmojiView_text_color, DEFAULT_COLOR)
             textPaint.color = textColor
-            val emojiCode = getInt(R.styleable.EmojiView_emoji, DEFAULT_EMOJI_CODE)
-            emoji = getEmojiByUnicode(emojiCode)
+            val emojiOrdinal = getInt(R.styleable.EmojiView_emoji, 0)
+            emoji = Emoji.values()[emojiOrdinal]
             amount = getInt(R.styleable.EmojiView_emoji_amount, DEFAULT_AMOUNT)
             refreshText()
             recycle()
@@ -116,32 +116,10 @@ class EmojiView @JvmOverloads constructor(
     }
 
     companion object {
-        private const val DEFAULT_EMOJI_CODE = 0x1F600
+        private val DEFAULT_EMOJI = Emoji.FACE_SMILING
         private const val DEFAULT_AMOUNT = 0
         private const val DEFAULT_FONT_SIZE_PX = 14F
         private const val DEFAULT_COLOR = Color.BLACK
         private val DRAWABLES_STATE = IntArray(1) {android.R.attr.state_selected}
-
-        val EMOJI_FACE_SMILING = getEmojiByUnicode(0x1F600)
-        val EMOJI_FACE_LAUGHING = getEmojiByUnicode(0x1F602)
-        val EMOJI_FACE_WINKING = getEmojiByUnicode(0x1F609)
-        val EMOJI_FACE_IN_LOVE = getEmojiByUnicode(0x1F60D)
-        val EMOJI_FACE_KISSING = getEmojiByUnicode(0x1F618)
-        val EMOJI_FACE_NEUTRAL = getEmojiByUnicode(0x1F610)
-        val EMOJI_FACE_WITH_SUNGLASSES = getEmojiByUnicode(0x1F60E)
-        val EMOJI_FACE_CRYING = getEmojiByUnicode(0x1F622)
-        val EMOJI_FACE_WITH_TONGUE = getEmojiByUnicode(0x1F61B)
-        val EMOJI_FACE_WITH_RAISED_EYEBROW = getEmojiByUnicode(0x1F928)
-        val EMOJI_FACE_SMIRKING = getEmojiByUnicode(0x1F60F)
-        val EMOJI_FACE_RELIEVED = getEmojiByUnicode(0x1F60C)
-        val EMOJI_FACE_COWBOY_HAT = getEmojiByUnicode(0x1F920)
-        val EMOJI_FACE_ASTONISHED = getEmojiByUnicode(0x1F632)
-        val EMOJI_FACE_WEARY = getEmojiByUnicode(0x1F629)
-        val EMOJI_SKULL = getEmojiByUnicode(0x1F480)
-        val EMOJI_SIGN_PLUS = getEmojiByUnicode(0x2795)
-
-        fun getEmojiByUnicode(unicode: Int): String {
-            return String(Character.toChars(unicode))
-        }
     }
 }
