@@ -35,14 +35,6 @@ class EmojiView @JvmOverloads constructor(
             }
         }
 
-    private fun refreshText() {
-        if (amount >= 0) {
-            this@EmojiView.text = "$emoji $amount"
-        } else {
-            this@EmojiView.text = emoji.toString()
-        }
-    }
-
     var amount: Int = DEFAULT_AMOUNT
         set(value) {
             if (field != value) {
@@ -51,6 +43,14 @@ class EmojiView @JvmOverloads constructor(
                 requestLayout()
             }
         }
+
+    private fun refreshText() {
+        if (amount >= 0) {
+            this@EmojiView.text = "$emoji $amount"
+        } else {
+            this@EmojiView.text = emoji.toString()
+        }
+    }
 
     private var text: String = ""
     private val textPoint = PointF()
