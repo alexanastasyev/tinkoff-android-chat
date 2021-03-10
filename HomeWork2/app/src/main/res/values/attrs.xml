@@ -29,5 +29,9 @@
         <attr name="user_name" format="string"/>
         <attr name="message_text" format="string"/>
         <attr name="avatar_src" format="reference"/>
+        <attr name="align" format="enum">
+            <enum name="LEFT" value="0"/>
+            <enum name="RIGHT" value="1"/>
+        </attr>
     </declare-styleable>
 </resources>

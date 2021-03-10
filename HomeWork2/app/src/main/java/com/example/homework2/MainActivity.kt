@@ -12,11 +12,15 @@ class MainActivity : AppCompatActivity() {
 
         val messageViewGroup = findViewById<MessageViewGroup>(R.id.messageViewGroup)
         messageViewGroup.setOnCLickListenerForEmojiViews()
-
-        messageViewGroup.messageText = "Avadacadabra"
-        messageViewGroup.userName = "James Bond"
-        messageViewGroup.emojis = listOf(Pair(Emoji.FACE_LAUGHING, 2), Pair(Emoji.FACE_SMILING, 1), Pair(Emoji.FACE_COWBOY_HAT, 99))
-        messageViewGroup.avatar = ResourcesCompat.getDrawable(resources, R.drawable.default_avatar, null)
+        messageViewGroup.reactions = listOf(
+                Pair(Emoji.FACE_LAUGHING, 2),
+                Pair(Emoji.FACE_SMILING, 1),
+                Pair(Emoji.FACE_SMILING, 10),
+                Pair(Emoji.FACE_SMILING, 11),
+                Pair(Emoji.FACE_SMILING, 12),
+                Pair(Emoji.FACE_SMILING, 5),
+                Pair(Emoji.FACE_SMILING, 6),
+                Pair(Emoji.FACE_COWBOY_HAT, 99))
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
