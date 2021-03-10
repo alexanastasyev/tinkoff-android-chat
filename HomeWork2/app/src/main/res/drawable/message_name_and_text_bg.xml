@@ -4,5 +4,5 @@
     <corners
         android:radius="20dp" />
     <solid
-        android:color="@color/emoji_not_selected" />
+        android:color="@color/message_bg_color" />
 </shape>

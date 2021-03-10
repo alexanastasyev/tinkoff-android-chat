@@ -37,7 +37,6 @@ class FlexBoxLayout @JvmOverloads constructor(
                 currentWidth = 0
                 currentHeight = maxOf(currentHeight, childrenHeight)
                 contentHeight += currentHeight
-                currentHeight = 0
 
                 // Here we moved to a new line
                 currentWidth += childrenWidth

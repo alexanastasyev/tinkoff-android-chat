@@ -14,7 +14,7 @@
         android:contentDescription="@string/avatar_picture" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/nameAndTextLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/message_name_and_text_bg"
@@ -47,7 +47,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.example.homework2.FlexBoxLayout
-        android:id="@+id/flexBoxLayout"
+        android:id="@+id/emojisLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
