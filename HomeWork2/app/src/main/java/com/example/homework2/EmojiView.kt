@@ -17,7 +17,16 @@ class EmojiView @JvmOverloads constructor(
         textAlign = Paint.Align.CENTER
     }
 
-    private var textSize: Int
+    var textColor: Int = DEFAULT_COLOR
+        set(value) {
+            if (field != value) {
+                field = value
+                textPaint.color = field
+                requestLayout()
+            }
+        }
+
+    var textSize: Int
         get() = textPaint.textSize.toInt()
         set(value) {
             if (textPaint.textSize.toInt() != value) {
@@ -69,7 +78,7 @@ class EmojiView @JvmOverloads constructor(
                     DEFAULT_FONT_SIZE_PX
                 )
             )
-            val textColor = getColor(R.styleable.EmojiView_text_color, DEFAULT_COLOR)
+            textColor = getColor(R.styleable.EmojiView_text_color, DEFAULT_COLOR)
             textPaint.color = textColor
             val emojiOrdinal = getInt(R.styleable.EmojiView_emoji, 0)
             emoji = Emoji.values()[emojiOrdinal]

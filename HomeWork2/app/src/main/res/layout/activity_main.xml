@@ -17,6 +17,10 @@
         android:layout_marginEnd="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:padding="8dp"/>
+        android:padding="8dp"
+
+        app:avatar_src="@drawable/avatar"
+        app:message_text="@string/message_example"
+        app:user_name="@string/name_example"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

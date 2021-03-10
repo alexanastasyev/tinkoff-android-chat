@@ -24,4 +24,10 @@
         </attr>
         <attr name="emoji_amount" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="MessageViewGroup">
+        <attr name="user_name" format="string"/>
+        <attr name="message_text" format="string"/>
+        <attr name="avatar_src" format="reference"/>
+    </declare-styleable>
 </resources>

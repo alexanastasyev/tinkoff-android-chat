@@ -3,6 +3,7 @@ package com.example.homework2
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Rect
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.children
@@ -27,6 +29,53 @@ class MessageViewGroup @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
+    var avatar: Drawable? = null
+    set(value) {
+        if (field != value) {
+            field = value
+            if (avatarImageView != null) {
+                avatarImageView.setImageDrawable(field)
+            }
+            requestLayout()
+        }
+    }
+
+    var userName: String = ""
+        set(value) {
+            if (field != value) {
+                field = value
+                if (nameTextView != null) {
+                    nameTextView.text = field
+                }
+                requestLayout()
+            }
+        }
+
+    var messageText: String = ""
+        set(value) {
+            if (field != value) {
+                field = value
+                if (messageTextView != null) {
+                    messageTextView.text = field
+                }
+                requestLayout()
+            }
+        }
+
+    var emojis: List<Pair<Emoji, Int>> = emptyList()
+        set(value) {
+            if (field != value) {
+                field = value
+                if (emojisLayout != null) {
+                    emojisLayout.setEmojis(emojis)
+                    setOnCLickListenerForEmojiViews()
+                }
+                requestLayout()
+            }
+        }
+
+    private val nameTextView: TextView
+    private val messageTextView: TextView
     private val avatarImageView: ImageView
     private val nameAndTextLayout: ConstraintLayout
     private val emojisLayout: FlexBoxLayout
@@ -49,8 +98,34 @@ class MessageViewGroup @JvmOverloads constructor(
     init {
         LayoutInflater.from(context).inflate(R.layout.custom_view_group, this, true)
 
+        context.obtainStyledAttributes(attrs, R.styleable.MessageViewGroup).apply {
+            userName = getString(R.styleable.MessageViewGroup_user_name).toString()
+            messageText = getString(R.styleable.MessageViewGroup_message_text).toString()
+            avatar = getDrawable(R.styleable.MessageViewGroup_avatar_src)
+            recycle()
+        }
+
         avatarImageView = findViewById(R.id.avatarView)
+        if (avatar != null) {
+            avatarImageView.setImageDrawable(avatar)
+        } else {
+            avatarImageView.setImageDrawable(getDrawable(context, R.drawable.default_avatar))
+        }
+
         emojisLayout = findViewById(R.id.emojisLayout)
+//        var i = 0
+//        emojisLayout.children.forEach {
+//            val emojiView = it as EmojiView
+//            emojiView.emoji = emojis[i]
+//            i++
+//        }
+
+        nameTextView = findViewById<TextView>(R.id.name)
+        nameTextView.text = userName
+
+        messageTextView = findViewById<TextView>(R.id.messageText)
+        messageTextView.text = messageText
+
         nameAndTextLayout = findViewById(R.id.nameAndTextLayout)
 
         setAvatarSize()
@@ -247,9 +322,17 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     fun setOnCLickListenerForEmojiViews() {
-        findViewById<FlexBoxLayout>(R.id.emojisLayout).children.forEach { emojiView ->
+        val emojiLayout = findViewById<FlexBoxLayout>(R.id.emojisLayout)
+        for (i in 0 until emojiLayout.childCount - 1) {
+            val emojiView = emojiLayout.getChildAt(i) as EmojiView
             emojiView.setOnClickListener {
-                emojiView.isSelected = !emojiView.isSelected
+                if (emojiView.isSelected) {
+                    emojiView.isSelected = false
+                    emojiView.amount -= 1
+                } else {
+                    emojiView.isSelected = true
+                    emojiView.amount += 1
+                }
             }
         }
     }
