@@ -18,6 +18,7 @@
         android:padding="8dp"
 
         app:align="LEFT"
+        app:avatar_src="@drawable/avatar"
         app:message_text="@string/message_example"
         app:user_name="@string/name_example"/>
 

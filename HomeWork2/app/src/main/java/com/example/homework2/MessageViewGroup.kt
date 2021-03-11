@@ -28,7 +28,7 @@ class MessageViewGroup @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
-    var align: Int = 0
+    var align: Int = ALIGN_LEFT
         set(value) {
             if (field != value) {
                 field = value
@@ -99,7 +99,10 @@ class MessageViewGroup @JvmOverloads constructor(
         private const val MESSAGE_TEXT_KEY = "message"
         private const val EMOJIS_ARRAY_KEY = "emojis"
         private const val AMOUNTS_ARRAY_KEY = "amounts"
-        private const val emojis_STATE_SELECTED_KEY = "selected"
+        private const val EMOJIS_STATE_SELECTED_KEY = "selected"
+
+        private const val ALIGN_LEFT = 0
+        private const val ALIGN_RIGHT = 1
     }
 
     init {
@@ -136,7 +139,7 @@ class MessageViewGroup @JvmOverloads constructor(
     private fun setAvatarSize() {
         layoutParams = LinearLayout.LayoutParams(dpToPx(AVATAR_SIZE, resources), dpToPx(AVATAR_SIZE, resources))
         avatarImageView.layoutParams = layoutParams
-        if (align == 1) {
+        if (align == ALIGN_RIGHT) {
             avatarImageView.visibility = INVISIBLE
         }
     }
@@ -154,12 +157,15 @@ class MessageViewGroup @JvmOverloads constructor(
 
         val emojisLayoutParams = emojisLayout.layoutParams as MarginLayoutParams
 
-        if (align == 0) {
-            emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(8F, resources), 0, 0)
-        } else {
-            val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
-            val leftMargin = parentWidth - nameAndTextLayoutWidth
-            emojisLayoutParams.setMargins(leftMargin, dpToPx(8F, resources), 0, 0)
+        when (align) {
+            ALIGN_LEFT -> {
+                emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(8F, resources), 0, 0)
+            }
+            ALIGN_RIGHT -> {
+                val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
+                val leftMargin = parentWidth - nameAndTextLayoutWidth
+                emojisLayoutParams.setMargins(leftMargin, dpToPx(8F, resources), 0, 0)
+            }
         }
         measureChildWithMargins(emojisLayout, widthMeasureSpec, 0, heightMeasureSpec, maxOf(avatarImageViewHeight, nameAndTextLayoutHeight))
         val emojisLayoutHeight = emojisLayout.measuredHeight + emojisLayoutParams.topMargin + emojisLayoutParams.bottomMargin
@@ -180,36 +186,39 @@ class MessageViewGroup @JvmOverloads constructor(
         val emojisLayoutParams = emojisLayout.layoutParams as MarginLayoutParams
         emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(8F, resources), 0, 0)
 
-        if (align == 0) {
-            avatarImageViewRect.left = avatarLayoutParams.leftMargin + paddingLeft
-            avatarImageViewRect.top = avatarLayoutParams.topMargin + paddingTop
-            avatarImageViewRect.right = avatarImageViewRect.left + avatarImageView.measuredWidth
-            avatarImageViewRect.bottom = avatarImageViewRect.top + avatarImageView.measuredHeight
-            avatarImageView.layout(avatarImageViewRect)
+        when (align) {
+            ALIGN_LEFT -> {
+                avatarImageViewRect.left = avatarLayoutParams.leftMargin + paddingLeft
+                avatarImageViewRect.top = avatarLayoutParams.topMargin + paddingTop
+                avatarImageViewRect.right = avatarImageViewRect.left + avatarImageView.measuredWidth
+                avatarImageViewRect.bottom = avatarImageViewRect.top + avatarImageView.measuredHeight
+                avatarImageView.layout(avatarImageViewRect)
 
-            nameAndTextLayoutRect.left = nameAndTextLayout.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight
-            nameAndTextLayoutRect.top = nameAndTextLayoutParams.topMargin + paddingTop
-            nameAndTextLayoutRect.right = nameAndTextLayoutRect.left + nameAndTextLayout.measuredWidth
-            nameAndTextLayoutRect.bottom = nameAndTextLayoutRect.top + nameAndTextLayout.measuredHeight
-            nameAndTextLayout.layout(nameAndTextLayoutRect)
+                nameAndTextLayoutRect.left = nameAndTextLayout.marginLeft + avatarImageViewRect.right + avatarImageView.marginRight
+                nameAndTextLayoutRect.top = nameAndTextLayoutParams.topMargin + paddingTop
+                nameAndTextLayoutRect.right = nameAndTextLayoutRect.left + nameAndTextLayout.measuredWidth
+                nameAndTextLayoutRect.bottom = nameAndTextLayoutRect.top + nameAndTextLayout.measuredHeight
+                nameAndTextLayout.layout(nameAndTextLayoutRect)
 
-            emojisLayoutRect.left = emojisLayoutParams.leftMargin + paddingLeft
-            emojisLayoutRect.top = maxOf(avatarImageViewRect.bottom, nameAndTextLayoutRect.bottom) + emojisLayoutParams.topMargin
-            emojisLayoutRect.right = emojisLayoutRect.left + emojisLayout.measuredWidth
-            emojisLayoutRect.bottom = emojisLayoutRect.top + emojisLayout.measuredHeight
-            emojisLayout.layout(emojisLayoutRect)
-        } else {
-            nameAndTextLayoutRect.right = width - (nameAndTextLayoutParams.rightMargin + paddingEnd)
-            nameAndTextLayoutRect.top = nameAndTextLayoutParams.topMargin + paddingTop
-            nameAndTextLayoutRect.left = nameAndTextLayoutRect.right - nameAndTextLayout.measuredWidth
-            nameAndTextLayoutRect.bottom = nameAndTextLayoutRect.top + nameAndTextLayout.measuredHeight
-            nameAndTextLayout.layout(nameAndTextLayoutRect)
+                emojisLayoutRect.left = emojisLayoutParams.leftMargin + paddingLeft
+                emojisLayoutRect.top = maxOf(avatarImageViewRect.bottom, nameAndTextLayoutRect.bottom) + emojisLayoutParams.topMargin
+                emojisLayoutRect.right = emojisLayoutRect.left + emojisLayout.measuredWidth
+                emojisLayoutRect.bottom = emojisLayoutRect.top + emojisLayout.measuredHeight
+                emojisLayout.layout(emojisLayoutRect)
+            }
+            ALIGN_RIGHT -> {
+                nameAndTextLayoutRect.right = width - (nameAndTextLayoutParams.rightMargin + paddingEnd)
+                nameAndTextLayoutRect.top = nameAndTextLayoutParams.topMargin + paddingTop
+                nameAndTextLayoutRect.left = nameAndTextLayoutRect.right - nameAndTextLayout.measuredWidth
+                nameAndTextLayoutRect.bottom = nameAndTextLayoutRect.top + nameAndTextLayout.measuredHeight
+                nameAndTextLayout.layout(nameAndTextLayoutRect)
 
-            emojisLayoutRect.left = nameAndTextLayoutRect.left
-            emojisLayoutRect.top = maxOf(avatarImageViewRect.bottom, nameAndTextLayoutRect.bottom) + emojisLayoutParams.topMargin
-            emojisLayoutRect.right = nameAndTextLayoutRect.right
-            emojisLayoutRect.bottom = emojisLayoutRect.top + emojisLayout.measuredHeight
-            emojisLayout.layout(emojisLayoutRect)
+                emojisLayoutRect.left = nameAndTextLayoutRect.left
+                emojisLayoutRect.top = maxOf(avatarImageViewRect.bottom, nameAndTextLayoutRect.bottom) + emojisLayoutParams.topMargin
+                emojisLayoutRect.right = nameAndTextLayoutRect.right
+                emojisLayoutRect.bottom = emojisLayoutRect.top + emojisLayout.measuredHeight
+                emojisLayout.layout(emojisLayoutRect)
+            }
         }
 
     }
@@ -240,7 +249,7 @@ class MessageViewGroup @JvmOverloads constructor(
         val emojisLayout: FlexBoxLayout = findViewById(R.id.emojisLayout)
         outState.putSerializable(EMOJIS_ARRAY_KEY, saveEmojis(emojisLayout))
         outState.putIntArray(AMOUNTS_ARRAY_KEY, saveEmojisAmounts(emojisLayout))
-        outState.putBooleanArray(emojis_STATE_SELECTED_KEY, saveEmojisStates(emojisLayout))
+        outState.putBooleanArray(EMOJIS_STATE_SELECTED_KEY, saveEmojisStates(emojisLayout))
 
         return outState
     }
@@ -316,7 +325,7 @@ class MessageViewGroup @JvmOverloads constructor(
         val emojisAmounts = savedInstanceState.getIntArray(AMOUNTS_ARRAY_KEY) ?: return
         restoreEmojisAmounts(emojisAmounts, emojisLayout)
 
-        val emojisStates = savedInstanceState.getBooleanArray(emojis_STATE_SELECTED_KEY) ?: return
+        val emojisStates = savedInstanceState.getBooleanArray(EMOJIS_STATE_SELECTED_KEY) ?: return
         restoreEmojisStates(emojisStates, emojisLayout)
     }
 
