@@ -2,6 +2,7 @@ package com.example.homework2
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -93,6 +94,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     companion object {
         private const val AVATAR_SIZE = 50F
+        private const val MESSAGE_MINIMAL_MARGIN = 80F
 
         private const val AVATAR_IMAGE_KEY = "avatar"
         private const val NAME_KEY = "name"
@@ -137,11 +139,15 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     private fun setAvatarSize() {
-        layoutParams = LinearLayout.LayoutParams(dpToPx(AVATAR_SIZE, resources), dpToPx(AVATAR_SIZE, resources))
-        avatarImageView.layoutParams = layoutParams
-        if (align == ALIGN_RIGHT) {
-            avatarImageView.visibility = INVISIBLE
+        when (align) {
+            ALIGN_LEFT -> {
+                layoutParams = LinearLayout.LayoutParams(dpToPx(AVATAR_SIZE, resources), dpToPx(AVATAR_SIZE, resources))
+            }
+            ALIGN_RIGHT -> {
+                layoutParams = LinearLayout.LayoutParams(dpToPx(0F, resources), dpToPx(0F, resources))
+            }
         }
+        avatarImageView.layoutParams = layoutParams
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -151,6 +157,14 @@ class MessageViewGroup @JvmOverloads constructor(
         val avatarImageViewWidth = avatarImageView.measuredWidth + avatarImageViewLayoutParams.leftMargin + avatarImageViewLayoutParams.rightMargin
 
         val nameAndTextLayoutParams = nameAndTextLayout.layoutParams as MarginLayoutParams
+        when (align) {
+            ALIGN_LEFT -> {
+                nameAndTextLayoutParams.setMargins(nameAndTextLayoutParams.leftMargin, nameAndTextLayoutParams.topMargin, dpToPx(MESSAGE_MINIMAL_MARGIN, resources), nameAndTextLayoutParams.bottomMargin)
+            }
+            ALIGN_RIGHT -> {
+                nameAndTextLayoutParams.setMargins(dpToPx(MESSAGE_MINIMAL_MARGIN, resources), nameAndTextLayoutParams.topMargin, nameAndTextLayoutParams.rightMargin, nameAndTextLayoutParams.bottomMargin)
+            }
+        }
         measureChildWithMargins(nameAndTextLayout, widthMeasureSpec, avatarImageViewWidth, heightMeasureSpec, 0)
         val nameAndTextLayoutHeight = nameAndTextLayout.measuredHeight + nameAndTextLayoutParams.topMargin + nameAndTextLayoutParams.bottomMargin
         val nameAndTextLayoutWidth = nameAndTextLayout.measuredWidth + nameAndTextLayoutParams.leftMargin + nameAndTextLayoutParams.rightMargin
@@ -159,12 +173,14 @@ class MessageViewGroup @JvmOverloads constructor(
 
         when (align) {
             ALIGN_LEFT -> {
-                emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(8F, resources), 0, 0)
+                val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
+                val rightMargin = parentWidth - nameAndTextLayoutWidth - avatarImageViewWidth - avatarImageViewLayoutParams.leftMargin - avatarImageViewLayoutParams.rightMargin - nameAndTextLayoutParams.leftMargin
+                emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(8F, resources), rightMargin + nameAndTextLayoutParams.rightMargin, 0)
             }
             ALIGN_RIGHT -> {
                 val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
                 val leftMargin = parentWidth - nameAndTextLayoutWidth
-                emojisLayoutParams.setMargins(leftMargin, dpToPx(8F, resources), 0, 0)
+                emojisLayoutParams.setMargins(leftMargin + nameAndTextLayoutParams.leftMargin, dpToPx(8F, resources), 0, 0)
             }
         }
         measureChildWithMargins(emojisLayout, widthMeasureSpec, 0, heightMeasureSpec, maxOf(avatarImageViewHeight, nameAndTextLayoutHeight))
