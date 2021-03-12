@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HomeWork2</string>
+    <string name="app_name">Simple Chat</string>
     <string name="avatar_picture">Avatar picture</string>
     <string name="name_example">Name Surname</string>
     <string name="message_example">Example of multiline message. It is an example of message that has a few lines. More then two, please. Yeah, now it\'s okey.</string>
