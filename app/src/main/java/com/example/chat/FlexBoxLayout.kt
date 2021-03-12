@@ -1,12 +1,10 @@
-package com.example.homework2
+package com.example.chat
 
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.*
 
 class FlexBoxLayout @JvmOverloads constructor(

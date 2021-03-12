@@ -7,7 +7,7 @@
     tools:context=".MainActivity"
     android:background="@color/black">
 
-    <com.example.homework2.MessageViewGroup
+    <com.example.chat.MessageViewGroup
         android:id="@+id/messageViewGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         app:message_text="@string/message_example"
         app:user_name="@string/name_example"/>
 
-    <com.example.homework2.MessageViewGroup
+    <com.example.chat.MessageViewGroup
         android:id="@+id/messageViewGroup2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

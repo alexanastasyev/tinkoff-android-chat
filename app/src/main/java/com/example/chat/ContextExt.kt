@@ -1,4 +1,4 @@
-package com.example.homework2
+package com.example.chat
 
 import android.content.Context
 import android.content.res.Resources

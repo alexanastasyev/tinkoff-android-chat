@@ -1,4 +1,4 @@
-package com.example.homework2
+package com.example.chat
 
 import java.io.Serializable
 

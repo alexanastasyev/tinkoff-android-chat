@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:parentTag="com.example.homework2.MessageViewGroup">
+    tools:parentTag="com.example.chat.MessageViewGroup">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatarView"
@@ -45,13 +45,13 @@
             app:layout_constraintStart_toStartOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.example.homework2.FlexBoxLayout
+    <com.example.chat.FlexBoxLayout
         android:id="@+id/emojisLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/messageText"
         app:layout_constraintStart_toStartOf="parent">
 
-    </com.example.homework2.FlexBoxLayout>
+    </com.example.chat.FlexBoxLayout>
 
 </merge>

@@ -1,4 +1,4 @@
-package com.example.homework2
+package com.example.chat
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -394,6 +394,7 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     private fun setReactionsInEmojisLayout(reactions: List<Pair<Emoji, Int>>) {
+        emojisLayout.removeAllViews()
         for (i in reactions.indices) {
             val newEmojiView = EmojiView(context)
 

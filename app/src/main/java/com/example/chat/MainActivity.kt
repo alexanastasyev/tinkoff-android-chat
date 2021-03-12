@@ -1,8 +1,7 @@
-package com.example.homework2
+package com.example.chat
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.content.res.ResourcesCompat
 
 class MainActivity : AppCompatActivity() {
 
