@@ -17,9 +17,25 @@
         android:layout_marginTop="8dp"
         android:padding="8dp"
 
+        app:message_background="@drawable/message_name_and_text_bg"
         app:align="LEFT"
         app:avatar_src="@drawable/avatar"
         app:message_text="@string/message_example"
         app:user_name="@string/name_example"/>
+
+    <com.example.homework2.MessageViewGroup
+        android:id="@+id/messageViewGroup2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/messageViewGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:padding="8dp"
+
+        app:message_background="@drawable/message_name_and_text_my_bg"
+        app:align="RIGHT"
+        app:avatar_src="@drawable/avatar"
+        app:message_text="@string/message_example"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,5 +33,6 @@
             <enum name="LEFT" value="0"/>
             <enum name="RIGHT" value="1"/>
         </attr>
+        <attr name="message_background" format="reference"/>
     </declare-styleable>
 </resources>

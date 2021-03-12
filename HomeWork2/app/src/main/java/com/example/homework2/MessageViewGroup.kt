@@ -2,7 +2,6 @@ package com.example.homework2
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -70,6 +69,17 @@ class MessageViewGroup @JvmOverloads constructor(
             }
         }
 
+    var messageBackground: Drawable? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                if (nameAndTextLayout != null) {
+                    nameAndTextLayout.background = field
+                }
+                requestLayout()
+            }
+        }
+
     var reactions: List<Pair<Emoji, Int>> = emptyList()
         set(value) {
             if (field != value) {
@@ -115,6 +125,10 @@ class MessageViewGroup @JvmOverloads constructor(
             messageText = getString(R.styleable.MessageViewGroup_message_text).toString()
             avatar = getDrawable(R.styleable.MessageViewGroup_avatar_src)
             align = getInt(R.styleable.MessageViewGroup_align, 0)
+            messageBackground = getDrawable(R.styleable.MessageViewGroup_message_background)
+            if (messageBackground == null) {
+                messageBackground = ResourcesCompat.getDrawable(resources, R.drawable.message_name_and_text_bg, null)
+            }
             recycle()
         }
 
@@ -128,12 +142,17 @@ class MessageViewGroup @JvmOverloads constructor(
         emojisLayout = findViewById(R.id.emojisLayout)
 
         nameTextView = findViewById(R.id.name)
-        nameTextView.text = userName
+        if (userName != "null") {
+            nameTextView.text = userName
+        } else {
+            nameTextView.height = dpToPx(0F, resources)
+        }
 
         messageTextView = findViewById(R.id.messageText)
         messageTextView.text = messageText
 
         nameAndTextLayout = findViewById(R.id.nameAndTextLayout)
+        nameAndTextLayout.background = messageBackground
 
         setAvatarSize()
     }
