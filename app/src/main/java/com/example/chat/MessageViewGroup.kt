@@ -2,6 +2,7 @@ package com.example.chat
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -28,6 +29,14 @@ class MessageViewGroup @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
+    var textSize: Int = DEFAULT_TEXT_SIZE
+        set(value) {
+            if (field != value) {
+                field = value
+                requestLayout()
+            }
+        }
+
     var align: Int = ALIGN_LEFT
         set(value) {
             if (field != value) {
@@ -53,6 +62,7 @@ class MessageViewGroup @JvmOverloads constructor(
                 field = value
                 if (nameTextView != null) {
                     nameTextView.text = field
+                   // nameTextView.height = spToPx(textSize.toFloat(), resources) * 2
                 }
                 requestLayout()
             }
@@ -94,7 +104,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     private val nameTextView: TextView
     private val messageTextView: TextView
-    private val avatarImageView: ImageView
+    val avatarImageView: ImageView
     private val nameAndTextLayout: ConstraintLayout
     private val emojisLayout: FlexBoxLayout
 
@@ -105,6 +115,8 @@ class MessageViewGroup @JvmOverloads constructor(
     companion object {
         private const val AVATAR_SIZE = 50F
         private const val MESSAGE_MINIMAL_MARGIN = 80F
+
+        private const val DEFAULT_TEXT_SIZE = 16
 
         private const val AVATAR_IMAGE_KEY = "avatar"
         private const val NAME_KEY = "name"
@@ -121,6 +133,12 @@ class MessageViewGroup @JvmOverloads constructor(
         LayoutInflater.from(context).inflate(R.layout.custom_view_group, this, true)
 
         context.obtainStyledAttributes(attrs, R.styleable.MessageViewGroup).apply {
+
+            textSize = getDimensionPixelSize(
+                    R.styleable.MessageViewGroup_text_size,
+                    DEFAULT_TEXT_SIZE
+            )
+
             userName = getString(R.styleable.MessageViewGroup_user_name).toString()
             messageText = getString(R.styleable.MessageViewGroup_message_text).toString()
             avatar = getDrawable(R.styleable.MessageViewGroup_avatar_src)
@@ -142,13 +160,15 @@ class MessageViewGroup @JvmOverloads constructor(
         emojisLayout = findViewById(R.id.emojisLayout)
 
         nameTextView = findViewById(R.id.name)
+        nameTextView.textSize = textSize.toFloat()
         if (userName != "null") {
             nameTextView.text = userName
         } else {
-            nameTextView.height = dpToPx(0F, resources)
+           // nameTextView.height = dpToPx(0F, resources)
         }
 
         messageTextView = findViewById(R.id.messageText)
+        messageTextView.textSize = textSize.toFloat()
         messageTextView.text = messageText
 
         nameAndTextLayout = findViewById(R.id.nameAndTextLayout)

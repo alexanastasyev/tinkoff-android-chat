@@ -39,4 +39,5 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
     implementation "de.hdodenhof:circleimageview:$circleImageViewVersion"
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 }

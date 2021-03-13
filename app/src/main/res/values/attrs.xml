@@ -34,5 +34,6 @@
             <enum name="RIGHT" value="1"/>
         </attr>
         <attr name="message_background" format="reference"/>
+        <attr name="text_size" format="dimension"/>
     </declare-styleable>
 </resources>
