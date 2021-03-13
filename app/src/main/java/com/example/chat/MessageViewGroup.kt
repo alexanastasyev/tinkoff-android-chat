@@ -49,7 +49,7 @@ class MessageViewGroup @JvmOverloads constructor(
     set(value) {
         if (field != value) {
             field = value
-            if (avatarImageView != null) {
+            if (avatarImageView != null && align == ALIGN_LEFT) {
                 avatarImageView.setImageDrawable(field)
             }
             requestLayout()
@@ -106,7 +106,7 @@ class MessageViewGroup @JvmOverloads constructor(
     private val messageTextView: TextView
     val avatarImageView: ImageView
     private val nameAndTextLayout: ConstraintLayout
-    private val emojisLayout: FlexBoxLayout
+    val emojisLayout: FlexBoxLayout
 
     private val avatarImageViewRect = Rect()
     private val nameAndTextLayoutRect = Rect()
@@ -130,7 +130,7 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     init {
-        LayoutInflater.from(context).inflate(R.layout.custom_view_group, this, true)
+        LayoutInflater.from(context).inflate(R.layout.message_view_group, this, true)
 
         context.obtainStyledAttributes(attrs, R.styleable.MessageViewGroup).apply {
 
@@ -151,10 +151,13 @@ class MessageViewGroup @JvmOverloads constructor(
         }
 
         avatarImageView = findViewById(R.id.avatarView)
-        if (avatar != null) {
-            avatarImageView.setImageDrawable(avatar)
-        } else {
-            avatarImageView.setImageDrawable(getDrawable(context, R.drawable.default_avatar))
+
+        if (align == ALIGN_LEFT) {
+            if (avatar != null) {
+                avatarImageView.setImageDrawable(avatar)
+            } else {
+                avatarImageView.setImageDrawable(getDrawable(context, R.drawable.default_avatar))
+            }
         }
 
         emojisLayout = findViewById(R.id.emojisLayout)
@@ -184,6 +187,7 @@ class MessageViewGroup @JvmOverloads constructor(
             }
             ALIGN_RIGHT -> {
                 layoutParams = LinearLayout.LayoutParams(dpToPx(0F, resources), dpToPx(0F, resources))
+                avatarImageView.visibility = INVISIBLE
             }
         }
         avatarImageView.layoutParams = layoutParams
@@ -437,6 +441,9 @@ class MessageViewGroup @JvmOverloads constructor(
     }
 
     private fun setLastEmojiPlus() {
+        if (reactions.isEmpty()) {
+            return
+        }
         val emojiPlus = EmojiView(context)
         val emojiPlusLayoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
