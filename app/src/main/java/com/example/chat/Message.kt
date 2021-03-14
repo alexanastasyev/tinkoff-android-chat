@@ -1,7 +1,6 @@
 package com.example.chat
 
 import java.io.Serializable
-import java.net.URL
 import java.util.*
 
 class Message (

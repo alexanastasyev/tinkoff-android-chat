@@ -1,12 +1,13 @@
-package com.example.chat
+package com.example.chat.recycler
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chat.recycler.holders.BaseViewHolder
 
 abstract class BaseAdapter<T: ViewTyped>(internal val holderFactory: HolderFactory) :
     RecyclerView.Adapter<BaseViewHolder<ViewTyped>>() {
 
-        abstract val items: List<T>
+    abstract val items: List<T>
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ViewTyped> {
         return holderFactory(parent, viewType)

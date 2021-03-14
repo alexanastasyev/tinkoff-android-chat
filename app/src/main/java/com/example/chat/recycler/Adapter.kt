@@ -1,4 +1,4 @@
-package com.example.chat
+package com.example.chat.recycler
 
 class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holderFactory) {
     private val localItems: MutableList<T> = mutableListOf()

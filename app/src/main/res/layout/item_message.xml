@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.chat.MessageViewGroup
+<com.example.chat.views.MessageViewGroup
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/message_from_other"
@@ -8,4 +8,4 @@
     android:layout_margin="8dp"
     >
 
-</com.example.chat.MessageViewGroup>
+</com.example.chat.views.MessageViewGroup>

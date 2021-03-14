@@ -1,11 +1,8 @@
-package com.example.chat
+package com.example.chat.views
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
-import android.os.Bundle
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -18,9 +15,11 @@ import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.*
-import de.hdodenhof.circleimageview.CircleImageView
+import com.example.chat.Emoji
+import com.example.chat.R
+import com.example.chat.dpToPx
+import com.example.chat.spToPx
 
 class MessageViewGroup @JvmOverloads constructor(
     context: Context,
@@ -51,12 +50,14 @@ class MessageViewGroup @JvmOverloads constructor(
     set(value) {
         if (field != value) {
             field = value
-            if (avatarImageView != null && align == ALIGN_LEFT) {
+            if (align == ALIGN_LEFT) {
                 avatarImageView.setImageDrawable(field)
             }
             requestLayout()
         }
     }
+
+    // All these null-checks below are necessary. Otherwise the app crushes.
 
     var userName: String = ""
         set(value) {
@@ -64,7 +65,6 @@ class MessageViewGroup @JvmOverloads constructor(
                 field = value
                 if (nameTextView != null) {
                     nameTextView.text = field
-                   // nameTextView.height = spToPx(textSize.toFloat(), resources) * 2
                 }
                 requestLayout()
             }
@@ -98,18 +98,18 @@ class MessageViewGroup @JvmOverloads constructor(
                 field = value
                 if (emojisLayout != null) {
                     setReactionsInEmojisLayout(reactions)
-                    setOnCLickListenerForEmojiViews(clickListener)
+                    setOnCLickListenerForEmojiViews(clickListenerForEmojis)
                 }
                 requestLayout()
             }
         }
 
-    private lateinit var clickListener: OnClickListener
+    private lateinit var clickListenerForEmojis: OnClickListener
 
     private val nameTextView: TextView
     private val messageTextView: TextView
-    val avatarImageView: ImageView
     private val nameAndTextLayout: ConstraintLayout
+    val avatarImageView: ImageView
     val emojisLayout: FlexBoxLayout
 
     private val avatarImageViewRect = Rect()
@@ -119,18 +119,15 @@ class MessageViewGroup @JvmOverloads constructor(
     companion object {
         private const val AVATAR_SIZE = 50F
         private const val MESSAGE_MINIMAL_MARGIN = 80F
+        private const val EMOJIS_LAYOUT_MARGIN = 8F
+
+        private const val EMOJIS_PADDING = 2F
 
         private const val DEFAULT_TEXT_SIZE = 16
+        private const val DEFAULT_EMOJIS_TEXT_SIZE = 14F
 
-        private const val AVATAR_IMAGE_KEY = "avatar"
-        private const val NAME_KEY = "name"
-        private const val MESSAGE_TEXT_KEY = "message"
-        private const val EMOJIS_ARRAY_KEY = "emojis"
-        private const val AMOUNTS_ARRAY_KEY = "amounts"
-        private const val EMOJIS_STATE_SELECTED_KEY = "selected"
-
-        private const val ALIGN_LEFT = 0
-        private const val ALIGN_RIGHT = 1
+        const val ALIGN_LEFT = 0
+        const val ALIGN_RIGHT = 1
     }
 
     init {
@@ -138,11 +135,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
         context.obtainStyledAttributes(attrs, R.styleable.MessageViewGroup).apply {
 
-            textSize = getDimensionPixelSize(
-                    R.styleable.MessageViewGroup_text_size,
-                    DEFAULT_TEXT_SIZE
-            )
-
+            textSize = getDimensionPixelSize(R.styleable.MessageViewGroup_text_size,  DEFAULT_TEXT_SIZE)
             userName = getString(R.styleable.MessageViewGroup_user_name).toString()
             messageText = getString(R.styleable.MessageViewGroup_message_text).toString()
             avatar = getDrawable(R.styleable.MessageViewGroup_avatar_src)
@@ -155,24 +148,13 @@ class MessageViewGroup @JvmOverloads constructor(
         }
 
         avatarImageView = findViewById(R.id.avatarView)
-
-        if (align == ALIGN_LEFT) {
-            if (avatar != null) {
-                avatarImageView.setImageDrawable(avatar)
-            } else {
-                avatarImageView.setImageDrawable(getDrawable(context, R.drawable.default_avatar))
-            }
-        }
+        setAvatarPicture()
 
         emojisLayout = findViewById(R.id.emojisLayout)
 
         nameTextView = findViewById(R.id.name)
         nameTextView.textSize = textSize.toFloat()
-        if (userName != "null") {
-            nameTextView.text = userName
-        } else {
-           // nameTextView.height = dpToPx(0F, resources)
-        }
+        nameTextView.text = userName
 
         messageTextView = findViewById(R.id.messageText)
         messageTextView.textSize = textSize.toFloat()
@@ -182,6 +164,16 @@ class MessageViewGroup @JvmOverloads constructor(
         nameAndTextLayout.background = messageBackground
 
         setAvatarSize()
+    }
+
+    private fun setAvatarPicture() {
+        if (align == ALIGN_LEFT) {
+            if (avatar != null) {
+                avatarImageView.setImageDrawable(avatar)
+            } else {
+                avatarImageView.setImageDrawable(getDrawable(context, R.drawable.default_avatar))
+            }
+        }
     }
 
     private fun setAvatarSize() {
@@ -204,7 +196,6 @@ class MessageViewGroup @JvmOverloads constructor(
                 avatarImageViewLayoutParams.width = dpToPx(AVATAR_SIZE, resources)
                 avatarImageViewLayoutParams.height = dpToPx(AVATAR_SIZE, resources)
             }
-
             ALIGN_RIGHT -> {
                 avatarImageViewLayoutParams.width = 0
                 avatarImageViewLayoutParams.height = 0
@@ -228,17 +219,16 @@ class MessageViewGroup @JvmOverloads constructor(
         val nameAndTextLayoutWidth = nameAndTextLayout.measuredWidth + nameAndTextLayoutParams.leftMargin + nameAndTextLayoutParams.rightMargin
 
         val emojisLayoutParams = emojisLayout.layoutParams as MarginLayoutParams
-
         when (align) {
             ALIGN_LEFT -> {
                 val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
                 val rightMargin = parentWidth - nameAndTextLayoutWidth - avatarImageViewWidth - avatarImageViewLayoutParams.leftMargin - avatarImageViewLayoutParams.rightMargin - nameAndTextLayoutParams.leftMargin
-                emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(8F, resources), rightMargin + nameAndTextLayoutParams.rightMargin, 0)
+                emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(EMOJIS_LAYOUT_MARGIN, resources), rightMargin + nameAndTextLayoutParams.rightMargin, 0)
             }
             ALIGN_RIGHT -> {
                 val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
                 val leftMargin = parentWidth - nameAndTextLayoutWidth
-                emojisLayoutParams.setMargins(leftMargin + nameAndTextLayoutParams.leftMargin, dpToPx(8F, resources), 0, 0)
+                emojisLayoutParams.setMargins(leftMargin + nameAndTextLayoutParams.leftMargin, dpToPx(EMOJIS_LAYOUT_MARGIN, resources), 0, 0)
             }
         }
         measureChildWithMargins(emojisLayout, widthMeasureSpec, 0, heightMeasureSpec, maxOf(avatarImageViewHeight, nameAndTextLayoutHeight))
@@ -258,7 +248,7 @@ class MessageViewGroup @JvmOverloads constructor(
         val avatarLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
         val nameAndTextLayoutParams = nameAndTextLayout.layoutParams as MarginLayoutParams
         val emojisLayoutParams = emojisLayout.layoutParams as MarginLayoutParams
-        emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(8F, resources), 0, 0)
+        emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(EMOJIS_LAYOUT_MARGIN, resources), 0, 0)
 
         when (align) {
             ALIGN_LEFT -> {
@@ -297,8 +287,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     }
 
-    override fun generateDefaultLayoutParams(): LayoutParams =
-        MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
+    override fun generateDefaultLayoutParams(): LayoutParams = MarginLayoutParams(MATCH_PARENT, WRAP_CONTENT)
 
     override fun generateLayoutParams(attrs: AttributeSet?) = MarginLayoutParams(context, attrs)
 
@@ -308,148 +297,13 @@ class MessageViewGroup @JvmOverloads constructor(
         layout(rect.left, rect.top, rect.right, rect.bottom)
     }
 
-    fun saveState(): Bundle {
-        val outState = Bundle()
-
-        val avatarImageView: CircleImageView = findViewById(R.id.avatarView)
-        outState.putParcelable(AVATAR_IMAGE_KEY, saveImage(avatarImageView))
-
-        val nameView: TextView = findViewById(R.id.name)
-        outState.putString(NAME_KEY, saveText(nameView))
-
-        val messageTextView: TextView = findViewById(R.id.messageText)
-        outState.putString(MESSAGE_TEXT_KEY, saveText(messageTextView))
-
-        val emojisLayout: FlexBoxLayout = findViewById(R.id.emojisLayout)
-        outState.putSerializable(EMOJIS_ARRAY_KEY, saveEmojis(emojisLayout))
-        outState.putIntArray(AMOUNTS_ARRAY_KEY, saveEmojisAmounts(emojisLayout))
-        outState.putBooleanArray(EMOJIS_STATE_SELECTED_KEY, saveEmojisStates(emojisLayout))
-
-        return outState
-    }
-
-    private fun saveImage(imageView: ImageView): Bitmap? {
-        val imageDrawable = imageView.drawable
-        return imageDrawable?.toBitmap()
-    }
-
-    private fun saveText(textView: TextView): String {
-        return textView.text.toString()
-    }
-
-    private fun saveEmojis(emojisLayout: FlexBoxLayout): Array<Emoji?> {
-        val emojisAmount = emojisLayout.childCount
-        val emojis = arrayOfNulls<Emoji>(emojisAmount)
-        var i = 0
-        emojisLayout.children.forEach {
-            val emojiView: EmojiView = it as EmojiView
-            val emoji = emojiView.emoji
-            emojis[i] = emoji
-            i++
-        }
-        return emojis
-    }
-
-    private fun saveEmojisAmounts(emojisLayout: FlexBoxLayout): IntArray {
-        val emojisAmount = emojisLayout.childCount
-        val amounts = IntArray(emojisAmount)
-        var i = 0
-        emojisLayout.children.forEach {
-            val emojiView: EmojiView = it as EmojiView
-            val amount = emojiView.amount
-            amounts[i] = amount
-            i++
-        }
-        return amounts
-    }
-
-    private fun saveEmojisStates(emojisLayout: FlexBoxLayout): BooleanArray {
-        val emojisAmount = emojisLayout.childCount
-        val emojisStates = BooleanArray(emojisAmount)
-        var i = 0
-        emojisLayout.children.forEach {
-            val emojiView: EmojiView = it as EmojiView
-            emojisStates[i] = emojiView.isSelected
-            i++
-        }
-        return emojisStates
-    }
-
-    fun restoreState(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            return
-        }
-
-        val circleImageView: CircleImageView = findViewById(R.id.avatarView)
-        val imageBitmap = savedInstanceState.getParcelable<Bitmap>(AVATAR_IMAGE_KEY)
-        restoreImage(imageBitmap, circleImageView)
-
-        val nameView: TextView = findViewById(R.id.name)
-        val name = savedInstanceState.getString(NAME_KEY)
-        restoreText(name, nameView)
-
-        val messageTextView: TextView = findViewById(R.id.messageText)
-        val messageText = savedInstanceState.getString(MESSAGE_TEXT_KEY)
-        restoreText(messageText, messageTextView)
-
-        val emojisLayout: FlexBoxLayout = findViewById(R.id.emojisLayout)
-        val emojis = savedInstanceState.getSerializable(EMOJIS_ARRAY_KEY) as Array<Emoji>
-        restoreEmojis(emojis, emojisLayout)
-
-        val emojisAmounts = savedInstanceState.getIntArray(AMOUNTS_ARRAY_KEY) ?: return
-        restoreEmojisAmounts(emojisAmounts, emojisLayout)
-
-        val emojisStates = savedInstanceState.getBooleanArray(EMOJIS_STATE_SELECTED_KEY) ?: return
-        restoreEmojisStates(emojisStates, emojisLayout)
-    }
-
-    private fun restoreImage(image: Bitmap?, imageView: ImageView) {
-        imageView.setImageBitmap(image)
-    }
-
-    private fun restoreText(text: String?, textView: TextView) {
-        textView.text = text
-    }
-
-    private fun restoreEmojis(emojis: Array<Emoji>, emojisLayout: FlexBoxLayout) {
-        for (i in emojis.indices) {
-            val emojiView: EmojiView = emojisLayout.getChildAt(i) as EmojiView
-            emojiView.emoji = emojis[i]
-        }
-    }
-
-    private fun restoreEmojisAmounts(amounts: IntArray, emojisLayout: FlexBoxLayout) {
-        for (i in amounts.indices) {
-            val emojiView: EmojiView = emojisLayout.getChildAt(i) as EmojiView
-            emojiView.amount = amounts[i]
-        }
-    }
-
-    private fun restoreEmojisStates(states: BooleanArray, emojisLayout: FlexBoxLayout) {
-        for (i in states.indices) {
-            val emojiView: EmojiView = emojisLayout.getChildAt(i) as EmojiView
-            emojiView.isSelected = states[i]
-        }
-    }
-
     private fun setReactionsInEmojisLayout(reactions: List<Pair<Emoji, Int>>) {
         emojisLayout.removeAllViews()
         for (i in reactions.indices) {
             val newEmojiView = EmojiView(context)
-
-            val emojiLayoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT
-            )
-
-            emojiLayoutParams.setMargins(dpToPx(4F, resources))
-            newEmojiView.layoutParams = emojiLayoutParams
             newEmojiView.emoji = reactions[i].first
             newEmojiView.amount = reactions[i].second
-            newEmojiView.textSize = spToPx(15F, resources)
-            newEmojiView.background = ResourcesCompat.getDrawable(resources, R.drawable.emoji_view_bg, null)
-            newEmojiView.setPadding(dpToPx(2F, resources))
-            newEmojiView.textColor = ResourcesCompat.getColor(resources, R.color.text_color, null)
+            setDefaultEmojiViewParams(newEmojiView)
             emojisLayout.addView(newEmojiView)
         }
         setLastEmojiPlus()
@@ -460,36 +314,31 @@ class MessageViewGroup @JvmOverloads constructor(
             return
         }
         val emojiPlus = EmojiView(context)
-        val emojiPlusLayoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        )
-        emojiPlusLayoutParams.setMargins(dpToPx(4F, resources))
-        emojiPlus.layoutParams = emojiPlusLayoutParams
         emojiPlus.emoji = Emoji.SIGN_PLUS
         emojiPlus.amount = -1
-        emojiPlus.textSize = spToPx(15F, resources)
-        emojiPlus.background = ResourcesCompat.getDrawable(resources, R.drawable.emoji_view_bg, null)
-        emojiPlus.setPadding(dpToPx(2F, resources))
-        emojiPlus.textColor = ResourcesCompat.getColor(resources, R.color.text_color, null)
+        setDefaultEmojiViewParams(emojiPlus)
         emojisLayout.addView(emojiPlus)
     }
 
+    private fun setDefaultEmojiViewParams(emojiView: EmojiView) {
+        val emojiLayoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        emojiLayoutParams.setMargins(dpToPx(EMOJIS_LAYOUT_MARGIN, resources))
+        emojiView.layoutParams = emojiLayoutParams
+        emojiView.textSize = spToPx(DEFAULT_EMOJIS_TEXT_SIZE, resources)
+        emojiView.background = ResourcesCompat.getDrawable(resources, R.drawable.emoji_view_bg, null)
+        emojiView.setPadding(dpToPx(EMOJIS_PADDING, resources))
+        emojiView.textColor = ResourcesCompat.getColor(resources, R.color.text_color, null)
+    }
+
     fun setOnCLickListenerForEmojiViews(clickListener: OnClickListener) {
-        this.clickListener = clickListener
+        this.clickListenerForEmojis = clickListener
         val emojiLayout = findViewById<FlexBoxLayout>(R.id.emojisLayout)
+
         for (i in 0 until emojiLayout.childCount - 1) {
-            val emojiView = emojiLayout.getChildAt(i) as EmojiView
-            emojiView.setOnClickListener(clickListener)
-//            emojiView.setOnClickListener {
-//                if (emojiView.isSelected) {
-//                    emojiView.isSelected = false
-//                    emojiView.amount -= 1
-//                } else {
-//                    emojiView.isSelected = true
-//                    emojiView.amount += 1
-//                }
-//            }
+            emojiLayout.getChildAt(i).setOnClickListener(clickListener)
         }
     }
 }

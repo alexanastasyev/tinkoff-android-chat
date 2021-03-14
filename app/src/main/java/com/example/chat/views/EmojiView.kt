@@ -1,12 +1,13 @@
-package com.example.chat
+package com.example.chat.views
 
 import android.content.Context
 import android.graphics.*
-import android.os.Bundle
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.MeasureSpec.*
+import com.example.chat.Emoji
+import com.example.chat.R
+import com.example.chat.spToPx
 
 class EmojiView @JvmOverloads constructor(
     context: Context,
@@ -75,11 +76,7 @@ class EmojiView @JvmOverloads constructor(
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.EmojiView).apply {
-            textSize = getDimensionPixelSize(
-                R.styleable.EmojiView_size, context.spToPx(
-                    DEFAULT_FONT_SIZE_PX
-                )
-            )
+            textSize = getDimensionPixelSize(R.styleable.EmojiView_size, context.spToPx(DEFAULT_FONT_SIZE_PX))
             textColor = getColor(R.styleable.EmojiView_text_color, DEFAULT_COLOR)
             textPaint.color = textColor
             val emojiOrdinal = getInt(R.styleable.EmojiView_emoji, 0)
@@ -124,31 +121,6 @@ class EmojiView @JvmOverloads constructor(
             mergeDrawableStates(drawableState, DRAWABLES_STATE)
         }
         return drawableState
-    }
-
-    override fun onSaveInstanceState(): Parcelable? {
-        super.onSaveInstanceState()
-        return saveInstanceState()
-    }
-
-    fun saveInstanceState(): Bundle? {
-        val emojiState = Bundle()
-        emojiState.putSerializable("emoji", emoji)
-        emojiState.putInt("amount", amount)
-        emojiState.putBoolean("selected", isSelected)
-        return emojiState
-    }
-
-    override fun onRestoreInstanceState(state: Parcelable?) {
-        super.onRestoreInstanceState(state)
-        restoreInstanceState(state)
-    }
-
-    fun restoreInstanceState(state: Parcelable?) {
-        val emojiState = state as Bundle
-        emoji = emojiState.getSerializable("emoji") as Emoji
-        amount = emojiState.getInt("amount")
-        isSelected = emojiState.getBoolean("selected")
     }
 
     companion object {
