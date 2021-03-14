@@ -2,6 +2,8 @@ package com.example.chat
 
 import android.content.Context
 import android.graphics.Rect
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -76,6 +78,29 @@ class FlexBoxLayout @JvmOverloads constructor(
     override fun generateLayoutParams(attrs: AttributeSet?) = MarginLayoutParams(context, attrs)
 
     override fun generateLayoutParams(p: LayoutParams?): LayoutParams = MarginLayoutParams(p)
+
+    override fun onSaveInstanceState(): Parcelable? {
+        super.onSaveInstanceState()
+        val layoutState = Bundle()
+        var i = 0
+        children.forEach {
+            val emojiView = it as EmojiView
+            layoutState.putBundle("emoji$i", emojiView.saveInstanceState())
+            i++
+        }
+        return layoutState
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        super.onRestoreInstanceState(state)
+        val layoutState = state as Bundle
+        var i = 0
+        children.forEach {
+            val emojiView = it as EmojiView
+            emojiView.restoreInstanceState(layoutState.getBundle("emoji$i"))
+            i++
+        }
+    }
 
     private fun View.layout(rect: Rect) {
         layout(rect.left, rect.top, rect.right, rect.bottom)

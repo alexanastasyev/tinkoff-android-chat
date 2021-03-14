@@ -1,5 +1,6 @@
 package com.example.chat
 
+import java.io.Serializable
 import java.net.URL
 import java.util.*
 
@@ -10,5 +11,5 @@ class Message (
         val authorId: Long,
         val messageId: Long,
         val avatarUrl: String? = null,
-        val reactions: List<Reaction> = emptyList()
-        )
+        var reactions: List<Reaction> = emptyList()
+        ) : Serializable

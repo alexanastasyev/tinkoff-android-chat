@@ -8,11 +8,13 @@ class TextUi(
         override val viewType: Int = R.layout.item_text
 ) : ViewTyped
 
-class TextViewHolder(view: View, click: (View) -> Unit) : BaseViewHolder<TextUi>(view) {
+class TextViewHolder(view: View, click: ((View) -> Unit)?) : BaseViewHolder<TextUi>(view) {
     val textHolder = view.findViewById<TextView>(R.id.textHolder)
 
     init {
-        textHolder.setOnClickListener(click)
+        if (click != null) {
+            textHolder.setOnClickListener(click)
+        }
     }
 
     override fun bind(item: TextUi) {

@@ -2,6 +2,8 @@ package com.example.chat
 
 import android.content.Context
 import android.graphics.*
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.MeasureSpec.*
@@ -122,6 +124,31 @@ class EmojiView @JvmOverloads constructor(
             mergeDrawableStates(drawableState, DRAWABLES_STATE)
         }
         return drawableState
+    }
+
+    override fun onSaveInstanceState(): Parcelable? {
+        super.onSaveInstanceState()
+        return saveInstanceState()
+    }
+
+    fun saveInstanceState(): Bundle? {
+        val emojiState = Bundle()
+        emojiState.putSerializable("emoji", emoji)
+        emojiState.putInt("amount", amount)
+        emojiState.putBoolean("selected", isSelected)
+        return emojiState
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        super.onRestoreInstanceState(state)
+        restoreInstanceState(state)
+    }
+
+    fun restoreInstanceState(state: Parcelable?) {
+        val emojiState = state as Bundle
+        emoji = emojiState.getSerializable("emoji") as Emoji
+        amount = emojiState.getInt("amount")
+        isSelected = emojiState.getBoolean("selected")
     }
 
     companion object {

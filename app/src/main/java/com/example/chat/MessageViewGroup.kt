@@ -29,6 +29,8 @@ class MessageViewGroup @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
+    var messageId: Long? = null
+
     var textSize: Int = DEFAULT_TEXT_SIZE
         set(value) {
             if (field != value) {
@@ -96,11 +98,13 @@ class MessageViewGroup @JvmOverloads constructor(
                 field = value
                 if (emojisLayout != null) {
                     setReactionsInEmojisLayout(reactions)
-                    setOnCLickListenerForEmojiViews()
+                    setOnCLickListenerForEmojiViews(clickListener)
                 }
                 requestLayout()
             }
         }
+
+    private lateinit var clickListener: OnClickListener
 
     private val nameTextView: TextView
     private val messageTextView: TextView
@@ -195,6 +199,17 @@ class MessageViewGroup @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val avatarImageViewLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
+        when (align) {
+            ALIGN_LEFT -> {
+                avatarImageViewLayoutParams.width = dpToPx(AVATAR_SIZE, resources)
+                avatarImageViewLayoutParams.height = dpToPx(AVATAR_SIZE, resources)
+            }
+
+            ALIGN_RIGHT -> {
+                avatarImageViewLayoutParams.width = 0
+                avatarImageViewLayoutParams.height = 0
+            }
+        }
         measureChildWithMargins(avatarImageView, widthMeasureSpec, 0, heightMeasureSpec, 0)
         val avatarImageViewHeight = avatarImageView.measuredHeight + avatarImageViewLayoutParams.topMargin + avatarImageViewLayoutParams.bottomMargin
         val avatarImageViewWidth = avatarImageView.measuredWidth + avatarImageViewLayoutParams.leftMargin + avatarImageViewLayoutParams.rightMargin
@@ -313,9 +328,9 @@ class MessageViewGroup @JvmOverloads constructor(
         return outState
     }
 
-    private fun saveImage(imageView: ImageView): Bitmap {
+    private fun saveImage(imageView: ImageView): Bitmap? {
         val imageDrawable = imageView.drawable
-        return imageDrawable.toBitmap()
+        return imageDrawable?.toBitmap()
     }
 
     private fun saveText(textView: TextView): String {
@@ -460,19 +475,21 @@ class MessageViewGroup @JvmOverloads constructor(
         emojisLayout.addView(emojiPlus)
     }
 
-    fun setOnCLickListenerForEmojiViews() {
+    fun setOnCLickListenerForEmojiViews(clickListener: OnClickListener) {
+        this.clickListener = clickListener
         val emojiLayout = findViewById<FlexBoxLayout>(R.id.emojisLayout)
         for (i in 0 until emojiLayout.childCount - 1) {
             val emojiView = emojiLayout.getChildAt(i) as EmojiView
-            emojiView.setOnClickListener {
-                if (emojiView.isSelected) {
-                    emojiView.isSelected = false
-                    emojiView.amount -= 1
-                } else {
-                    emojiView.isSelected = true
-                    emojiView.amount += 1
-                }
-            }
+            emojiView.setOnClickListener(clickListener)
+//            emojiView.setOnClickListener {
+//                if (emojiView.isSelected) {
+//                    emojiView.isSelected = false
+//                    emojiView.amount -= 1
+//                } else {
+//                    emojiView.isSelected = true
+//                    emojiView.amount += 1
+//                }
+//            }
         }
     }
 }

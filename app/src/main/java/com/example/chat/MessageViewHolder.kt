@@ -13,12 +13,25 @@ class MessageUi(
         override val viewType: Int = R.layout.item_message
 ) : ViewTyped
 
-class MessageViewHolder(view: View) : BaseViewHolder<MessageUi>(view) {
+class MessageViewHolder(view: View,
+                        click: ((View) -> Unit)?,
+                        action: ((View) -> Unit)?
+    ) : BaseViewHolder<MessageUi>(view) {
     val messageHolder = view.findViewById<MessageViewGroup>(R.id.message_from_other)
+
+    init {
+        if (click != null) {
+            messageHolder.setOnClickListener(click)
+        }
+        if (action != null) {
+            action(messageHolder)
+        }
+    }
 
     override fun bind(item: MessageUi) {
         val context = messageHolder.context
         if (item.authorId == MainActivity.THIS_USER_ID) {
+            messageHolder.messageId = item.messageId
             messageHolder.align = 1
             messageHolder.messageText = item.text
             messageHolder.userName = item.author
@@ -31,6 +44,7 @@ class MessageViewHolder(view: View) : BaseViewHolder<MessageUi>(view) {
             messageHolder.avatarImageView.setImageDrawable(null)
 
         } else {
+            messageHolder.messageId = item.messageId
             messageHolder.align = 0
             messageHolder.messageText = item.text
             messageHolder.userName = item.author
@@ -45,7 +59,6 @@ class MessageViewHolder(view: View) : BaseViewHolder<MessageUi>(view) {
                     .load(item.avatarUrl)
                     .placeholder(R.drawable.default_avatar)
                     .into(messageHolder.avatarImageView)
-
         }
     }
 }
