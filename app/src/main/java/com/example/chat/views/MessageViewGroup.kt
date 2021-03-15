@@ -99,12 +99,14 @@ class MessageViewGroup @JvmOverloads constructor(
                 if (emojisLayout != null) {
                     setReactionsInEmojisLayout(reactions)
                     setOnCLickListenerForEmojiViews(clickListenerForEmojis)
+                    setOnPlusClickListener(emojiPlusClickListener)
                 }
                 requestLayout()
             }
         }
 
     private lateinit var clickListenerForEmojis: OnClickListener
+    private lateinit var emojiPlusClickListener: OnClickListener
 
     private val nameTextView: TextView
     private val messageTextView: TextView
@@ -316,6 +318,7 @@ class MessageViewGroup @JvmOverloads constructor(
         val emojiPlus = EmojiView(context)
         emojiPlus.emoji = Emoji.SIGN_PLUS
         emojiPlus.amount = -1
+        setOnPlusClickListener(emojiPlusClickListener)
         setDefaultEmojiViewParams(emojiPlus)
         emojisLayout.addView(emojiPlus)
     }
@@ -325,7 +328,12 @@ class MessageViewGroup @JvmOverloads constructor(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
         )
-        emojiLayoutParams.setMargins(dpToPx(EMOJIS_LAYOUT_MARGIN, resources))
+        emojiLayoutParams.setMargins(
+                dpToPx(0F, resources),
+                dpToPx(EMOJIS_LAYOUT_MARGIN, resources),
+                dpToPx(EMOJIS_LAYOUT_MARGIN, resources),
+                dpToPx(EMOJIS_LAYOUT_MARGIN, resources)
+        )
         emojiView.layoutParams = emojiLayoutParams
         emojiView.size = spToPx(DEFAULT_EMOJIS_TEXT_SIZE, resources)
         emojiView.background = ResourcesCompat.getDrawable(resources, R.drawable.emoji_view_bg, null)
@@ -336,7 +344,6 @@ class MessageViewGroup @JvmOverloads constructor(
     fun setOnCLickListenerForEmojiViews(clickListener: OnClickListener) {
         this.clickListenerForEmojis = clickListener
         val emojiLayout = findViewById<FlexBoxLayout>(R.id.emojisLayout)
-
         for (i in 0 until emojiLayout.childCount - 1) {
             emojiLayout.getChildAt(i).setOnClickListener(clickListener)
         }
@@ -346,18 +353,30 @@ class MessageViewGroup @JvmOverloads constructor(
         this.nameAndTextLayout.setOnLongClickListener(clickListener)
     }
 
+    fun setOnPlusClickListener(clickListener: OnClickListener) {
+        this.emojiPlusClickListener = clickListener
+        val emojiLayoutLocal = findViewById<FlexBoxLayout>(R.id.emojisLayout)
+        if (emojiLayoutLocal.childCount != 0) {
+            emojiLayoutLocal.getChildAt(emojiLayoutLocal.childCount - 1).setOnClickListener(clickListener)
+        }
+    }
+
     fun addEmojiView(emojiView: EmojiView) {
         reactions.add(Pair(emojiView.emoji, emojiView.amount))
         setReactionsInEmojisLayout(reactions)
         setOnCLickListenerForEmojiViews(clickListenerForEmojis)
+        setOnPlusClickListener(emojiPlusClickListener)
     }
 
     fun removeEmojiView(emojiView: EmojiView) {
-        for (reaction in reactions) {
-            if (reaction.first == emojiView.emoji) {
-                reactions.remove(reaction)
+        var emojiToRemoveIndex = -1
+        for (i in 0 until reactions.size) {
+            if (reactions[i].first == emojiView.emoji) {
+                emojiToRemoveIndex = i
             }
         }
+        reactions.remove(reactions[emojiToRemoveIndex])
+
         setReactionsInEmojisLayout(reactions)
         setOnCLickListenerForEmojiViews(clickListenerForEmojis)
     }

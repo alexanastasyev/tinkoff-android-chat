@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var messages: ArrayList<Message>
     private lateinit var messageUis: ArrayList<ViewTyped>
     private lateinit var adapter: Adapter<ViewTyped>
+    private lateinit var globalMessageViewGroup: MessageViewGroup
+    private lateinit var dialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +64,7 @@ class MainActivity : AppCompatActivity() {
             val messageViewGroup = message as MessageViewGroup
             messageViewGroup.setOnCLickListenerForEmojiViews(getOnCLickListenerForEmojiView(messageViewGroup))
             messageViewGroup.setOnLongClickListenerForMessages(getOnLongClickListenerForMessages(messageViewGroup))
+            messageViewGroup.setOnPlusClickListener(getOnPlusClickListener(messageViewGroup))
         }
     }
 
@@ -121,18 +124,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun getOnPlusClickListener(messageViewGroup: MessageViewGroup): View.OnClickListener {
+        return View.OnClickListener {
+            showEmojisDialog(messageViewGroup)
+        }
+    }
+
     private fun showEmojisDialog(messageViewGroup: MessageViewGroup) {
         val bottomEmojisDialog = layoutInflater.inflate(R.layout.bottom_emojis_sheet, null)
-        val dialog = BottomSheetDialog(this)
+        dialog = BottomSheetDialog(this)
         dialog.setContentView(bottomEmojisDialog)
 
-        val emojiView = bottomEmojisDialog.findViewById<EmojiView>(R.id.face_smiling)
-        emojiView.setOnClickListener{
-            addEmojiView(messageViewGroup, emojiView)
+        globalMessageViewGroup = messageViewGroup
+
+        bottomEmojisDialog.setOnClickListener{
             dialog.dismiss()
         }
-        
+
         dialog.show()
+    }
+
+    fun onDialogEmojiClick(view: View) {
+        addEmojiView(
+                messageViewGroup = globalMessageViewGroup,
+                view as EmojiView
+        )
+        dialog.dismiss()
     }
 
     private fun addEmojiView(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
@@ -147,9 +164,9 @@ class MainActivity : AppCompatActivity() {
         } else {
 
             val newEmojiView = EmojiView(this)
-            newEmojiView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, )
+            newEmojiView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
             newEmojiView.amount = 1
-            newEmojiView.emoji = Emoji.FACE_SMILING
+            newEmojiView.emoji = emojiView.emoji
             newEmojiView.isSelected = true
             newEmojiView.textColor = ContextCompat.getColor(this, R.color.white)
             newEmojiView.background = ContextCompat.getDrawable(this, R.drawable.emoji_view_bg)
@@ -159,7 +176,7 @@ class MainActivity : AppCompatActivity() {
             messageViewGroup.addEmojiView(newEmojiView)
 
             val messageIndex = getIndexOfMessage(messageViewGroup)
-            messages[messageIndex].reactions.add(Reaction(Emoji.FACE_SMILING, 1, arrayListOf(THIS_USER_ID)))
+            messages[messageIndex].reactions.add(Reaction(emojiView.emoji, 1, arrayListOf(THIS_USER_ID)))
 
             refreshSelectedEmojis(messageViewGroup)
         }
@@ -170,11 +187,13 @@ class MainActivity : AppCompatActivity() {
 
         val messageIndex = getIndexOfMessage(messageViewGroup)
 
-        for (reaction in messages[messageIndex].reactions) {
-            if (reaction.emoji == emojiView.emoji) {
-                messages[messageIndex].reactions.remove(reaction)
+        var indexToRemove = -1
+        for (i in 0 until messages[messageIndex].reactions.size) {
+            if (messages[messageIndex].reactions[i].emoji == emojiView.emoji) {
+                indexToRemove = i
             }
         }
+        messages[messageIndex].reactions.removeAt(indexToRemove)
 
         refreshSelectedEmojis(messageViewGroup)
     }
@@ -278,4 +297,5 @@ class MainActivity : AppCompatActivity() {
 
         const val MESSAGES_LIST_KEY = "messages"
     }
+
 }

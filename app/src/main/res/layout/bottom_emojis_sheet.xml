@@ -18,6 +18,7 @@
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
             app:emoji="FACE_SMILING"
+            android:onClick="onDialogEmojiClick"
             android:id="@+id/face_smiling"/>
 
         <com.example.chat.views.EmojiView
