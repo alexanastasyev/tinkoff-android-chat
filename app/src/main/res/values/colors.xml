@@ -10,6 +10,7 @@
     <color name="grey">#777777</color>
 
     <color name="primary">#3f8e86</color>
+    <color name="send_img_bg_color">#3f8e86</color>
     <color name="ripple">#fff</color>
     <color name="emoji_selected">#777777</color>
     <color name="emoji_not_selected">#1c1c1c</color>

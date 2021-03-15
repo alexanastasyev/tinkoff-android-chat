@@ -92,7 +92,7 @@ class MessageViewGroup @JvmOverloads constructor(
             }
         }
 
-    var reactions: List<Pair<Emoji, Int>> = emptyList()
+    var reactions: ArrayList<Pair<Emoji, Int>> = arrayListOf()
         set(value) {
             if (field != value) {
                 field = value
@@ -108,7 +108,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     private val nameTextView: TextView
     private val messageTextView: TextView
-    private val nameAndTextLayout: ConstraintLayout
+    val nameAndTextLayout: ConstraintLayout
     val avatarImageView: ImageView
     val emojisLayout: FlexBoxLayout
 
@@ -327,7 +327,7 @@ class MessageViewGroup @JvmOverloads constructor(
         )
         emojiLayoutParams.setMargins(dpToPx(EMOJIS_LAYOUT_MARGIN, resources))
         emojiView.layoutParams = emojiLayoutParams
-        emojiView.textSize = spToPx(DEFAULT_EMOJIS_TEXT_SIZE, resources)
+        emojiView.size = spToPx(DEFAULT_EMOJIS_TEXT_SIZE, resources)
         emojiView.background = ResourcesCompat.getDrawable(resources, R.drawable.emoji_view_bg, null)
         emojiView.setPadding(dpToPx(EMOJIS_PADDING, resources))
         emojiView.textColor = ResourcesCompat.getColor(resources, R.color.text_color, null)
@@ -340,5 +340,25 @@ class MessageViewGroup @JvmOverloads constructor(
         for (i in 0 until emojiLayout.childCount - 1) {
             emojiLayout.getChildAt(i).setOnClickListener(clickListener)
         }
+    }
+
+    fun setOnLongClickListenerForMessages(clickListener: OnLongClickListener) {
+        this.nameAndTextLayout.setOnLongClickListener(clickListener)
+    }
+
+    fun addEmojiView(emojiView: EmojiView) {
+        reactions.add(Pair(emojiView.emoji, emojiView.amount))
+        setReactionsInEmojisLayout(reactions)
+        setOnCLickListenerForEmojiViews(clickListenerForEmojis)
+    }
+
+    fun removeEmojiView(emojiView: EmojiView) {
+        for (reaction in reactions) {
+            if (reaction.first == emojiView.emoji) {
+                reactions.remove(reaction)
+            }
+        }
+        setReactionsInEmojisLayout(reactions)
+        setOnCLickListenerForEmojiViews(clickListenerForEmojis)
     }
 }

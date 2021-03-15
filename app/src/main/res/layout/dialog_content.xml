@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity"
     android:background="@color/black">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -13,6 +11,9 @@
         android:layout_height="0dp"
         android:id="@+id/recyclerView"
         android:background="@color/black"
+        android:paddingBottom="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,14 +32,17 @@
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:gravity="start|top"
+        android:gravity="start|center"
         android:inputType="textMultiLine"
         android:background="@drawable/edit_message_bg"
         android:padding="8dp"
         android:textColor="@color/white"
         android:hint="@string/edit_message_hint"
         android:textColorHint="@color/edit_text_hint_color"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guidelineVertical"
         app:layout_constraintTop_toBottomOf="@id/guidelineBottom"
@@ -55,9 +59,10 @@
         android:padding="8dp"
         app:layout_constraintStart_toEndOf="@id/guidelineVertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guidelineBottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:src="@drawable/send"/>
+        app:layout_constraintTop_toTopOf="@id/editText"
+        app:layout_constraintBottom_toBottomOf="@id/editText"
+        android:src="@drawable/send"
+        android:contentDescription="@string/send_message" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineVertical"
@@ -65,6 +70,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.9"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

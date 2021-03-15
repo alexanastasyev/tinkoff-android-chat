@@ -1,6 +1,7 @@
 package com.example.chat.recycler.holders
 
 import android.view.View
+import com.example.chat.Emoji
 import com.example.chat.MainActivity
 import com.example.chat.R
 import com.example.chat.Reaction
@@ -8,6 +9,7 @@ import com.example.chat.recycler.ViewTyped
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MessageUi(
         var messageId: Long,
@@ -15,7 +17,7 @@ class MessageUi(
         var author: String,
         var authorId: Long,
         var avatarUrl: String?,
-        var reactions: List<Reaction>,
+        var reactions: ArrayList<Reaction>,
         var date: Date,
         override val viewType: Int = R.layout.item_message
 ) : ViewTyped
@@ -60,7 +62,7 @@ class MessageViewHolder(
     }
 
     private fun bindReactions(item: MessageUi) {
-        messageHolder.reactions = item.reactions.map { Pair(it.emoji, it.amount) }
+        messageHolder.reactions = item.reactions.map { Pair(it.emoji, it.amount) } as ArrayList<Pair<Emoji, Int>>
         for (i in item.reactions.indices) {
             if (item.reactions[i].reactedUsersId.contains(MainActivity.THIS_USER_ID))
                 messageHolder.emojisLayout.getChildAt(i).isSelected = true

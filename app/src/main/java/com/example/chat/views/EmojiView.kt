@@ -29,7 +29,7 @@ class EmojiView @JvmOverloads constructor(
             }
         }
 
-    var textSize: Int
+    var size: Int
         get() = textPaint.textSize.toInt()
         set(value) {
             if (textPaint.textSize.toInt() != value) {
@@ -76,7 +76,7 @@ class EmojiView @JvmOverloads constructor(
 
     init {
         context.obtainStyledAttributes(attrs, R.styleable.EmojiView).apply {
-            textSize = getDimensionPixelSize(R.styleable.EmojiView_size, context.spToPx(DEFAULT_FONT_SIZE_PX))
+            size = getDimensionPixelSize(R.styleable.EmojiView_size, context.spToPx(DEFAULT_FONT_SIZE_PX))
             textColor = getColor(R.styleable.EmojiView_text_color, DEFAULT_COLOR)
             textPaint.color = textColor
             val emojiOrdinal = getInt(R.styleable.EmojiView_emoji, 0)

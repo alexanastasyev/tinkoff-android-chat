@@ -2,6 +2,7 @@ package com.example.chat
 
 import java.io.Serializable
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Message (
         val text: String,
@@ -10,5 +11,5 @@ class Message (
         val authorId: Long,
         val messageId: Long,
         val avatarUrl: String? = null,
-        var reactions: List<Reaction> = emptyList()
+        var reactions: ArrayList<Reaction> = arrayListOf()
         ) : Serializable
