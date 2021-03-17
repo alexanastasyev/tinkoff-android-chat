@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_sheet"
@@ -19,8 +19,7 @@
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
             app:emoji_unicode="0x1F600"
-            android:onClick="onDialogEmojiClick"
-            android:id="@+id/face_smiling"/>
+            android:onClick="onDialogEmojiClick"/>
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
@@ -86,6 +85,42 @@
             style="@style/EmojiViewStyle"
             app:emoji_unicode="0x1F921" />
 
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F4A9" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x2764" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F44D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F44E" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F44F" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F47D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F47F" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F62D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F973" />
+
     </com.example.chat.views.FlexBoxLayout>
 
-</LinearLayout>
+</ScrollView>
