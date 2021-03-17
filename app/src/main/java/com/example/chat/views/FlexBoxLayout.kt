@@ -33,6 +33,10 @@ class FlexBoxLayout @JvmOverloads constructor(
             val childrenHeight = it.measuredHeight + layoutParams.topMargin + layoutParams.bottomMargin
             val childrenWidth = it.measuredWidth + layoutParams.leftMargin + layoutParams.rightMargin
 
+            if (childrenWidth > parentWidth) {
+                parentWidth = childrenWidth
+            }
+
             if (currentWidth + childrenWidth > parentWidth) {
                 contentWidth = maxOf(contentWidth, currentWidth)
                 currentWidth = 0

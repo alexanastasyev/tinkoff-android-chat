@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
                     if (currentIndex == 0) {
                         true
                     } else {
-                        val formatter = SimpleDateFormat("dd MMM", Locale.getDefault())
+                        val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                         val dateAsStringOfCurrent = formatter.format(messages[currentIndex].date)
                         val dateAsStringOfPrevious = formatter.format(messages[previousIndex].date)
                         dateAsStringOfCurrent != dateAsStringOfPrevious
@@ -287,24 +287,10 @@ class MainActivity : AppCompatActivity() {
 
                 Message("Nice text, bro", "Dr Dre", Date(30000), 3, 3),
 
-                Message("Wanna apple?", "Steve Jobs", Date(40000), 4, 4,
+                Message("Wanna apple?", "Steve Jobs", Date(700_000_000_000), 4, 4,
                         avatarUrl = "https://cdn.vox-cdn.com/thumbor/gD8CFUq4EEdI8ux04KyGMmuIgcA=/0x86:706x557/920x613/filters:focal(0x86:706x557):format(webp)/cdn.vox-cdn.com/imported_assets/847184/stevejobs.png"),
-
-                Message("Hello, world!", "John Smith", Date(50000), 1, 5),
-
-                Message("Look\n" +
-                        "If you had\n" +
-                        "One shot\n" +
-                        "Or one opportunity\n" +
-                        "To seize everything you ever wanted\n" +
-                        "In one moment\n" +
-                        "Would you capture it\n" +
-                        "Or just let it slip?", "Marshall Bruce Mathers III", Date(60000), 2, 6),
-
-                Message("Nice text, bro", "Dr Dre", Date(700_000_000), 3, 7),
-
-                Message("Wanna apple?", "Steve Jobs", Date(700_000_000_000), 4, 8,
-                        avatarUrl = "https://cdn.vox-cdn.com/thumbor/gD8CFUq4EEdI8ux04KyGMmuIgcA=/0x86:706x557/920x613/filters:focal(0x86:706x557):format(webp)/cdn.vox-cdn.com/imported_assets/847184/stevejobs.png"),
+                Message("When something is important enough, you do it even if the odds are not in your favor.", "Elon Musk", Date(701_000_000_000), 5, 5,
+                        avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/8/85/Elon_Musk_Royal_Society_%28crop1%29.jpg")
         )
     }
 

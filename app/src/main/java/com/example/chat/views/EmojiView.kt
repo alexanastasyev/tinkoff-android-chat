@@ -5,6 +5,10 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import android.view.View.MeasureSpec.*
+import androidx.core.view.marginBottom
+import androidx.core.view.marginEnd
+import androidx.core.view.marginStart
+import androidx.core.view.marginTop
 import com.example.chat.Emoji
 import com.example.chat.R
 import com.example.chat.spToPx
@@ -57,10 +61,10 @@ class EmojiView @JvmOverloads constructor(
         }
 
     private fun refreshText() {
-        if (amount >= 0) {
-            this@EmojiView.text = "$emoji $amount"
+        text = if (amount >= 0) {
+            "$emoji $amount"
         } else {
-            this@EmojiView.text = emoji.toString()
+            emoji.toString()
         }
     }
 
@@ -91,11 +95,11 @@ class EmojiView @JvmOverloads constructor(
         textPaint.getTextBounds(text, 0, text.length, textBounds)
         textWidth = textBounds.width()
         textHeight = textBounds.height()
-        contentWidth = textWidth + paddingStart + paddingEnd
-        contentHeight = textHeight + paddingTop + paddingBottom
+        contentWidth = textWidth + paddingStart + paddingEnd + marginStart + marginEnd
+        contentHeight = textHeight + paddingTop + paddingBottom + marginTop + marginBottom
         modeWidth = getMode(widthMeasureSpec)
         modeHeight = getMode(heightMeasureSpec)
-        setMeasuredDimension(contentWidth + paddingLeft + paddingRight, contentHeight + paddingTop + paddingBottom)
+        setMeasuredDimension(contentWidth, contentHeight)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {

@@ -14,7 +14,7 @@
         android:paddingBottom="8dp"
         android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
+        app:layout_constraintBottom_toTopOf="@id/editText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
