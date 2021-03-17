@@ -21,6 +21,14 @@ class EmojiView @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : View(context, attrs, defStyleAttr, defStyleRes), Serializable {
 
+    companion object {
+        private val DEFAULT_EMOJI = Emoji.FACE_SMILING
+        private const val DEFAULT_AMOUNT = 0
+        private const val DEFAULT_FONT_SIZE_PX = 14F
+        private const val DEFAULT_COLOR = Color.BLACK
+        private val DRAWABLES_STATE = IntArray(1) {android.R.attr.state_selected}
+    }
+
     private val textPaint = Paint().apply {
         textAlign = Paint.Align.CENTER
     }
@@ -124,13 +132,5 @@ class EmojiView @JvmOverloads constructor(
             mergeDrawableStates(drawableState, DRAWABLES_STATE)
         }
         return drawableState
-    }
-
-    companion object {
-        private val DEFAULT_EMOJI = Emoji.FACE_SMILING
-        private const val DEFAULT_AMOUNT = 0
-        private const val DEFAULT_FONT_SIZE_PX = 14F
-        private const val DEFAULT_COLOR = Color.BLACK
-        private val DRAWABLES_STATE = IntArray(1) {android.R.attr.state_selected}
     }
 }

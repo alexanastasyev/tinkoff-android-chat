@@ -25,6 +25,15 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val THIS_USER_ID = 1234567890L
+        const val THIS_USER_NAME = "Alexey Anastasyev"
+        const val THIS_USER_AVATAR_URL = "https://sun9-62.userapi.com/impf/c841630/v841630065/113e0/lpOMX1Dm8Ao.jpg?size=225x225&quality=96&sign=5c18b2e9ed3f0f0dd9795f4e37012341&type=album"
+
+        const val MESSAGES_LIST_KEY = "messages"
+        private const val DIVIDER_FOR_GENERATING_ID = 1_000_000_000
+    }
+
     private lateinit var messages: ArrayList<Message>
     private lateinit var messageUis: ArrayList<ViewTyped>
     private lateinit var recyclerView: RecyclerView
@@ -337,15 +346,6 @@ class MainActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(MESSAGES_LIST_KEY, messages)
-    }
-
-    companion object {
-        const val THIS_USER_ID = 1234567890L
-        const val THIS_USER_NAME = "Alexey Anastasyev"
-        const val THIS_USER_AVATAR_URL = "https://sun9-62.userapi.com/impf/c841630/v841630065/113e0/lpOMX1Dm8Ao.jpg?size=225x225&quality=96&sign=5c18b2e9ed3f0f0dd9795f4e37012341&type=album"
-
-        const val MESSAGES_LIST_KEY = "messages"
-        private const val DIVIDER_FOR_GENERATING_ID = 1_000_000_000
     }
 
 }
