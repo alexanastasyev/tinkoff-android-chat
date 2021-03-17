@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/editText"
         app:layout_constraintBottom_toBottomOf="@id/editText"
-        android:src="@drawable/send"
+        android:src="@drawable/close"
         android:contentDescription="@string/send_message" />
 
     <androidx.constraintlayout.widget.Guideline

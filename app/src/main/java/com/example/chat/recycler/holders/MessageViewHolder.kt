@@ -1,15 +1,13 @@
 package com.example.chat.recycler.holders
 
 import android.view.View
-import com.example.chat.Emoji
-import com.example.chat.MainActivity
-import com.example.chat.R
-import com.example.chat.Reaction
+import android.widget.TextView
+import com.example.chat.*
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
+import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MessageUi(
         var messageId: Long,
@@ -25,10 +23,16 @@ class MessageUi(
 class MessageViewHolder(
         view: View,
         click: ((View) -> Unit)?,
-        action: ((View) -> Unit)?
-    ) : BaseViewHolder<MessageUi>(view) {
+        action: ((View) -> Unit)?,
+        private val showDate: ((View) -> Boolean)
+) : BaseViewHolder<MessageUi>(view) {
 
-    private val messageHolder = view.findViewById<MessageViewGroup>(R.id.message_from_other)
+//    companion object {
+//        private var lastDayUpdated: String = ""
+//    }
+
+    private val messageHolder = view.findViewById<MessageViewGroup>(R.id.message)
+    private val dateHolder = view.findViewById<TextView>(R.id.date)
 
     init {
         if (click != null) {
@@ -44,6 +48,28 @@ class MessageViewHolder(
 
         messageHolder.messageId = item.messageId
         messageHolder.messageText = item.text
+
+
+        val formatter = SimpleDateFormat("dd MMM", Locale.getDefault())
+        val dateAsString = formatter.format(item.date)
+        dateHolder.text = dateAsString
+
+        val shouldShowDate = showDate(messageHolder)
+
+        if (shouldShowDate) {
+            dateHolder.height = 50
+        } else {
+            dateHolder.height = 0
+        }
+
+//        if (dateAsString != lastDayUpdated) {
+//            dateHolder.height = 50
+//            dateHolder.text = dateAsString
+//            lastDayUpdated = dateAsString
+//        } else {
+//            dateHolder.height = 0
+//        }
+
         messageHolder.userName = item.author
         bindReactions(item)
 
@@ -59,6 +85,8 @@ class MessageViewHolder(
                     .placeholder(R.drawable.default_avatar)
                     .into(messageHolder.avatarImageView)
         }
+
+
     }
 
     private fun bindReactions(item: MessageUi) {

@@ -9,15 +9,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.setPadding
+import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
 import com.example.chat.recycler.ViewTyped
+import com.example.chat.recycler.holders.MessageUi
 import com.example.chat.recycler.messageToUi
 import com.example.chat.views.EmojiView
 import com.example.chat.views.MessageViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -27,8 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var messages: ArrayList<Message>
     private lateinit var messageUis: ArrayList<ViewTyped>
     private lateinit var adapter: Adapter<ViewTyped>
-    private lateinit var globalMessageViewGroup: MessageViewGroup
-    private lateinit var dialog: BottomSheetDialog
+    private lateinit var clickedMessageViewGroup: MessageViewGroup
+    private lateinit var emojisDialog: BottomSheetDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +41,20 @@ class MainActivity : AppCompatActivity() {
         messageUis = messageToUi(messages) as ArrayList<ViewTyped>
 
         val holderFactory = ChatHolderFactory(
-                action = getActionForMessageViewGroups()
+                action = getActionForMessageViewGroups(),
+                showDate = { message ->
+                    val messageViewGroup = message as MessageViewGroup
+                    val currentIndex = getIndexOfMessage(messageViewGroup)
+                    val previousIndex = currentIndex - 1
+                    if (currentIndex == 0) {
+                        true
+                    } else {
+                        val formatter = SimpleDateFormat("dd MMM", Locale.getDefault())
+                        val dateAsStringOfCurrent = formatter.format(messages[currentIndex].date)
+                        val dateAsStringOfPrevious = formatter.format(messages[previousIndex].date)
+                        dateAsStringOfCurrent != dateAsStringOfPrevious
+                    }
+                }
         )
         adapter = Adapter(holderFactory)
 
@@ -49,6 +65,17 @@ class MainActivity : AppCompatActivity() {
         adapter.items = messageUis
 
         setClickListenerForSendImage()
+        setEditTextListener()
+    }
+
+    private fun setEditTextListener() {
+        findViewById<EditText>(R.id.editText).doOnTextChanged { text, start, before, count ->
+            if (text.isNullOrEmpty()) {
+                findViewById<ImageView>(R.id.imageSend).setImageResource(R.drawable.close)
+            } else {
+                findViewById<ImageView>(R.id.imageSend).setImageResource(R.drawable.send)
+            }
+        }
     }
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
@@ -83,8 +110,6 @@ class MainActivity : AppCompatActivity() {
                         emojiView.amount -= 1
 
                         if (emojiView.amount == 0) {
-//                            messageViewGroup.emojisLayout.removeView(emojiView)
-//                            messageViewGroup.reactions.removeAt(emojiIndex)
                             removeEmojiView(messageViewGroup, emojiView)
                         } else {
                             messages[messageIndex].reactions[emojiIndex].reactedUsersId.remove(THIS_USER_ID)
@@ -132,24 +157,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun showEmojisDialog(messageViewGroup: MessageViewGroup) {
         val bottomEmojisDialog = layoutInflater.inflate(R.layout.bottom_emojis_sheet, null)
-        dialog = BottomSheetDialog(this)
-        dialog.setContentView(bottomEmojisDialog)
+        emojisDialog = BottomSheetDialog(this)
+        emojisDialog.setContentView(bottomEmojisDialog)
 
-        globalMessageViewGroup = messageViewGroup
+        clickedMessageViewGroup = messageViewGroup
 
-        bottomEmojisDialog.setOnClickListener{
-            dialog.dismiss()
-        }
-
-        dialog.show()
+        emojisDialog.show()
     }
 
     fun onDialogEmojiClick(view: View) {
         addEmojiView(
-                messageViewGroup = globalMessageViewGroup,
+                messageViewGroup = clickedMessageViewGroup,
                 view as EmojiView
         )
-        dialog.dismiss()
+        emojisDialog.dismiss()
     }
 
     private fun addEmojiView(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
@@ -196,6 +217,7 @@ class MainActivity : AppCompatActivity() {
         messages[messageIndex].reactions.removeAt(indexToRemove)
 
         refreshSelectedEmojis(messageViewGroup)
+        messageViewGroup.setOnPlusClickListener(getOnPlusClickListener(messageViewGroup))
     }
 
     private fun refreshSelectedEmojis(messageViewGroup: MessageViewGroup) {
@@ -235,10 +257,11 @@ class MainActivity : AppCompatActivity() {
                 messages.add(newMessage)
 
                 messageUis.add(messageToUi(listOf(newMessage))[0])
-                adapter.items = messageUis
+                adapter.items.add(messageToUi(listOf(newMessage))[0])
 
                 editText.text.clear()
-                adapter.notifyItemInserted(adapter.itemCount - 1)
+
+                //adapter.notifyItemInserted(adapter.itemCount - 1)
                 recyclerView.scrollToPosition(adapter.itemCount - 1)
             }
         }
@@ -246,7 +269,7 @@ class MainActivity : AppCompatActivity() {
     
     private fun getMessagesList(): List<Message> {
         return listOf(
-                Message("Hello, world!", "John Smith", Date(10000), 2384758, 1),
+                Message("Hello, world!", "John Smith", Date(10000), 1, 1),
 
                 Message("Look\n" +
                         "If you had\n" +
@@ -255,19 +278,19 @@ class MainActivity : AppCompatActivity() {
                         "To seize everything you ever wanted\n" +
                         "In one moment\n" +
                         "Would you capture it\n" +
-                        "Or just let it slip?", "Marshall Bruce Mathers III", Date(20000), 2334412, 2,
+                        "Or just let it slip?", "Marshall Bruce Mathers III", Date(20000), 2, 2,
                         reactions = arrayListOf(
                                 Reaction(Emoji.FACE_IN_LOVE, 3, arrayListOf(1, 2, 3, THIS_USER_ID)),
                                 Reaction(Emoji.FACE_WITH_SUNGLASSES, 3, arrayListOf(1, 2, 3)),
                                 Reaction(Emoji.FACE_SMILING, 4, arrayListOf(1, 2, 3, 4))
                         )),
 
-                Message("Nice text, bro", "Dr Dre", Date(3984), 13413, 3),
+                Message("Nice text, bro", "Dr Dre", Date(30000), 3, 3),
 
-                Message("Wanna apple?", "Steve Jobs", Date(30000), 6534758, 4,
+                Message("Wanna apple?", "Steve Jobs", Date(40000), 4, 4,
                         avatarUrl = "https://cdn.vox-cdn.com/thumbor/gD8CFUq4EEdI8ux04KyGMmuIgcA=/0x86:706x557/920x613/filters:focal(0x86:706x557):format(webp)/cdn.vox-cdn.com/imported_assets/847184/stevejobs.png"),
 
-                Message("Hello, world!", "John Smith", Date(10000), 2384758, 5),
+                Message("Hello, world!", "John Smith", Date(50000), 1, 5),
 
                 Message("Look\n" +
                         "If you had\n" +
@@ -276,11 +299,11 @@ class MainActivity : AppCompatActivity() {
                         "To seize everything you ever wanted\n" +
                         "In one moment\n" +
                         "Would you capture it\n" +
-                        "Or just let it slip?", "Marshall Bruce Mathers III", Date(20000), 2334412, 6),
+                        "Or just let it slip?", "Marshall Bruce Mathers III", Date(60000), 2, 6),
 
-                Message("Nice text, bro", "Dr Dre", Date(3984), 13413, 7),
+                Message("Nice text, bro", "Dr Dre", Date(700_000_000), 3, 7),
 
-                Message("Wanna apple?", "Steve Jobs", Date(30000), 6534758, 8,
+                Message("Wanna apple?", "Steve Jobs", Date(700_000_000_000), 4, 8,
                         avatarUrl = "https://cdn.vox-cdn.com/thumbor/gD8CFUq4EEdI8ux04KyGMmuIgcA=/0x86:706x557/920x613/filters:focal(0x86:706x557):format(webp)/cdn.vox-cdn.com/imported_assets/847184/stevejobs.png"),
         )
     }
@@ -291,7 +314,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val THIS_USER_ID = 123456789101112L
+        const val THIS_USER_ID = 1234567890L
         const val THIS_USER_NAME = "Alexey Anastasyev"
         const val THIS_USER_AVATAR_URL = "https://sun9-62.userapi.com/impf/c841630/v841630065/113e0/lpOMX1Dm8Ao.jpg?size=225x225&quality=96&sign=5c18b2e9ed3f0f0dd9795f4e37012341&type=album"
 
