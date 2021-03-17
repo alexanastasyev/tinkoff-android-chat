@@ -82,6 +82,10 @@
             style="@style/EmojiViewStyle"
             app:emoji_unicode="0x1F480" />
 
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F921" />
+
     </com.example.chat.views.FlexBoxLayout>
 
 </LinearLayout>

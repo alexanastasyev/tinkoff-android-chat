@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity() {
                         "Would you capture it\n" +
                         "Or just let it slip?", "Marshall Bruce Mathers III", Date(20000), 2, 2,
                         reactions = arrayListOf(
-                                Reaction(Emoji(0x1F60D), 3, arrayListOf(1, 2, 3, THIS_USER_ID)),
-                                Reaction(Emoji(0x1F60E), 3, arrayListOf(1, 2, 3)),
-                                Reaction(Emoji(0x1F600), 4, arrayListOf(1, 2, 3, 4))
+                                Reaction(Emoji.FACE_IN_LOVE, 3, arrayListOf(1, 3, THIS_USER_ID)),
+                                Reaction(Emoji.FACE_WITH_SUNGLASSES, 3, arrayListOf(1, 2, 3)),
+                                Reaction(Emoji.FACE_SMILING, 4, arrayListOf(1, 2, 3, 4))
                         )),
 
                 Message("Nice text, bro", "Dr Dre", Date(30000), 3, 3),
@@ -93,13 +93,13 @@ class MainActivity : AppCompatActivity() {
     private fun getActionForMessageViewGroups() : (View) -> Unit {
         return { message ->
             val messageViewGroup = message as MessageViewGroup
-            messageViewGroup.setOnClickListenerForEmojiViews(getOnCLickListenerForEmojiView(messageViewGroup))
+            messageViewGroup.setOnClickListenerForEmojiViews(getOnClickListenerForEmojiView(messageViewGroup))
             messageViewGroup.setOnLongClickListenerForMessages(getOnLongClickListenerForMessages(messageViewGroup))
             messageViewGroup.setOnPlusClickListener(getOnPlusClickListener(messageViewGroup))
         }
     }
 
-    private fun getOnCLickListenerForEmojiView(messageViewGroup: MessageViewGroup): (View) -> Unit {
+    private fun getOnClickListenerForEmojiView(messageViewGroup: MessageViewGroup): (View) -> Unit {
         return { emoji ->
             val emojiView = emoji as EmojiView
 
@@ -124,18 +124,6 @@ class MainActivity : AppCompatActivity() {
         }
         return messageIndex
     }
-
-//    private fun isMessageIndexValid(messageIndex: Int): Boolean {
-//        return messageIndex in messages.indices
-//    }
-//
-//    private fun isEmojiIndexValid(messageIndex: Int, emojiIndex: Int): Boolean {
-//        return if (isMessageIndexValid(messageIndex)) {
-//            emojiIndex in messages[messageIndex].reactions.indices
-//        } else {
-//            false
-//        }
-//    }
 
     private fun unselectEmoji(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
         emojiView.isSelected = false
@@ -312,13 +300,13 @@ class MainActivity : AppCompatActivity() {
         if (emojiAlreadyExist(messageViewGroup, emojiView)) {
             messageViewGroup.emojisLayout.children.forEach {
                 val existingEmojiView = it as EmojiView
-                if (existingEmojiView.emoji == emojiView.emoji && !existingEmojiView.isSelected) {
+                if (existingEmojiView.emoji.unicode == emojiView.emoji.unicode && !existingEmojiView.isSelected) {
                     existingEmojiView.callOnClick()
                 }
             }
         } else {
             val newEmojiView = createNewEmojiView(emojiView.emoji)
-            newEmojiView.setOnClickListener(getOnCLickListenerForEmojiView(messageViewGroup))
+            newEmojiView.setOnClickListener(getOnClickListenerForEmojiView(messageViewGroup))
             messageViewGroup.addEmojiView(newEmojiView)
             createReaction(messageViewGroup, emojiView)
             refreshSelectedEmojis(messageViewGroup)
@@ -326,7 +314,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun emojiAlreadyExist(messageViewGroup: MessageViewGroup, emojiView: EmojiView): Boolean {
-        return messageViewGroup.reactions.map { it.first }.contains(emojiView.emoji)
+        return messageViewGroup.reactions.map { it.first.unicode }.contains(emojiView.emoji.unicode)
     }
 
     private fun createNewEmojiView(emoji: Emoji): EmojiView {

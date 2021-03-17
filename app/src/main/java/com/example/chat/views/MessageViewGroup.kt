@@ -316,7 +316,7 @@ class MessageViewGroup @JvmOverloads constructor(
             return
         }
         val emojiPlus = EmojiView(context)
-        emojiPlus.emoji = Emoji(0x2795)
+        emojiPlus.emoji = Emoji.SIGN_PLUS
         emojiPlus.amount = -1
         setOnPlusClickListener(emojiPlusClickListener)
         setDefaultEmojiViewParams(emojiPlus)
