@@ -18,8 +18,7 @@
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji_unicode="0x1F600"
-            android:onClick="onDialogEmojiClick"/>
+            app:emoji_unicode="0x1F600"/>
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
@@ -79,11 +78,27 @@
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji_unicode="0x1F480" />
+            app:emoji_unicode="0x1F62D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F973" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
             app:emoji_unicode="0x1F921" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F480" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F47D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F47F" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
@@ -105,21 +120,6 @@
             style="@style/EmojiViewStyle"
             app:emoji_unicode="0x1F44F" />
 
-        <com.example.chat.views.EmojiView
-            style="@style/EmojiViewStyle"
-            app:emoji_unicode="0x1F47D" />
-
-        <com.example.chat.views.EmojiView
-            style="@style/EmojiViewStyle"
-            app:emoji_unicode="0x1F47F" />
-
-        <com.example.chat.views.EmojiView
-            style="@style/EmojiViewStyle"
-            app:emoji_unicode="0x1F62D" />
-
-        <com.example.chat.views.EmojiView
-            style="@style/EmojiViewStyle"
-            app:emoji_unicode="0x1F973" />
 
     </com.example.chat.views.FlexBoxLayout>
 

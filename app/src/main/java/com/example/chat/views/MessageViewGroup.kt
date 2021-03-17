@@ -31,7 +31,7 @@ class MessageViewGroup @JvmOverloads constructor(
     companion object {
         private const val AVATAR_SIZE = 50F
         private const val MESSAGE_MINIMAL_SIDE_MARGIN = 80F
-        private const val EMOJIS_LAYOUT_MARGIN = 8F
+        private const val EMOJIS_LAYOUT_MARGIN = 4F
 
         const val EMOJIS_PADDING = 2F
 
@@ -329,8 +329,8 @@ class MessageViewGroup @JvmOverloads constructor(
                 LinearLayout.LayoutParams.WRAP_CONTENT
         )
         emojiLayoutParams.setMargins(
-                dpToPx(0F, resources),
-                dpToPx(2F, resources),
+                dpToPx(EMOJIS_LAYOUT_MARGIN, resources),
+                dpToPx(EMOJIS_LAYOUT_MARGIN, resources),
                 dpToPx(EMOJIS_LAYOUT_MARGIN, resources),
                 dpToPx(EMOJIS_LAYOUT_MARGIN, resources)
         )
