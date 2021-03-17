@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="com.example.homework2.MessageViewGroup">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/avatarView"
+        android:src="@drawable/avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/avatar_picture" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/nameAndTextLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/message_name_and_text_bg"
+        android:padding="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="8dp">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/name_color"
+            android:layout_marginStart="16dp"
+            android:textSize="16sp"
+            android:text="@string/name_example"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <TextView
+            android:id="@+id/messageText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textSize="16sp"
+            android:textColor="@color/text_color"
+            android:text="@string/message_example"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            app:layout_constraintStart_toStartOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.example.homework2.FlexBoxLayout
+        android:id="@+id/emojisLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="58dp"
+        app:layout_constraintTop_toBottomOf="@id/messageText"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_SMILING"
+            app:emoji_amount="5"/>
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_LAUGHING"
+            app:emoji_amount="1" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_WINKING"
+            app:emoji_amount="10" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_IN_LOVE"
+            app:emoji_amount="100" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_KISSING"
+            app:emoji_amount="20" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_NEUTRAL"
+            app:emoji_amount="50" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_WITH_SUNGLASSES"
+            app:emoji_amount="0" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_CRYING"
+            app:emoji_amount="300" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_WITH_TONGUE"
+            app:emoji_amount="40" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_WITH_RAISED_EYEBROW"
+            app:emoji_amount="350" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_SMIRKING"
+            app:emoji_amount="1" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_RELIEVED"
+            app:emoji_amount="1" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_COWBOY_HAT"
+            app:emoji_amount="0" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_ASTONISHED"
+            app:emoji_amount="80" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="FACE_WEARY"
+            app:emoji_amount="10" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="SKULL"
+            app:emoji_amount="100" />
+
+        <com.example.homework2.EmojiView
+            style="@style/EmojiViewStyle"
+            app:text_color="@color/text_color"
+            app:emoji="SIGN_PLUS"
+            app:emoji_amount="-1" />
+
+    </com.example.homework2.FlexBoxLayout>
+
+</merge>
