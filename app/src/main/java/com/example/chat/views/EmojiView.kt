@@ -12,13 +12,14 @@ import androidx.core.view.marginTop
 import com.example.chat.Emoji
 import com.example.chat.R
 import com.example.chat.spToPx
+import java.io.Serializable
 
 class EmojiView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0,
     defStyleRes: Int = 0
-) : View(context, attrs, defStyleAttr, defStyleRes) {
+) : View(context, attrs, defStyleAttr, defStyleRes), Serializable {
 
     private val textPaint = Paint().apply {
         textAlign = Paint.Align.CENTER
@@ -83,8 +84,8 @@ class EmojiView @JvmOverloads constructor(
             size = getDimensionPixelSize(R.styleable.EmojiView_size, context.spToPx(DEFAULT_FONT_SIZE_PX))
             textColor = getColor(R.styleable.EmojiView_text_color, DEFAULT_COLOR)
             textPaint.color = textColor
-            val emojiOrdinal = getInt(R.styleable.EmojiView_emoji, 0)
-            emoji = Emoji.values()[emojiOrdinal]
+            val emojiUnicode = getInt(R.styleable.EmojiView_emoji_unicode, 0)
+            emoji = Emoji(emojiUnicode)
             amount = getInt(R.styleable.EmojiView_emoji_amount, DEFAULT_AMOUNT)
             refreshText()
             recycle()
@@ -104,19 +105,17 @@ class EmojiView @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val textX = width / 2F
-        val textY = height / 2F + getDisplacementOfTextWithEmoji(textHeight)
+        val textY = height / 2F + getOffsetOfTextWithEmoji(textHeight)
         textPoint.set(textX, textY)
     }
 
-    private fun getDisplacementOfTextWithEmoji(textHeight: Number) : Float {
-        val displacementFactor = 3.5F
-        return textHeight.toFloat() / displacementFactor
+    private fun getOffsetOfTextWithEmoji(textHeight: Int) : Float {
+        val offsetFactor = 3.5F
+        return textHeight.toFloat() / offsetFactor
     }
 
     override fun onDraw(canvas: Canvas) {
-        val canvasCount = canvas.save()
         canvas.drawText(text, textPoint.x, textPoint.y, textPaint)
-        canvas.restoreToCount(canvasCount)
     }
 
     override fun onCreateDrawableState(extraSpace: Int): IntArray {
@@ -128,7 +127,7 @@ class EmojiView @JvmOverloads constructor(
     }
 
     companion object {
-        private val DEFAULT_EMOJI = Emoji.FACE_SMILING
+        private val DEFAULT_EMOJI = Emoji(0x1F600) // Smiling
         private const val DEFAULT_AMOUNT = 0
         private const val DEFAULT_FONT_SIZE_PX = 14F
         private const val DEFAULT_COLOR = Color.BLACK

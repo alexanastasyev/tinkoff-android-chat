@@ -4,7 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.holders.BaseViewHolder
 
 abstract class HolderFactory : (ViewGroup, Int) -> BaseViewHolder<ViewTyped> {
@@ -13,7 +12,7 @@ abstract class HolderFactory : (ViewGroup, Int) -> BaseViewHolder<ViewTyped> {
     final override fun invoke(viewGroup: ViewGroup, viewType: Int): BaseViewHolder<ViewTyped> {
         val view: View = viewGroup.inflate(viewType)
         return when (viewType) {
-            // Here will be different simple view types (progress bar, etc)
+            // Here can be different simple view types (progress bar, etc)
             else -> checkNotNull(createViewHolder(view, viewType)) {
                 "unknown viewType=" + viewGroup.resources.getResourceName(viewType)
             }

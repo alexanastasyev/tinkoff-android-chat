@@ -3,24 +3,24 @@
     <declare-styleable name="EmojiView">
         <attr name="text_color" format="color" />
         <attr name="size" format="dimension" />
-        <attr name="emoji" format="enum">
-            <enum name="FACE_SMILING" value="0" />
-            <enum name="FACE_LAUGHING" value="1" />
-            <enum name="FACE_WINKING" value="2" />
-            <enum name="FACE_IN_LOVE" value="3" />
-            <enum name="FACE_KISSING" value="4" />
-            <enum name="FACE_NEUTRAL" value="5" />
-            <enum name="FACE_WITH_SUNGLASSES" value="6" />
-            <enum name="FACE_CRYING" value="7" />
-            <enum name="FACE_WITH_TONGUE" value="8" />
-            <enum name="FACE_WITH_RAISED_EYEBROW" value="9" />
-            <enum name="FACE_SMIRKING" value="10" />
-            <enum name="FACE_RELIEVED" value="11" />
-            <enum name="FACE_COWBOY_HAT" value="12" />
-            <enum name="FACE_ASTONISHED" value="13" />
-            <enum name="FACE_WEARY" value="14" />
-            <enum name="SKULL" value="15" />
-            <enum name="SIGN_PLUS" value="16" />
+        <attr name="emoji_unicode" format="integer">
+<!--            <enum name="FACE_SMILING" value="0" />-->
+<!--            <enum name="FACE_LAUGHING" value="1" />-->
+<!--            <enum name="FACE_WINKING" value="2" />-->
+<!--            <enum name="FACE_IN_LOVE" value="3" />-->
+<!--            <enum name="FACE_KISSING" value="4" />-->
+<!--            <enum name="FACE_NEUTRAL" value="5" />-->
+<!--            <enum name="FACE_WITH_SUNGLASSES" value="6" />-->
+<!--            <enum name="FACE_CRYING" value="7" />-->
+<!--            <enum name="FACE_WITH_TONGUE" value="8" />-->
+<!--            <enum name="FACE_WITH_RAISED_EYEBROW" value="9" />-->
+<!--            <enum name="FACE_SMIRKING" value="10" />-->
+<!--            <enum name="FACE_RELIEVED" value="11" />-->
+<!--            <enum name="FACE_COWBOY_HAT" value="12" />-->
+<!--            <enum name="FACE_ASTONISHED" value="13" />-->
+<!--            <enum name="FACE_WEARY" value="14" />-->
+<!--            <enum name="SKULL" value="15" />-->
+<!--            <enum name="SIGN_PLUS" value="16" />-->
         </attr>
         <attr name="emoji_amount" format="integer" />
     </declare-styleable>

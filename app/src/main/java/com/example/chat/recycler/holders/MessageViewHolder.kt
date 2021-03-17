@@ -24,12 +24,8 @@ class MessageViewHolder(
         view: View,
         click: ((View) -> Unit)?,
         action: ((View) -> Unit)?,
-        private val showDate: ((View) -> Boolean)
+        private val shouldShowDate: ((View) -> Boolean)
 ) : BaseViewHolder<MessageUi>(view) {
-
-//    companion object {
-//        private var lastDayUpdated: String = ""
-//    }
 
     private val messageHolder = view.findViewById<MessageViewGroup>(R.id.message)
     private val dateHolder = view.findViewById<TextView>(R.id.date)
@@ -48,30 +44,9 @@ class MessageViewHolder(
 
         messageHolder.messageId = item.messageId
         messageHolder.messageText = item.text
-
-
-        val formatter = SimpleDateFormat("dd MMM", Locale.getDefault())
-        val dateAsString = formatter.format(item.date)
-        dateHolder.text = dateAsString
-
-        val shouldShowDate = showDate(messageHolder)
-
-        if (shouldShowDate) {
-            dateHolder.height = 50
-        } else {
-            dateHolder.height = 0
-        }
-
-//        if (dateAsString != lastDayUpdated) {
-//            dateHolder.height = 50
-//            dateHolder.text = dateAsString
-//            lastDayUpdated = dateAsString
-//        } else {
-//            dateHolder.height = 0
-//        }
-
         messageHolder.userName = item.author
         bindReactions(item)
+        bindAndShowDateIfNecessary(item)
 
         if (item.authorId == MainActivity.THIS_USER_ID) {
             messageHolder.align = MessageViewGroup.ALIGN_RIGHT
@@ -85,8 +60,18 @@ class MessageViewHolder(
                     .placeholder(R.drawable.default_avatar)
                     .into(messageHolder.avatarImageView)
         }
+    }
 
+    private fun bindAndShowDateIfNecessary(item: MessageUi) {
+        val formatter = SimpleDateFormat("d MMM", Locale.getDefault())
+        val dateAsString = formatter.format(item.date)
+        dateHolder.text = dateAsString
 
+        if (shouldShowDate(messageHolder)) {
+            dateHolder.height = 50
+        } else {
+            dateHolder.height = 0
+        }
     }
 
     private fun bindReactions(item: MessageUi) {

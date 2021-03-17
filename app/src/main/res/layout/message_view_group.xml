@@ -8,8 +8,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/avatarView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:contentDescription="@string/avatar_picture" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/name_color"
+            android:background="@color/edit_text_bg_color"
             android:paddingBottom="8dp"
             android:textSize="16sp"
             app:layout_constraintTop_toTopOf="parent"
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/text_color"
+            android:background="@color/edit_text_bg_color"
             app:layout_constraintTop_toBottomOf="@id/name"
             app:layout_constraintStart_toStartOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>

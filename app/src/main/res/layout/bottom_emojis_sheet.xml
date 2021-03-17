@@ -18,69 +18,69 @@
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_SMILING"
+            app:emoji_unicode="0x1F600"
             android:onClick="onDialogEmojiClick"
             android:id="@+id/face_smiling"/>
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_WEARY" />
+            app:emoji_unicode="0x1F629" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_ASTONISHED" />
+            app:emoji_unicode="0x1F632" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_COWBOY_HAT" />
+            app:emoji_unicode="0x1F920" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_RELIEVED" />
+            app:emoji_unicode="0x1F60C" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_SMIRKING" />
+            app:emoji_unicode="0x1F60F" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_WITH_RAISED_EYEBROW" />
+            app:emoji_unicode="0x1F928" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_WITH_TONGUE" />
+            app:emoji_unicode="0x1F61B" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_CRYING" />
+            app:emoji_unicode="0x1F622" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_IN_LOVE" />
+            app:emoji_unicode="0x1F60D" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_KISSING" />
+            app:emoji_unicode="0x1F618" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_WITH_SUNGLASSES" />
+            app:emoji_unicode="0x1F60E" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_LAUGHING" />
+            app:emoji_unicode="0x1F602" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_NEUTRAL" />
+            app:emoji_unicode="0x1F610" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="FACE_WINKING" />
+            app:emoji_unicode="0x1F609" />
 
         <com.example.chat.views.EmojiView
             style="@style/EmojiViewStyle"
-            app:emoji="SKULL" />
+            app:emoji_unicode="0x1F480" />
 
     </com.example.chat.views.FlexBoxLayout>
 

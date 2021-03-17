@@ -1,7 +1,6 @@
 package com.example.chat.recycler
 
 import com.example.chat.Message
-import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.holders.MessageUi
 import java.util.ArrayList
 

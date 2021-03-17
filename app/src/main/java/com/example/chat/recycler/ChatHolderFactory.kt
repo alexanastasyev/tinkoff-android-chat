@@ -8,12 +8,12 @@ import com.example.chat.recycler.holders.MessageViewHolder
 class ChatHolderFactory(
         private val click: ((View) -> Unit)? = null,
         private val action: ((View) -> Unit)? = null,
-        private val showDate: ((View) -> Boolean)
+        private val shouldShowDate: ((View) -> Boolean)
     ) : HolderFactory() {
 
     override fun createViewHolder(view: View, viewType: Int): BaseViewHolder<*>? {
         return when (viewType) {
-            R.layout.item_message -> MessageViewHolder(view, click, action, showDate)
+            R.layout.item_message -> MessageViewHolder(view, click, action, shouldShowDate)
             else -> null
         }
     }

@@ -28,6 +28,20 @@ class MessageViewGroup @JvmOverloads constructor(
     defStyleRes: Int = 0
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
+    companion object {
+        private const val AVATAR_SIZE = 50F
+        private const val MESSAGE_MINIMAL_SIDE_MARGIN = 80F
+        private const val EMOJIS_LAYOUT_MARGIN = 8F
+
+        const val EMOJIS_PADDING = 2F
+
+        private const val DEFAULT_TEXT_SIZE = 16
+        private const val DEFAULT_EMOJIS_TEXT_SIZE = 14F
+
+        const val ALIGN_LEFT = 0
+        const val ALIGN_RIGHT = 1
+    }
+
     var messageId: Long? = null
 
     var textSize: Int = DEFAULT_TEXT_SIZE
@@ -98,7 +112,7 @@ class MessageViewGroup @JvmOverloads constructor(
                 field = value
                 if (emojisLayout != null) {
                     setReactionsInEmojisLayout(reactions)
-                    setOnCLickListenerForEmojiViews(clickListenerForEmojis)
+                    setOnClickListenerForEmojiViews(clickListenerForEmojis)
                     setOnPlusClickListener(emojiPlusClickListener)
                 }
                 requestLayout()
@@ -117,20 +131,6 @@ class MessageViewGroup @JvmOverloads constructor(
     private val avatarImageViewRect = Rect()
     private val nameAndTextLayoutRect = Rect()
     private val emojisLayoutRect = Rect()
-
-    companion object {
-        private const val AVATAR_SIZE = 50F
-        private const val MESSAGE_MINIMAL_SIDE_MARGIN = 80F
-        private const val EMOJIS_LAYOUT_MARGIN = 8F
-
-        private const val EMOJIS_PADDING = 2F
-
-        private const val DEFAULT_TEXT_SIZE = 16
-        private const val DEFAULT_EMOJIS_TEXT_SIZE = 14F
-
-        const val ALIGN_LEFT = 0
-        const val ALIGN_RIGHT = 1
-    }
 
     init {
         LayoutInflater.from(context).inflate(R.layout.message_view_group, this, true)
@@ -316,7 +316,7 @@ class MessageViewGroup @JvmOverloads constructor(
             return
         }
         val emojiPlus = EmojiView(context)
-        emojiPlus.emoji = Emoji.SIGN_PLUS
+        emojiPlus.emoji = Emoji(0x2795)
         emojiPlus.amount = -1
         setOnPlusClickListener(emojiPlusClickListener)
         setDefaultEmojiViewParams(emojiPlus)
@@ -341,7 +341,7 @@ class MessageViewGroup @JvmOverloads constructor(
         emojiView.textColor = ResourcesCompat.getColor(resources, R.color.text_color, null)
     }
 
-    fun setOnCLickListenerForEmojiViews(clickListener: OnClickListener) {
+    fun setOnClickListenerForEmojiViews(clickListener: OnClickListener) {
         this.clickListenerForEmojis = clickListener
         val emojiLayout = findViewById<FlexBoxLayout>(R.id.emojisLayout)
         for (i in 0 until emojiLayout.childCount - 1) {
@@ -364,7 +364,7 @@ class MessageViewGroup @JvmOverloads constructor(
     fun addEmojiView(emojiView: EmojiView) {
         reactions.add(Pair(emojiView.emoji, emojiView.amount))
         setReactionsInEmojisLayout(reactions)
-        setOnCLickListenerForEmojiViews(clickListenerForEmojis)
+        setOnClickListenerForEmojiViews(clickListenerForEmojis)
         setOnPlusClickListener(emojiPlusClickListener)
     }
 
@@ -378,6 +378,6 @@ class MessageViewGroup @JvmOverloads constructor(
         reactions.remove(reactions[emojiToRemoveIndex])
 
         setReactionsInEmojisLayout(reactions)
-        setOnCLickListenerForEmojiViews(clickListenerForEmojis)
+        setOnClickListenerForEmojiViews(clickListenerForEmojis)
     }
 }
