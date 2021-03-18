@@ -29,7 +29,7 @@ class MessageViewHolder(
 ) : BaseViewHolder<MessageUi>(view) {
 
     companion object {
-        private const val MINIMAL_MESSAGE_WIDTH = 200
+        private const val MINIMAL_MESSAGE_WIDTH = 100
     }
 
     private val messageHolder = view.findViewById<MessageViewGroup>(R.id.message)
