@@ -2,10 +2,12 @@ package com.example.chat.recycler.holders
 
 import android.view.View
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.example.chat.*
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
+import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -56,10 +58,11 @@ class MessageViewHolder(
         if (item.authorId == MainActivity.THIS_USER_ID) {
             messageHolder.align = MessageViewGroup.ALIGN_RIGHT
             messageHolder.avatarImageView.setImageDrawable(null)
-            with(messageHolder.findViewById<TextView>(R.id.name)) {
-                height = 0
-                width = MINIMAL_MESSAGE_WIDTH
-            }
+            messageHolder.findViewById<TextView>(R.id.name).setTextColor(ContextCompat.getColor(context, R.color.my_name_color))
+//            with(messageHolder.findViewById<TextView>(R.id.name)) {
+//                height = 0
+//                width = MINIMAL_MESSAGE_WIDTH
+//            }
         } else {
             messageHolder.align = MessageViewGroup.ALIGN_LEFT
             Picasso
@@ -67,6 +70,8 @@ class MessageViewHolder(
                     .load(item.avatarUrl)
                     .placeholder(R.drawable.default_avatar)
                     .into(messageHolder.avatarImageView)
+
+            messageHolder.findViewById<TextView>(R.id.name).setTextColor(ContextCompat.getColor(context, R.color.name_color))
         }
         setBackground(messageHolder)
     }
