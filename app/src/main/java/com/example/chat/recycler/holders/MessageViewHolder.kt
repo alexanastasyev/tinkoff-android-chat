@@ -7,7 +7,6 @@ import com.example.chat.*
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
-import org.w3c.dom.Text
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,10 +58,6 @@ class MessageViewHolder(
             messageHolder.align = MessageViewGroup.ALIGN_RIGHT
             messageHolder.avatarImageView.setImageDrawable(null)
             messageHolder.findViewById<TextView>(R.id.name).setTextColor(ContextCompat.getColor(context, R.color.my_name_color))
-//            with(messageHolder.findViewById<TextView>(R.id.name)) {
-//                height = 0
-//                width = MINIMAL_MESSAGE_WIDTH
-//            }
         } else {
             messageHolder.align = MessageViewGroup.ALIGN_LEFT
             Picasso
