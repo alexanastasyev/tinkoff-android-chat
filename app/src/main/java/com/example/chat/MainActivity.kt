@@ -5,8 +5,10 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.core.view.setPadding
 import androidx.core.widget.doOnTextChanged
@@ -50,7 +52,8 @@ class MainActivity : AppCompatActivity() {
 
         val holderFactory = ChatHolderFactory(
                 action = getActionForMessageViewGroups(),
-                shouldShowDate = getShouldDateBeShown()
+                shouldShowDate = getShouldDateBeShown(),
+                setBackground = getBackgroundSetter()
         )
         adapter = Adapter(holderFactory)
 
@@ -62,6 +65,8 @@ class MainActivity : AppCompatActivity() {
 
         setClickListenerForSendImage()
         setEditTextListener()
+
+        recyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
@@ -92,9 +97,11 @@ class MainActivity : AppCompatActivity() {
 
                 Message("Nice text, bro", "Dr Dre", Date(30000), 3, 3),
 
-                Message("Wanna apple?", "Steve Jobs", Date(700_000_000_000), 4, 4,
+                Message("I agree", "Alexey Anastasyev", Date(40000), THIS_USER_ID, 4),
+
+                Message("Wanna apple?", "Steve Jobs", Date(700_000_000_000), 4, 5,
                         avatarUrl = "https://cdn.vox-cdn.com/thumbor/gD8CFUq4EEdI8ux04KyGMmuIgcA=/0x86:706x557/920x613/filters:focal(0x86:706x557):format(webp)/cdn.vox-cdn.com/imported_assets/847184/stevejobs.png"),
-                Message("When something is important enough, you do it even if the odds are not in your favor.", "Elon Musk", Date(701_000_000_000), 5, 5,
+                Message("When something is important enough, you do it even if the odds are not in your favor.", "Elon Musk", Date(701_000_000_000), 5, 6,
                         avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/8/85/Elon_Musk_Royal_Society_%28crop1%29.jpg")
         )
     }
@@ -116,6 +123,21 @@ class MainActivity : AppCompatActivity() {
                 unselectEmoji(messageViewGroup, emojiView)
             } else {
                 selectEmoji(messageViewGroup, emojiView)
+            }
+        }
+    }
+
+    private fun getBackgroundSetter(): (View) -> Unit {
+        return { message ->
+            val messageViewGroup = message as MessageViewGroup
+            if (messageViewGroup.align == MessageViewGroup.ALIGN_RIGHT) {
+                messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(resources, R.drawable.my_message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(resources, R.drawable.my_message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(resources, R.drawable.my_message_name_and_text_bg, null)
+            } else {
+                messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(resources, R.drawable.message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(resources, R.drawable.message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(resources, R.drawable.message_name_and_text_bg, null)
             }
         }
     }
@@ -347,5 +369,4 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
         outState.putSerializable(MESSAGES_LIST_KEY, messages)
     }
-
 }

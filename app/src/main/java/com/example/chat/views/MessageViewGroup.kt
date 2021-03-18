@@ -124,7 +124,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     private val nameTextView: TextView
     private val messageTextView: TextView
-    private val nameAndTextLayout: ConstraintLayout
+    val nameAndTextLayout: ConstraintLayout
     val avatarImageView: ImageView
     val emojisLayout: FlexBoxLayout
 

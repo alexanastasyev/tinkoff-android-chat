@@ -24,8 +24,13 @@ class MessageViewHolder(
         view: View,
         click: ((View) -> Unit)?,
         action: ((View) -> Unit)?,
+        private val setBackground: ((View) -> Unit),
         private val shouldShowDate: ((View) -> Boolean)
 ) : BaseViewHolder<MessageUi>(view) {
+
+    companion object {
+        private const val MINIMAL_MESSAGE_WIDTH = 200
+    }
 
     private val messageHolder = view.findViewById<MessageViewGroup>(R.id.message)
     private val dateHolder = view.findViewById<TextView>(R.id.date)
@@ -51,7 +56,10 @@ class MessageViewHolder(
         if (item.authorId == MainActivity.THIS_USER_ID) {
             messageHolder.align = MessageViewGroup.ALIGN_RIGHT
             messageHolder.avatarImageView.setImageDrawable(null)
-
+            with(messageHolder.findViewById<TextView>(R.id.name)) {
+                height = 0
+                width = MINIMAL_MESSAGE_WIDTH
+            }
         } else {
             messageHolder.align = MessageViewGroup.ALIGN_LEFT
             Picasso
@@ -60,6 +68,7 @@ class MessageViewHolder(
                     .placeholder(R.drawable.default_avatar)
                     .into(messageHolder.avatarImageView)
         }
+        setBackground(messageHolder)
     }
 
     private fun bindAndShowDateIfNecessary(item: MessageUi) {
@@ -67,9 +76,7 @@ class MessageViewHolder(
         val dateAsString = formatter.format(item.date)
         dateHolder.text = dateAsString
 
-        if (shouldShowDate(messageHolder)) {
-            dateHolder.height = 50
-        } else {
+        if (!shouldShowDate(messageHolder)) {
             dateHolder.height = 0
         }
     }
