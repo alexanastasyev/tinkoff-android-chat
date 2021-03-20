@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.chat.*
+import com.example.chat.activities.ChatActivity
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
@@ -54,7 +55,7 @@ class MessageViewHolder(
         bindReactions(item)
         bindAndShowDateIfNecessary(item)
 
-        if (item.authorId == MainActivity.THIS_USER_ID) {
+        if (item.authorId == ChatActivity.THIS_USER_ID) {
             messageHolder.align = MessageViewGroup.ALIGN_RIGHT
             messageHolder.avatarImageView.setImageDrawable(null)
             messageHolder.findViewById<TextView>(R.id.name).setTextColor(ContextCompat.getColor(context, R.color.my_name_color))
@@ -84,7 +85,7 @@ class MessageViewHolder(
     private fun bindReactions(item: MessageUi) {
         messageHolder.reactions = item.reactions.map { Pair(it.emoji, it.amount) } as ArrayList<Pair<Emoji, Int>>
         for (i in item.reactions.indices) {
-            if (item.reactions[i].reactedUsersId.contains(MainActivity.THIS_USER_ID))
+            if (item.reactions[i].reactedUsersId.contains(ChatActivity.THIS_USER_ID))
                 messageHolder.emojisLayout.getChildAt(i).isSelected = true
         }
     }

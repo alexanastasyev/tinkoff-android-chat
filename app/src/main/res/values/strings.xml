@@ -5,4 +5,10 @@
     <string name="name_example">Name Surname</string>
     <string name="message_example">Example of multiline message. It is an example of message that has a few lines. More then two, please. Yeah, now it\'s okey.</string>
     <string name="send_message">Send message</string>
+    <string name="channels">Channels</string>
+    <string name="people">People</string>
+    <string name="profile">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">Search</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.example.chat
+package com.example.chat.activities
 
 import android.os.Bundle
 import android.view.View
@@ -14,6 +14,7 @@ import androidx.core.view.setPadding
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chat.*
 import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
 import com.example.chat.recycler.ViewTyped
@@ -25,7 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MainActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity() {
 
     companion object {
         const val THIS_USER_ID = 1234567890L
@@ -131,13 +132,19 @@ class MainActivity : AppCompatActivity() {
         return { message ->
             val messageViewGroup = message as MessageViewGroup
             if (messageViewGroup.align == MessageViewGroup.ALIGN_RIGHT) {
-                messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(resources, R.drawable.my_message_name_and_text_bg, null)
-                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(resources, R.drawable.my_message_name_and_text_bg, null)
-                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(resources, R.drawable.my_message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(resources,
+                    R.drawable.my_message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(resources,
+                    R.drawable.my_message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(resources,
+                    R.drawable.my_message_name_and_text_bg, null)
             } else {
-                messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(resources, R.drawable.message_name_and_text_bg, null)
-                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(resources, R.drawable.message_name_and_text_bg, null)
-                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(resources, R.drawable.message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(resources,
+                    R.drawable.message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(resources,
+                    R.drawable.message_name_and_text_bg, null)
+                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(resources,
+                    R.drawable.message_name_and_text_bg, null)
             }
         }
     }
