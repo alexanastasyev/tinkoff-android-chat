@@ -11,14 +11,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         supportFragmentManager.beginTransaction()
-            .add(R.id.fragmentContainer, ChannelsFragment(), "channels")
+            .add(R.id.fragmentContainer, ChannelsMainFragment(), "channels")
             .commit()
 
         findViewById<BottomNavigationView>(R.id.bottomNavigation).setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.channels -> {
                     supportFragmentManager.beginTransaction()
-                        .add(R.id.fragmentContainer, ChannelsFragment(), "channels")
+                        .add(R.id.fragmentContainer, ChannelsMainFragment(), "channels")
                         .commit()
                     true
                 }

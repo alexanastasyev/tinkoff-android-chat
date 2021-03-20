@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 class PagerAdapter(
-    private val fragments: List<String>
+    private val texts: List<String>
 ) : RecyclerView.Adapter<PagerAdapter.PagerViewHolder>() {
     inner class PagerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
@@ -17,11 +17,10 @@ class PagerAdapter(
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
-        val currentText = fragments[position]
-        holder.itemView.findViewById<TextView>(R.id.textView).text = currentText
+        holder.itemView.findViewById<TextView>(R.id.textView).text = texts[position]
     }
 
     override fun getItemCount(): Int {
-        return fragments.size
+        return texts.size
     }
 }

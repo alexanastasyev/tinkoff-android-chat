@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.example.chat.R
 
 class ProfileFragment : androidx.fragment.app.Fragment() {
@@ -13,6 +14,11 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         inflater.inflate(R.layout.fragment_profile, container, true)
+
+        val text = "PROFILE"
+        val textView = activity?.findViewById<TextView>(R.id.profileTextView)
+        textView?.text = text
+
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 }

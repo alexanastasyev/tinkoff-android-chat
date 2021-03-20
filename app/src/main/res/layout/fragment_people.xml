@@ -5,11 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".activities.PeopleFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:text="Список людей" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewContacts"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="Список людей" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

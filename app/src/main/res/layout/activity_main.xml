@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_navigation_menu"
+        app:itemBackground="@android:color/transparent"
         app:itemIconTint="@color/menu_item_color"
         app:itemTextColor="@color/menu_item_color"/>
 
