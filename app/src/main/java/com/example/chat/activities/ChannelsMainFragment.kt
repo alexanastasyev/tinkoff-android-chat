@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewpager2.widget.ViewPager2
+import com.example.chat.Channel
 import com.example.chat.PagerAdapter
 import com.example.chat.R
 import com.google.android.material.tabs.TabLayout
@@ -16,14 +17,16 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        inflater.inflate(R.layout.fragment_channels_main, container, true)
+        return inflater.inflate(R.layout.fragment_channels_main, container, false)
+    }
 
-        val viewPager = activity?.findViewById<ViewPager2>(R.id.fragmentViewPager)
-        val tabLayout = activity?.findViewById<TabLayout>(R.id.tabLayout)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val viewPager = view.findViewById<ViewPager2>(R.id.fragmentViewPager)
+        val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
 
-        val texts = listOf("My channels", "All channels")
-        val adapter = PagerAdapter(texts)
-        viewPager?.adapter = adapter
+        val channels = listOf(getMyChannels(), getAllChannels())
+        val adapter = PagerAdapter(channels)
+        viewPager.adapter = adapter
 
         val tabs: List<String> = listOf("Subscribed", "All streams")
 
@@ -32,6 +35,24 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 tab.text = tabs[position]
             }.attach()
         }
-        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
+    private fun getAllChannels(): List<Channel> {
+        return listOf(
+                Channel("General", listOf()),
+                Channel("Development", listOf()),
+                Channel("Coding", listOf()),
+                Channel("Chess", listOf()),
+                Channel("Android", listOf()),
+                Channel("Design", listOf())
+        )
+    }
+
+    private fun getMyChannels(): List<Channel> {
+        return listOf(
+                Channel("Coding", listOf()),
+                Channel("Chess", listOf()),
+                Channel("Android", listOf())
+        )
     }
 }

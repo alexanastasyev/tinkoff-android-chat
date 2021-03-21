@@ -16,21 +16,25 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        inflater.inflate(R.layout.fragment_people, container, true)
+        return inflater.inflate(R.layout.fragment_people, container, false)
+    }
 
-        val contacts = listOf(
-                Contact("Sherlock Holmes", "https://aif-s3.aif.ru/images/020/856/92c446222800f644b2a57f05a8025a9b.jpg"),
-                Contact("John Watson", "https://cdn.fishki.net/upload/post/2017/12/03/2447213/tn/4de61c308551534ae848c984a4d7cb74.jpg")
-        )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val contacts = getContacts()
         val contactUis = contactToUi(contacts)
         val holderFactory = ChatHolderFactory()
         val adapter = Adapter<ViewTyped>(holderFactory)
-        val recyclerView = activity?.findViewById<RecyclerView>(R.id.recyclerViewContacts)
-        recyclerView?.layoutManager = LinearLayoutManager(recyclerView?.context)
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewContacts)
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView?.context)
 
-        recyclerView?.adapter = adapter
+        recyclerView.adapter = adapter
         adapter.items = contactUis as ArrayList<ViewTyped>
+    }
 
-        return super.onCreateView(inflater, container, savedInstanceState)
+    private fun getContacts() : List<Contact> {
+        return listOf(
+                Contact("Sherlock Holmes", "https://aif-s3.aif.ru/images/020/856/92c446222800f644b2a57f05a8025a9b.jpg"),
+                Contact("John Watson", "https://cdn.fishki.net/upload/post/2017/12/03/2447213/tn/4de61c308551534ae848c984a4d7cb74.jpg")
+        )
     }
 }
