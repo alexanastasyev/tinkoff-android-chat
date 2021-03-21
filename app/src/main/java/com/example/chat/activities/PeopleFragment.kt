@@ -25,7 +25,7 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
         val holderFactory = ChatHolderFactory()
         val adapter = Adapter<ViewTyped>(holderFactory)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewContacts)
-        recyclerView.layoutManager = LinearLayoutManager(recyclerView?.context)
+        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
 
         recyclerView.adapter = adapter
         adapter.items = contactUis as ArrayList<ViewTyped>

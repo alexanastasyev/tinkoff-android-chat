@@ -21,11 +21,4 @@ class ChannelsListFragment : androidx.fragment.app.Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_channels_list, container, true)
     }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        val channels = getChannels()
-//
-//    }
-
-
 }

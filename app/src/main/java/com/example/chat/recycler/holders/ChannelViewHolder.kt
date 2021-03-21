@@ -1,13 +1,13 @@
 package com.example.chat.recycler.holders
 
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import com.example.chat.R
 import com.example.chat.recycler.ViewTyped
 
 class ChannelUi (
         var name: String,
-        var topics: List<String>,
         override val viewType: Int = R.layout.item_channel
         ) : ViewTyped
 
@@ -17,10 +17,11 @@ class ChannelViewHolder (
 ) : BaseViewHolder<ChannelUi>(view) {
 
     private val channelViewHolder = view.findViewById<TextView>(R.id.channelName)
+    private val imageArrow = view.findViewById<ImageView>(R.id.imageArrow)
 
     init {
         if (click != null) {
-            channelViewHolder.setOnClickListener(click)
+            imageArrow.setOnClickListener(click)
         }
     }
 
