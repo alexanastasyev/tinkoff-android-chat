@@ -9,7 +9,6 @@ import com.example.chat.PagerAdapter
 import com.example.chat.R
 import com.example.chat.entities.Channel
 import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayoutMediator
 
 
@@ -36,17 +35,6 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 tab.text = tabs[position]
             }.attach()
         }
-
-//        tabLayout.addOnTabSelectedListener(object : OnTabSelectedListener {
-//            override fun onTabSelected(tab: TabLayout.Tab) {
-//            }
-//
-//            override fun onTabUnselected(tab: TabLayout.Tab) {
-//            }
-//
-//            override fun onTabReselected(tab: TabLayout.Tab) {
-//            }
-//        })
     }
 
     private fun getAllChannels(): List<Channel> {

@@ -32,10 +32,6 @@ class MessageViewHolder(
         private val shouldShowDate: ((View) -> Boolean)
 ) : BaseViewHolder<MessageUi>(view) {
 
-    companion object {
-        private const val MINIMAL_MESSAGE_WIDTH = 100
-    }
-
     private val messageHolder = view.findViewById<MessageViewGroup>(R.id.message)
     private val dateHolder = view.findViewById<TextView>(R.id.date)
 

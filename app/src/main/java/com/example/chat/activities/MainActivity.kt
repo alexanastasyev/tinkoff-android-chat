@@ -33,19 +33,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun showChannelsFragment() {
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, ChannelsMainFragment(), "channels")
+                .add(R.id.fragmentContainer, ChannelsMainFragment())
                 .commit()
     }
 
     private fun showPeopleFragment() {
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, PeopleFragment(), "people")
+                .add(R.id.fragmentContainer, PeopleFragment())
                 .commit()
     }
 
     private fun showProfileFragment() {
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, ProfileFragment(), "profile")
+                .add(R.id.fragmentContainer, ProfileFragment())
                 .commit()
     }
 }

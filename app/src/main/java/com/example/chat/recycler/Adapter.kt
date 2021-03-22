@@ -16,8 +16,8 @@ class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holde
         for (i in 0 until position) {
             newItemsList.add(items[i])
         }
-        for (i in newItems) {
-            newItemsList.add(i)
+        for (item in newItems) {
+            newItemsList.add(item)
         }
         for (i in position until items.size) {
             newItemsList.add(items[i])

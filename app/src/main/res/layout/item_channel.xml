@@ -35,6 +35,7 @@
         app:tint="@android:color/darker_gray"
         app:layout_constraintTop_toTopOf="@id/channelName"
         app:layout_constraintBottom_toBottomOf="@id/channelName"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/expand_or_collapse" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
