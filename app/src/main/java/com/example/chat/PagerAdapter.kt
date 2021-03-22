@@ -1,9 +1,12 @@
 package com.example.chat
 
 import android.content.Intent
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.activities.ChatActivity
 import com.example.chat.recycler.*
 import com.example.chat.recycler.holders.ChannelUi
+import com.example.chat.recycler.holders.TopicUi
 
 class PagerAdapter(
         private val channels: List<List<Channel>>
@@ -23,7 +27,6 @@ class PagerAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_channels_list, parent, false)
-        view.isSelected = false
         return PagerViewHolder(view)
     }
 
@@ -54,9 +57,10 @@ class PagerAdapter(
     private fun showTopics(view: View) {
         val position = recyclerView.getChildLayoutPosition(view.parent as ConstraintLayout)
 
-        if (position == adapter.itemCount - 1 || adapter.items[position + 1] is ChannelUi) {
+        if (position == adapter.items.size - 1 || adapter.items[position + 1] is ChannelUi) {
 
-            val layout = recyclerView.getChildAt(position)
+            val layout = view.parent as ConstraintLayout
+
             val textView = layout.findViewById<TextView>(R.id.channelName)
             val channelName = textView.text.toString()
             val topics = getTopics(channelName)
@@ -64,14 +68,44 @@ class PagerAdapter(
 
             adapter.addItemsAtPosition(position + 1, topicUis)
             adapter.notifyDataSetChanged()
+
+            (adapter.items[position] as ChannelUi).isExpanded = true
+
+           // (view as ImageView).setImageResource(R.drawable.arrow_up)
+
+        } else if (position < adapter.items.size - 1 && adapter.items[position + 1] is TopicUi) {
+
+            val deleteFrom = position + 1
+            var deleteTo = deleteFrom
+            for (i in position + 1 until adapter.items.size) {
+                if (adapter.items[i] is ChannelUi) {
+                    break
+                }
+                deleteTo = i
+            }
+
+            adapter.removeItems(deleteFrom, deleteTo)
+            adapter.notifyDataSetChanged()
+
+            (adapter.items[position] as ChannelUi).isExpanded = false
+
+//            (view as ImageView).setImageResource(R.drawable.arrow_down)
         }
+
+//        for (i in 0 until recyclerView.childCount - 1) {
+//            if (adapter.items[i] is ChannelUi && adapter.items[i + 1] is TopicUi) {
+//                recyclerView.getChildAt(i).findViewById<ImageView>(R.id.imageArrow).setImageResource(R.drawable.arrow_up)
+//            } else {
+//                recyclerView.getChildAt(i).findViewById<ImageView>(R.id.imageArrow).setImageResource(R.drawable.arrow_down)
+//            }
+//        }
     }
 
     private fun getTopics(channelName: String): List<Topic> {
         return listOf(
-                Topic("First topic"),
-                Topic("Second topic"),
-                Topic("Third topic")
+                Topic("First topic of $channelName"),
+                Topic("Second topic of $channelName"),
+                Topic("Third topic of $channelName")
         )
     }
 }

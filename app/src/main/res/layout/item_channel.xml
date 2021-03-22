@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:tag="layoutChannelItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/channel_item_bg"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
@@ -10,18 +16,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/imageArrow"
+        android:background="@android:color/transparent"
+        android:padding="4dp"
         android:layout_width="0dp"
+        android:layout_marginStart="4dp"
         android:layout_height="wrap_content"
         android:textColor="@android:color/darker_gray"
         android:textSize="20sp"/>
 
     <ImageView
         android:id="@+id/imageArrow"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:src="@drawable/arrow_down"
+        android:background="@android:color/transparent"
+        android:padding="4dp"
+        android:layout_marginEnd="4dp"
         app:tint="@android:color/darker_gray"
         app:layout_constraintTop_toTopOf="@id/channelName"
+        app:layout_constraintBottom_toBottomOf="@id/channelName"
         app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

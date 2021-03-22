@@ -44,7 +44,11 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 Channel("Coding", listOf()),
                 Channel("Chess", listOf()),
                 Channel("Android", listOf()),
-                Channel("Design", listOf())
+                Channel("Design", listOf()),
+                Channel("Channel 4", listOf()),
+                Channel("Channel 5", listOf()),
+                Channel("Channel 6", listOf()),
+                Channel("Channel 7", listOf())
         )
     }
 
@@ -52,7 +56,11 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         return listOf(
                 Channel("Coding", listOf()),
                 Channel("Chess", listOf()),
-                Channel("Android", listOf())
+                Channel("Android", listOf()),
+                Channel("Channel 4", listOf()),
+                Channel("Channel 5", listOf()),
+                Channel("Channel 6", listOf()),
+                Channel("Channel 7", listOf())
         )
     }
 }

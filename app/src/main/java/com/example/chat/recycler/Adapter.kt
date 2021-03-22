@@ -24,4 +24,15 @@ class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holde
         }
         items = newItemsList as ArrayList<T>
     }
+
+    fun removeItems(from: Int, to: Int) {
+        val newItemsList: MutableList<T> = ArrayList()
+        for (i in 0 until from) {
+            newItemsList.add(items[i])
+        }
+        for (i in to + 1 until items.size) {
+            newItemsList.add(items[i])
+        }
+        items = newItemsList as ArrayList<T>
+    }
 }
