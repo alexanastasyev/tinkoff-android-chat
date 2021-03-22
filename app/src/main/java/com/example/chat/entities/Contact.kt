@@ -1,4 +1,4 @@
-package com.example.chat
+package com.example.chat.entities
 
 class Contact (
         val name: String,

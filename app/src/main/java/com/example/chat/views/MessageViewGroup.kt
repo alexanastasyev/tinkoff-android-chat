@@ -16,7 +16,7 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.*
-import com.example.chat.Emoji
+import com.example.chat.entities.Emoji
 import com.example.chat.R
 import com.example.chat.dpToPx
 import com.example.chat.spToPx

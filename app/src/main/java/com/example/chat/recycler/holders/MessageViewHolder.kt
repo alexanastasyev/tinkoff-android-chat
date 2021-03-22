@@ -5,6 +5,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.example.chat.*
 import com.example.chat.activities.ChatActivity
+import com.example.chat.entities.Emoji
+import com.example.chat.entities.Reaction
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso

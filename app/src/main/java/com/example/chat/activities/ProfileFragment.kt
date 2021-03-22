@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.chat.Contact
+import com.example.chat.entities.Contact
 import com.example.chat.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView

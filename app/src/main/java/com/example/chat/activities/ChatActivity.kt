@@ -15,10 +15,13 @@ import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.*
+import com.example.chat.entities.Emoji
+import com.example.chat.entities.Message
+import com.example.chat.entities.Reaction
 import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
 import com.example.chat.recycler.ViewTyped
-import com.example.chat.recycler.messageToUi
+import com.example.chat.recycler.converters.messageToUi
 import com.example.chat.views.EmojiView
 import com.example.chat.views.MessageViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog

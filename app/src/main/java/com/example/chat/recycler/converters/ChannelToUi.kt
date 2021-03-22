@@ -1,6 +1,7 @@
-package com.example.chat.recycler
+package com.example.chat.recycler.converters
 
-import com.example.chat.Channel
+import com.example.chat.entities.Channel
+import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.holders.ChannelUi
 
 fun channelToUi(channels: List<Channel>) : List<ViewTyped> {

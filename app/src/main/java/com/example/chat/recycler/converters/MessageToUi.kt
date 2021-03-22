@@ -1,6 +1,7 @@
-package com.example.chat.recycler
+package com.example.chat.recycler.converters
 
-import com.example.chat.Message
+import com.example.chat.entities.Message
+import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.holders.MessageUi
 import java.util.ArrayList
 

@@ -6,9 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chat.Contact
+import com.example.chat.entities.Contact
 import com.example.chat.R
 import com.example.chat.recycler.*
+import com.example.chat.recycler.converters.contactToUi
 
 class PeopleFragment : androidx.fragment.app.Fragment() {
     override fun onCreateView(

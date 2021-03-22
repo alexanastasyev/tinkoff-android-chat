@@ -10,32 +10,42 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragmentContainer, ChannelsMainFragment(), "channels")
-            .commit()
+        showChannelsFragment()
 
         findViewById<BottomNavigationView>(R.id.bottomNavigation).setOnNavigationItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.channels -> {
-                    supportFragmentManager.beginTransaction()
-                        .add(R.id.fragmentContainer, ChannelsMainFragment(), "channels")
-                        .commit()
+                    showChannelsFragment()
                     true
                 }
                 R.id.people -> {
-                    supportFragmentManager.beginTransaction()
-                        .add(R.id.fragmentContainer, PeopleFragment(), "people")
-                        .commit()
+                    showPeopleFragment()
                     true
                 }
                 R.id.profile -> {
-                    supportFragmentManager.beginTransaction()
-                        .add(R.id.fragmentContainer, ProfileFragment(), "profile")
-                        .commit()
+                    showProfileFragment()
                     true
                 }
                 else -> false
             }
         }
+    }
+
+    private fun showChannelsFragment() {
+        supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentContainer, ChannelsMainFragment(), "channels")
+                .commit()
+    }
+
+    private fun showPeopleFragment() {
+        supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentContainer, PeopleFragment(), "people")
+                .commit()
+    }
+
+    private fun showProfileFragment() {
+        supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentContainer, ProfileFragment(), "profile")
+                .commit()
     }
 }
