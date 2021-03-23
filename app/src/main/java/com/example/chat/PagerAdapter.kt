@@ -25,6 +25,7 @@ class PagerAdapter(
 
     companion object {
         private const val LAYOUT_CHANNEL_ITEM_TAG = "layoutChannelItem"
+        const val TOPIC_KEY = "topic"
 
         private const val TYPE_MY_CHANNELS = 0
         private const val TYPE_ALL_CHANNELS = 1
@@ -156,7 +157,7 @@ class PagerAdapter(
     private fun startChatActivity(view: View) {
         val intent = Intent(view.context, ChatActivity::class.java)
         val topicName = (view as TextView).text
-        intent.putExtra("topic", topicName)
+        intent.putExtra(TOPIC_KEY, topicName)
         view.context.startActivity(intent)
     }
 

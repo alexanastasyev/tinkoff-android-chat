@@ -54,7 +54,7 @@ class ChatActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            val topicName = extras.getString("topic")
+            val topicName = extras.getString(PagerAdapter.TOPIC_KEY)
             val toolbar = findViewById<Toolbar>(R.id.toolbarChat)
             toolbar?.title = topicName
             setSupportActionBar(toolbar)
