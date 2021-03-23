@@ -7,36 +7,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.ChannelsMainFragment">
 
-    <EditText
-        android:id="@+id/searchEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/searchImage"
-        android:inputType="textShortMessage"
-        android:hint="@string/search"
-        android:background="@drawable/edit_message_bg"
-        android:padding="8dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/edit_text_hint_color"/>
+<!--    <EditText-->
+<!--        android:id="@+id/searchEditText"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toStartOf="@+id/searchImage"-->
+<!--        android:inputType="textShortMessage"-->
+<!--        android:hint="@string/search"-->
+<!--        android:background="@drawable/edit_message_bg"-->
+<!--        android:padding="8dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textColorHint="@color/edit_text_hint_color"/>-->
 
-    <ImageView
-        android:id="@id/searchImage"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/search"
-        android:padding="8dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="@string/search" />
+<!--    <ImageView-->
+<!--        android:id="@id/searchImage"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:src="@drawable/search"-->
+<!--        android:padding="8dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:contentDescription="@string/search" />-->
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabTextColor="@color/tab_item_color"
-        app:layout_constraintTop_toBottomOf="@+id/searchEditText"/>
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/fragmentViewPager"

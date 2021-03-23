@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.entities.Contact
@@ -17,6 +18,8 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        (activity as AppCompatActivity).supportActionBar?.title = "Users"
+        (activity as AppCompatActivity).supportActionBar?.show()
         return inflater.inflate(R.layout.fragment_people, container, false)
     }
 

@@ -67,7 +67,7 @@ class PagerAdapter(
             if (isChannel(view)) {
                 showOrHideTopics(view, channelsType)
             } else {
-                startChatActivity(view)
+                startChatActivity(view, channelsType)
             }
         }
     }
@@ -153,8 +153,10 @@ class PagerAdapter(
 
     }
 
-    private fun startChatActivity(view: View) {
+    private fun startChatActivity(view: View, channelsType: Int) {
         val intent = Intent(view.context, ChatActivity::class.java)
+        val topicName = (view as TextView).text
+        intent.putExtra("topic", topicName)
         view.context.startActivity(intent)
     }
 

@@ -9,7 +9,7 @@ fun channelToUi(channels: List<Channel>) : List<ViewTyped> {
     val channelsUis: ArrayList<ChannelUi> = ArrayList()
     for (channel in channels) {
         channelsUis.add(ChannelUi(
-                channel.name
+                "#${channel.name}"
         ))
     }
     return channelsUis

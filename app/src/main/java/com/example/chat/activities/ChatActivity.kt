@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
@@ -50,6 +51,14 @@ class ChatActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_activity)
+
+        val extras = intent.extras
+        if (extras != null) {
+            val topicName = extras.getString("topic")
+            val toolbar = findViewById<Toolbar>(R.id.toolbarChat)
+            toolbar?.title = topicName
+            setSupportActionBar(toolbar)
+        }
 
         restoreOrReceiveMessages(savedInstanceState)
         messageUis = messageToUi(messages) as ArrayList<ViewTyped>
