@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="80dp"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+    <!--  ConstraintLayout is necessary to align ScrollView center  -->
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+    <com.example.chat.views.FlexBoxLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F600"/>
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F629" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F632" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F920" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F60C" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F60F" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F928" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F61B" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F622" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F60D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F618" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F60E" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F602" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F610" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F609" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F62D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F973" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F921" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F480" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F47D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F47F" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F4A9" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x2764" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F44D" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F44E" />
+
+        <com.example.chat.views.EmojiView
+            style="@style/EmojiViewStyle"
+            app:emoji_unicode="0x1F44F" />
+    </com.example.chat.views.FlexBoxLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
