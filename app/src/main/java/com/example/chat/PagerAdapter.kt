@@ -16,8 +16,8 @@ import com.example.chat.recycler.ChatHolderFactory
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.channelToUi
 import com.example.chat.recycler.converters.topicToUi
-import com.example.chat.recycler.holders.ChannelUi
-import com.example.chat.recycler.holders.TopicUi
+import com.example.chat.recycler.uis.ChannelUi
+import com.example.chat.recycler.uis.TopicUi
 
 class PagerAdapter(
         private val channels: List<List<Channel>>

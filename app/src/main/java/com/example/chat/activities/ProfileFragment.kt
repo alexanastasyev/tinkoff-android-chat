@@ -40,10 +40,10 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
         val imageView = view.findViewById<CircleImageView>(R.id.profilePicture)
         Picasso
-                .with(imageView.context)
-                .load(profile.imageUrl)
-                .placeholder(R.drawable.default_avatar)
-                .into(imageView)
+            .with(imageView.context)
+            .load(profile.imageUrl)
+            .placeholder(R.drawable.default_avatar)
+            .into(imageView)
 
     }
 

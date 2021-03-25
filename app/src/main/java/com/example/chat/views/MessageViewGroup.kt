@@ -48,7 +48,7 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                requestLayout()
+                invalidate()
             }
         }
 
@@ -56,20 +56,20 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                requestLayout()
+                invalidate()
             }
         }
 
     var avatar: Drawable? = null
-    set(value) {
-        if (field != value) {
-            field = value
-            if (align == ALIGN_LEFT) {
-                avatarImageView.setImageDrawable(field)
+        set(value) {
+            if (field != value) {
+                field = value
+                if (align == ALIGN_LEFT) {
+                    avatarImageView.setImageDrawable(field)
+                }
+                invalidate()
             }
-            requestLayout()
         }
-    }
 
     // All these null-checks below are necessary. Otherwise the app crushes.
 
@@ -77,10 +77,7 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                if (nameTextView != null) {
-                    nameTextView.text = field
-                }
-                requestLayout()
+                nameTextView?.text = field
             }
         }
 
@@ -88,10 +85,8 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                if (messageTextView != null) {
-                    messageTextView.text = field
-                }
-                requestLayout()
+                messageTextView?.text = field
+                invalidate()
             }
         }
 
@@ -99,10 +94,8 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                if (nameAndTextLayout != null) {
-                    nameAndTextLayout.background = field
-                }
-                requestLayout()
+                nameAndTextLayout?.background = field
+                invalidate()
             }
         }
 
@@ -115,7 +108,7 @@ class MessageViewGroup @JvmOverloads constructor(
                     setOnClickListenerForEmojiViews(clickListenerForEmojis)
                     setOnPlusClickListener(emojiPlusClickListener)
                 }
-                requestLayout()
+                invalidate()
             }
         }
 

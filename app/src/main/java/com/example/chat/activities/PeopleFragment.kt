@@ -37,8 +37,8 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
 
     private fun getContacts() : List<Contact> {
         return listOf(
-                Contact("Sherlock Holmes", "https://aif-s3.aif.ru/images/020/856/92c446222800f644b2a57f05a8025a9b.jpg"),
-                Contact("John Watson", "https://cdn.fishki.net/upload/post/2017/12/03/2447213/tn/4de61c308551534ae848c984a4d7cb74.jpg")
+            Contact("Sherlock Holmes", "https://aif-s3.aif.ru/images/020/856/92c446222800f644b2a57f05a8025a9b.jpg"),
+            Contact("John Watson", "https://cdn.fishki.net/upload/post/2017/12/03/2447213/tn/4de61c308551534ae848c984a4d7cb74.jpg")
         )
     }
 }

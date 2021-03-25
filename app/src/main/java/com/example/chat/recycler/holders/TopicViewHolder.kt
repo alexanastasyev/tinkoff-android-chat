@@ -4,15 +4,11 @@ import android.view.View
 import android.widget.TextView
 import com.example.chat.R
 import com.example.chat.recycler.ViewTyped
-
-class TopicUi (
-        var name: String,
-        override val viewType: Int = R.layout.item_topic
-    ) : ViewTyped
+import com.example.chat.recycler.uis.TopicUi
 
 class TopicViewHolder (
-        view: View,
-        click: ((View) -> Unit)?,
+    view: View,
+    click: ((View) -> Unit)?,
 ) : BaseViewHolder<TopicUi>(view) {
 
     private val topicViewHolder = view.findViewById<TextView>(R.id.topicName)

@@ -8,28 +8,18 @@ import com.example.chat.activities.ChatActivity
 import com.example.chat.entities.Emoji
 import com.example.chat.entities.Reaction
 import com.example.chat.recycler.ViewTyped
+import com.example.chat.recycler.uis.MessageUi
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MessageUi(
-        var messageId: Long,
-        var text: String,
-        var author: String,
-        var authorId: Long,
-        var avatarUrl: String?,
-        var reactions: ArrayList<Reaction>,
-        var date: Date,
-        override val viewType: Int = R.layout.item_message
-) : ViewTyped
-
 class MessageViewHolder(
-        view: View,
-        click: ((View) -> Unit)?,
-        action: ((View) -> Unit)?,
-        private val setBackground: ((View) -> Unit),
-        private val shouldShowDate: ((View) -> Boolean)
+    view: View,
+    click: ((View) -> Unit)?,
+    action: ((View) -> Unit)?,
+    private val setBackground: ((View) -> Unit),
+    private val shouldShowDate: ((View) -> Boolean)
 ) : BaseViewHolder<MessageUi>(view) {
 
     private val messageHolder = view.findViewById<MessageViewGroup>(R.id.message)
@@ -83,8 +73,9 @@ class MessageViewHolder(
     private fun bindReactions(item: MessageUi) {
         messageHolder.reactions = item.reactions.map { Pair(it.emoji, it.amount) } as ArrayList<Pair<Emoji, Int>>
         for (i in item.reactions.indices) {
-            if (item.reactions[i].reactedUsersId.contains(ChatActivity.THIS_USER_ID))
+            if (item.reactions[i].reactedUsersId.contains(ChatActivity.THIS_USER_ID)) {
                 messageHolder.emojisLayout.getChildAt(i).isSelected = true
+            }
         }
     }
 }

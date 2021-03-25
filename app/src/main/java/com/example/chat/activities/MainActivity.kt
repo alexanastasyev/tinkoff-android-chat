@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         showChannelsFragment()
 
         findViewById<BottomNavigationView>(R.id.bottomNavigation).setOnNavigationItemSelectedListener { item ->
-            when(item.itemId) {
+            when (item.itemId) {
                 R.id.channels -> {
                     showChannelsFragment()
                     true
@@ -40,20 +40,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun showChannelsFragment() {
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, ChannelsMainFragment())
-                .commit()
+            .add(R.id.fragmentContainer, ChannelsMainFragment())
+            .commit()
     }
 
     private fun showPeopleFragment() {
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, PeopleFragment())
-                .commit()
+            .add(R.id.fragmentContainer, PeopleFragment())
+            .commit()
     }
 
     private fun showProfileFragment() {
         supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentContainer, ProfileFragment())
-                .commit()
+            .add(R.id.fragmentContainer, ProfileFragment())
+            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

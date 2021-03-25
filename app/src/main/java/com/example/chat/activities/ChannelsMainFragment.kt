@@ -14,9 +14,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class ChannelsMainFragment : androidx.fragment.app.Fragment() {
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         (activity as AppCompatActivity).supportActionBar?.title = "Search..."
         (activity as AppCompatActivity).supportActionBar?.show()
@@ -41,28 +41,28 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
 
     private fun getAllChannels(): List<Channel> {
         return listOf(
-                Channel("General", 1),
-                Channel("Development", 2),
-                Channel("Coding", 3),
-                Channel("Chess", 4),
-                Channel("Android", 5),
-                Channel("Design", 6),
-                Channel("Channel 4", 7),
-                Channel("Channel 5", 8),
-                Channel("Channel 6", 9),
-                Channel("Channel 7", 10)
+            Channel("General", 1),
+            Channel("Development", 2),
+            Channel("Coding", 3),
+            Channel("Chess", 4),
+            Channel("Android", 5),
+            Channel("Design", 6),
+            Channel("Channel 4", 7),
+            Channel("Channel 5", 8),
+            Channel("Channel 6", 9),
+            Channel("Channel 7", 10)
         )
     }
 
     private fun getMyChannels(): List<Channel> {
         return listOf(
-                Channel("Coding", 3),
-                Channel("Chess", 4),
-                Channel("Android", 5),
-                Channel("Channel 4", 7),
-                Channel("Channel 5", 8),
-                Channel("Channel 6", 9),
-                Channel("Channel 7", 10)
+            Channel("Coding", 3),
+            Channel("Chess", 4),
+            Channel("Android", 5),
+            Channel("Channel 4", 7),
+            Channel("Channel 5", 8),
+            Channel("Channel 6", 9),
+            Channel("Channel 7", 10)
         )
     }
 }

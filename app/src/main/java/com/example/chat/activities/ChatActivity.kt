@@ -50,7 +50,7 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dialog_activity)
+        setContentView(R.layout.chat_activity)
 
         val extras = intent.extras
         if (extras != null) {
@@ -64,9 +64,9 @@ class ChatActivity : AppCompatActivity() {
         messageUis = messageToUi(messages) as ArrayList<ViewTyped>
 
         val holderFactory = ChatHolderFactory(
-                action = getActionForMessageViewGroups(),
-                shouldShowDate = getShouldDateBeShown(),
-                setBackground = getBackgroundSetter()
+            action = getActionForMessageViewGroups(),
+            shouldShowDate = getShouldDateBeShown(),
+            setBackground = getBackgroundSetter()
         )
         adapter = Adapter(holderFactory)
 
@@ -314,13 +314,13 @@ class ChatActivity : AppCompatActivity() {
         val reactions = arrayListOf<Reaction>()
 
         return Message(
-                text,
-                author,
-                date,
-                authorId,
-                messageId,
-                avatarUrl,
-                reactions
+            text,
+            author,
+            date,
+            authorId,
+            messageId,
+            avatarUrl,
+            reactions
         )
     }
 

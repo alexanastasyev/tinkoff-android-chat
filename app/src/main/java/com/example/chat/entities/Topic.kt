@@ -1,5 +1,5 @@
 package com.example.chat.entities
 
-class Topic (
-        val name: String
-        )
+class Topic(
+    val name: String
+)

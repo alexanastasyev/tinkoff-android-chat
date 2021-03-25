@@ -4,18 +4,13 @@ import android.view.View
 import android.widget.TextView
 import com.example.chat.R
 import com.example.chat.recycler.ViewTyped
+import com.example.chat.recycler.uis.ContactUi
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
 
-class ContactUi(
-        var imageUrl: String?,
-        var name: String,
-        override val viewType: Int = R.layout.item_contact
-) : ViewTyped
-
 class ContactViewHolder(
-        view: View,
-        click: ((View) -> Unit)?,
+    view: View,
+    click: ((View) -> Unit)?,
 ) : BaseViewHolder<ContactUi>(view) {
 
     private val contactNameHolder = view.findViewById<TextView>(R.id.contactName)

@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".activities.ChatActivity">
 
-    <include layout="@layout/dialog_content"/>
+    <include layout="@layout/chat_content"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
