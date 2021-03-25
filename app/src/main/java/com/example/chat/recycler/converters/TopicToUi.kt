@@ -5,12 +5,7 @@ import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.uis.TopicUi
 
 fun topicToUi(topics: List<Topic>) : List<ViewTyped> {
-
-    val topicUis: ArrayList<TopicUi> = ArrayList()
-    for (topic in topics) {
-        topicUis.add(TopicUi(
-                topic.name
-        ))
-    }
-    return topicUis
+    return topics.map { TopicUi(
+        it.name
+    ) }
 }

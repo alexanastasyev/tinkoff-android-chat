@@ -1,7 +1,7 @@
 package com.example.chat.recycler.uis
 
 import com.example.chat.R
-import com.example.chat.entities.Reaction
+import com.example.chat.entities.Emoji
 import com.example.chat.recycler.ViewTyped
 import java.util.*
 
@@ -11,7 +11,8 @@ class MessageUi(
         var author: String,
         var authorId: Long,
         var avatarUrl: String?,
-        var reactions: ArrayList<Reaction>,
-        var date: Date,
+        var reactions: ArrayList<Pair<Emoji, Int>>,
+        var isEmojiSelected: List<Boolean>,
+        var date: String,
         override val viewType: Int = R.layout.item_message
 ) : ViewTyped

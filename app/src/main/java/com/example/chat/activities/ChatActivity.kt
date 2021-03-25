@@ -5,11 +5,9 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.core.view.setPadding
 import androidx.core.widget.doOnTextChanged
@@ -65,8 +63,7 @@ class ChatActivity : AppCompatActivity() {
 
         val holderFactory = ChatHolderFactory(
             action = getActionForMessageViewGroups(),
-            shouldShowDate = getShouldDateBeShown(),
-            setBackground = getBackgroundSetter()
+            shouldShowDate = getShouldDateBeShown()
         )
         adapter = Adapter(holderFactory)
 
@@ -84,39 +81,10 @@ class ChatActivity : AppCompatActivity() {
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         messages = if (savedInstanceState == null) {
-            ArrayList(getMessagesList())
+            ArrayList(MessageRepository.getMessagesList())
         } else {
             savedInstanceState.getSerializable(MESSAGES_LIST_KEY) as ArrayList<Message>
         }
-    }
-
-    private fun getMessagesList(): List<Message> {
-        return listOf(
-                Message("Hello, world!", "John Smith", Date(10000), 1, 1),
-
-                Message("Look\n" +
-                        "If you had\n" +
-                        "One shot\n" +
-                        "Or one opportunity\n" +
-                        "To seize everything you ever wanted\n" +
-                        "In one moment\n" +
-                        "Would you capture it\n" +
-                        "Or just let it slip?", "Marshall Bruce Mathers III", Date(20000), 2, 2,
-                        reactions = arrayListOf(
-                                Reaction(Emoji.FACE_IN_LOVE, 3, arrayListOf(1, 3, THIS_USER_ID)),
-                                Reaction(Emoji.FACE_WITH_SUNGLASSES, 3, arrayListOf(1, 2, 3)),
-                                Reaction(Emoji.FACE_SMILING, 4, arrayListOf(1, 2, 3, 4))
-                        )),
-
-                Message("Nice text, bro", "Dr Dre", Date(30000), 3, 3),
-
-                Message("I agree", "Alexey Anastasyev", Date(40000), THIS_USER_ID, 4),
-
-                Message("Wanna apple?", "Steve Jobs", Date(700_000_000_000), 4, 5,
-                        avatarUrl = "https://cdn.vox-cdn.com/thumbor/gD8CFUq4EEdI8ux04KyGMmuIgcA=/0x86:706x557/920x613/filters:focal(0x86:706x557):format(webp)/cdn.vox-cdn.com/imported_assets/847184/stevejobs.png"),
-                Message("When something is important enough, you do it even if the odds are not in your favor.", "Elon Musk", Date(701_000_000_000), 5, 6,
-                        avatarUrl = "https://upload.wikimedia.org/wikipedia/commons/8/85/Elon_Musk_Royal_Society_%28crop1%29.jpg")
-        )
     }
 
     private fun getActionForMessageViewGroups() : (View) -> Unit {
@@ -136,27 +104,6 @@ class ChatActivity : AppCompatActivity() {
                 unselectEmoji(messageViewGroup, emojiView)
             } else {
                 selectEmoji(messageViewGroup, emojiView)
-            }
-        }
-    }
-
-    private fun getBackgroundSetter(): (View) -> Unit {
-        return { message ->
-            val messageViewGroup = message as MessageViewGroup
-            if (messageViewGroup.align == MessageViewGroup.ALIGN_RIGHT) {
-                messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(resources,
-                    R.drawable.my_message_name_and_text_bg, null)
-                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(resources,
-                    R.drawable.my_message_name_and_text_bg, null)
-                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(resources,
-                    R.drawable.my_message_name_and_text_bg, null)
-            } else {
-                messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(resources,
-                    R.drawable.message_name_and_text_bg, null)
-                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(resources,
-                    R.drawable.message_name_and_text_bg, null)
-                messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(resources,
-                    R.drawable.message_name_and_text_bg, null)
             }
         }
     }
@@ -338,6 +285,8 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
+    // The function is used!
+
     fun onDialogEmojiClick(view: View) {
         addEmojiView(
                 messageViewGroup = clickedMessageViewGroup,
@@ -375,7 +324,7 @@ class ChatActivity : AppCompatActivity() {
         newEmojiView.isSelected = true
         newEmojiView.textColor = ContextCompat.getColor(this, R.color.white)
         newEmojiView.background = ContextCompat.getDrawable(this, R.drawable.emoji_view_bg)
-        newEmojiView.setPadding(dpToPx(MessageViewGroup.EMOJIS_PADDING))
+        newEmojiView.setPadding(dpToPx(MessageViewGroup.EMOJIS_PADDING_DP))
         return newEmojiView
     }
 

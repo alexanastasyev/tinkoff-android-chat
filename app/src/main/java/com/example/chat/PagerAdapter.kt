@@ -88,7 +88,7 @@ class PagerAdapter(
     private fun isCollapsed(view: View, channelsType: Int): Boolean {
         val position = getChildPosition(view)
         val currentAdapter = getCurrentAdapter(channelsType)
-        return  position == currentAdapter.items.size - 1 || currentAdapter.items[position + 1] is ChannelUi
+        return position == currentAdapter.items.size - 1 || currentAdapter.items[position + 1] is ChannelUi
     }
 
     private fun getChildPosition(view: View): Int {
@@ -127,9 +127,9 @@ class PagerAdapter(
 
     private fun getTopics(channelName: String): List<Topic> {
         return listOf(
-                Topic("First topic of $channelName"),
-                Topic("Second topic of $channelName"),
-                Topic("Third topic of $channelName")
+            Topic("First topic of $channelName"),
+            Topic("Second topic of $channelName"),
+            Topic("Third topic of $channelName")
         )
     }
 

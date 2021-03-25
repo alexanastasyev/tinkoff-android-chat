@@ -5,12 +5,7 @@ import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.uis.ChannelUi
 
 fun channelToUi(channels: List<Channel>) : List<ViewTyped> {
-
-    val channelsUis: ArrayList<ChannelUi> = ArrayList()
-    for (channel in channels) {
-        channelsUis.add(ChannelUi(
-                "#${channel.name}"
-        ))
-    }
-    return channelsUis
+    return channels.map { ChannelUi(
+        "#${it.name}"
+    ) }
 }

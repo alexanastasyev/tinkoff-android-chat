@@ -3,22 +3,17 @@ package com.example.chat.recycler.holders
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.example.chat.*
 import com.example.chat.activities.ChatActivity
-import com.example.chat.entities.Emoji
-import com.example.chat.entities.Reaction
-import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.uis.MessageUi
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
-import java.util.*
 
 class MessageViewHolder(
     view: View,
     click: ((View) -> Unit)?,
     action: ((View) -> Unit)?,
-    private val setBackground: ((View) -> Unit),
     private val shouldShowDate: ((View) -> Boolean)
 ) : BaseViewHolder<MessageUi>(view) {
 
@@ -61,9 +56,7 @@ class MessageViewHolder(
     }
 
     private fun bindAndShowDateIfNecessary(item: MessageUi) {
-        val formatter = SimpleDateFormat("d MMM", Locale.getDefault())
-        val dateAsString = formatter.format(item.date)
-        dateHolder.text = dateAsString
+        dateHolder.text = item.date
 
         if (!shouldShowDate(messageHolder)) {
             dateHolder.height = 0
@@ -71,11 +64,29 @@ class MessageViewHolder(
     }
 
     private fun bindReactions(item: MessageUi) {
-        messageHolder.reactions = item.reactions.map { Pair(it.emoji, it.amount) } as ArrayList<Pair<Emoji, Int>>
+        messageHolder.reactions = item.reactions
         for (i in item.reactions.indices) {
-            if (item.reactions[i].reactedUsersId.contains(ChatActivity.THIS_USER_ID)) {
+            if (item.isEmojiSelected[i]) {
                 messageHolder.emojisLayout.getChildAt(i).isSelected = true
             }
+        }
+    }
+
+    private fun setBackground(messageViewGroup: MessageViewGroup) {
+        if (messageViewGroup.align == MessageViewGroup.ALIGN_RIGHT) {
+            messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.my_message_name_and_text_bg, null)
+            messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.my_message_name_and_text_bg, null)
+            messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.my_message_name_and_text_bg, null)
+        } else {
+            messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.message_name_and_text_bg, null)
+            messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.message_name_and_text_bg, null)
+            messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.message_name_and_text_bg, null)
         }
     }
 }
