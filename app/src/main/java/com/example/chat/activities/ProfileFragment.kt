@@ -11,8 +11,13 @@ import com.example.chat.entities.Contact
 import com.example.chat.R
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class ProfileFragment : androidx.fragment.app.Fragment() {
+    private val disposeBag = CompositeDisposable()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,38 +28,62 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val profile = getProfileDetails()
-        val isOnline = getProfileStatus()
+        val profileDisposable = getProfileDetails()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ profile ->
+                val textViewName = view.findViewById<TextView>(R.id.profileName)
+                textViewName.text = profile.name
 
-        val textViewName = view.findViewById<TextView>(R.id.profileName)
-        textViewName.text = profile.name
+                val imageView = view.findViewById<CircleImageView>(R.id.profilePicture)
+                Picasso
+                    .with(imageView.context)
+                    .load(profile.imageUrl)
+                    .placeholder(R.drawable.default_avatar)
+                    .into(imageView)
+            },
+            {
+                // Error
+            })
+        disposeBag.add(profileDisposable)
 
-        val textViewStatus = view.findViewById<TextView>(R.id.status)
-        if (isOnline) {
-            textViewStatus.text = getString(R.string.online)
-            textViewStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.status_online_color, null))
-        } else {
-            textViewStatus.text = getString(R.string.offline)
-            textViewStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.status_offline_color, null))
-        }
-
-        val imageView = view.findViewById<CircleImageView>(R.id.profilePicture)
-        Picasso
-            .with(imageView.context)
-            .load(profile.imageUrl)
-            .placeholder(R.drawable.default_avatar)
-            .into(imageView)
-
+        val isOnlineDisposable = getProfileStatus()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ isOnline ->
+                val textViewStatus = view.findViewById<TextView>(R.id.status)
+                if (isOnline) {
+                    textViewStatus.text = getString(R.string.online)
+                    textViewStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.status_online_color, null))
+                } else {
+                    textViewStatus.text = getString(R.string.offline)
+                    textViewStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.status_offline_color, null))
+                }
+            },
+            {
+                // Error
+            })
+        disposeBag.add(isOnlineDisposable)
     }
 
-    private fun getProfileDetails(): Contact {
-        return Contact(
+    private fun getProfileDetails(): Single<Contact> {
+        return Single.create { subscriber ->
+            val profile = Contact(
                 "Alexey Anastasyev",
                 "https://assets.gitlab-static.net/uploads/-/system/user/avatar/8174750/avatar.png"
-        )
+            )
+            subscriber.onSuccess(profile)
+        }
     }
 
-    private fun getProfileStatus(): Boolean {
-        return true
+    private fun getProfileStatus(): Single<Boolean> {
+        return Single.create{ subscriber ->
+            subscriber.onSuccess(true)
+        }
+    }
+
+    override fun onDestroyView() {
+        disposeBag.clear()
+        super.onDestroyView()
     }
 }

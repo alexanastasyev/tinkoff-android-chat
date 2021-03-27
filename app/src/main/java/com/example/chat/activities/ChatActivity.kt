@@ -24,6 +24,9 @@ import com.example.chat.recycler.converters.messageToUi
 import com.example.chat.views.EmojiView
 import com.example.chat.views.MessageViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -38,6 +41,8 @@ class ChatActivity : AppCompatActivity() {
         const val MESSAGES_LIST_KEY = "messages"
         private const val DIVIDER_FOR_GENERATING_ID = 1_000_000_000
     }
+
+    private val disposeBag = CompositeDisposable()
 
     private lateinit var messages: ArrayList<Message>
     private lateinit var messageUis: ArrayList<ViewTyped>
@@ -81,7 +86,19 @@ class ChatActivity : AppCompatActivity() {
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         messages = if (savedInstanceState == null) {
-            ArrayList(MessageRepository.getMessagesList())
+            val messagesDisposable = MessageRepository.getMessagesList()
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ message ->
+                    messages.add(message)
+                    messageUis.add(messageToUi(listOf(message))[0])
+                    adapter.items.add(messageToUi(listOf(message))[0])
+                    recyclerView.scrollToPosition(adapter.itemCount - 1)
+                }, {
+                    // Error
+                })
+            disposeBag.add(messagesDisposable)
+            arrayListOf()
         } else {
             savedInstanceState.getSerializable(MESSAGES_LIST_KEY) as ArrayList<Message>
         }
@@ -286,11 +303,10 @@ class ChatActivity : AppCompatActivity() {
     }
 
     // The function is used!
-
     fun onDialogEmojiClick(view: View) {
         addEmojiView(
-                messageViewGroup = clickedMessageViewGroup,
-                view as EmojiView
+            messageViewGroup = clickedMessageViewGroup,
+            view as EmojiView
         )
         emojisDialog.dismiss()
     }
@@ -336,5 +352,10 @@ class ChatActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(MESSAGES_LIST_KEY, messages)
+    }
+
+    override fun onDestroy() {
+        disposeBag.clear()
+        super.onDestroy()
     }
 }

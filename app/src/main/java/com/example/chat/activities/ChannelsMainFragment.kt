@@ -9,10 +9,19 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.chat.PagerAdapter
 import com.example.chat.R
 import com.example.chat.entities.Channel
+import com.example.chat.entities.Contact
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import io.reactivex.Observable
+import io.reactivex.Scheduler
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class ChannelsMainFragment : androidx.fragment.app.Fragment() {
+    private val disposeBag = CompositeDisposable()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,7 +34,11 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val viewPager = view.findViewById<ViewPager2>(R.id.fragmentViewPager)
-        val channels = listOf(getMyChannels(), getAllChannels())
+
+        val myChannels = mutableListOf<Channel>()
+        val allChannels = mutableListOf<Channel>()
+
+        val channels = listOf(myChannels, allChannels)
         val adapter = PagerAdapter(channels)
         viewPager.adapter = adapter
 
@@ -37,32 +50,53 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 tab.text = tabs[position]
             }.attach()
         }
+
+        val myChannelsDisposable = getMyChannels()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ channel ->
+                myChannels.add(channel)
+                adapter.notifyDataSetChanged()
+            },
+            {
+                // Error
+            })
+        disposeBag.add(myChannelsDisposable)
+
+        val allChannelsDisposable = getAllChannels()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ channel ->
+                allChannels.add(channel)
+                adapter.notifyDataSetChanged()
+            },
+            {
+                // Error
+            })
+        disposeBag.add(allChannelsDisposable)
     }
 
-    private fun getAllChannels(): List<Channel> {
-        return listOf(
-            Channel("General", 1),
-            Channel("Development", 2),
-            Channel("Coding", 3),
-            Channel("Chess", 4),
-            Channel("Android", 5),
-            Channel("Design", 6),
-            Channel("Channel 4", 7),
-            Channel("Channel 5", 8),
-            Channel("Channel 6", 9),
-            Channel("Channel 7", 10)
-        )
+    private fun getAllChannels(): Observable<Channel> {
+        return Observable.create{ subscriber ->
+            for (i in 1..10) {
+                val channel = Channel("Channel $i", i.toLong())
+                subscriber.onNext(channel)
+            }
+            subscriber.onComplete()
+        }
     }
 
-    private fun getMyChannels(): List<Channel> {
-        return listOf(
-            Channel("Coding", 3),
-            Channel("Chess", 4),
-            Channel("Android", 5),
-            Channel("Channel 4", 7),
-            Channel("Channel 5", 8),
-            Channel("Channel 6", 9),
-            Channel("Channel 7", 10)
-        )
+    private fun getMyChannels(): Observable<Channel> {
+        return Observable.create{ subscriber ->
+            for (i in 1..10 step 3) {
+                val channel = Channel("Channel $i", i.toLong())
+                subscriber.onNext(channel)
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        disposeBag.clear()
+        super.onDestroyView()
     }
 }
