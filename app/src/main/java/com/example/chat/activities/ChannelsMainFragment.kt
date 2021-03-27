@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.chat.PagerAdapter
@@ -59,7 +60,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 adapter.notifyDataSetChanged()
             },
             {
-                // Error
+                Toast.makeText(this.context, getString(R.string.error_receive_channels), Toast.LENGTH_SHORT).show()
             })
         disposeBag.add(myChannelsDisposable)
 
@@ -71,7 +72,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 adapter.notifyDataSetChanged()
             },
             {
-                // Error
+                Toast.makeText(this.context, getString(R.string.error_receive_channels), Toast.LENGTH_SHORT).show()
             })
         disposeBag.add(allChannelsDisposable)
     }

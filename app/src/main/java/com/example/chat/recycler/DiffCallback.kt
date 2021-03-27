@@ -10,8 +10,4 @@ class DiffCallback: DiffUtil.ItemCallback<ViewTyped>() {
     override fun areContentsTheSame(oldItem: ViewTyped, newItem: ViewTyped): Boolean {
         return true
     }
-
-    override fun getChangePayload(oldItem: ViewTyped, newItem: ViewTyped): Any? {
-        return super.getChangePayload(oldItem, newItem)
-    }
 }

@@ -14,4 +14,9 @@
     <string name="log_out">LOG OUT</string>
     <string name="online">online</string>
     <string name="offline">offline</string>
+    <string name="error_receive_messages">Error! Can\'t receive messages</string>
+    <string name="error_receive_channels">Error! Can\'t receive channels</string>
+    <string name="error_receive_user_info">Error! Can\'t receive user info</string>
+    <string name="error_receive_user_status">Error! Can\'t receive user status</string>
+    <string name="error_receive_topics">Error! Can\'t receive topics</string>
 </resources>

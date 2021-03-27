@@ -35,7 +35,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
         const val EMOJIS_PADDING_DP = 2F
 
-        private const val DEFAULT_TEXT_SIZE_SP = 6F
+        private const val DEFAULT_TEXT_SIZE_SP = 16
         private const val DEFAULT_EMOJIS_TEXT_SIZE_SP = 14F
 
         const val ALIGN_LEFT = 0
@@ -44,7 +44,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
     var messageId: Long? = null
 
-    var textSize: Int = spToPx(DEFAULT_TEXT_SIZE_SP, resources)
+    var textSize: Int = DEFAULT_TEXT_SIZE_SP
         set(value) {
             if (field != value) {
                 field = value
@@ -60,7 +60,7 @@ class MessageViewGroup @JvmOverloads constructor(
             }
         }
 
-    var avatar: Drawable? = null
+    private var avatar: Drawable? = null
         set(value) {
             if (field != value) {
                 field = value
@@ -130,7 +130,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
         context.obtainStyledAttributes(attrs, R.styleable.MessageViewGroup).apply {
 
-            textSize = getDimensionPixelSize(R.styleable.MessageViewGroup_text_size,  spToPx(DEFAULT_TEXT_SIZE_SP, resources))
+            textSize = getDimensionPixelSize(R.styleable.MessageViewGroup_text_size,  DEFAULT_TEXT_SIZE_SP)
             userName = getString(R.styleable.MessageViewGroup_user_name).toString()
             messageText = getString(R.styleable.MessageViewGroup_message_text).toString()
             avatar = getDrawable(R.styleable.MessageViewGroup_avatar_src)

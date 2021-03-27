@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import com.example.chat.entities.Contact
@@ -43,7 +44,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                     .into(imageView)
             },
             {
-                // Error
+                Toast.makeText(this.context, getString(R.string.error_receive_user_info), Toast.LENGTH_SHORT).show()
             })
         disposeBag.add(profileDisposable)
 
@@ -61,7 +62,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                 }
             },
             {
-                // Error
+                Toast.makeText(this.context, getString(R.string.error_receive_user_status), Toast.LENGTH_SHORT).show()
             })
         disposeBag.add(isOnlineDisposable)
     }

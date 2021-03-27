@@ -1,6 +1,8 @@
 package com.example.chat.recycler
 
+import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
+import com.example.chat.R
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -18,10 +20,7 @@ class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holde
                 .subscribe({
                     differ.submitList(newItems)
                     notifyDataSetChanged()
-                },
-                {
-
-                })
+                }, {})
         }
 
     fun addItemsAtPosition(position: Int, newItems: List<T>) {

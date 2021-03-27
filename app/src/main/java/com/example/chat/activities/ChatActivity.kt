@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -95,7 +96,7 @@ class ChatActivity : AppCompatActivity() {
                     adapter.items = messageUis
                     recyclerView.scrollToPosition(adapter.itemCount - 1)
                 }, {
-                    // Error
+                    Toast.makeText(this, getString(R.string.error_receive_messages), Toast.LENGTH_SHORT).show()
                 })
             disposeBag.add(messagesDisposable)
             arrayListOf()

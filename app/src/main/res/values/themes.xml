@@ -14,9 +14,14 @@
         <!-- Customize your theme here. -->
         <item name="android:background">@color/black</item>
         <item name="bottomSheetDialogTheme">@style/EmojisBottomSheetDialog</item>
+        <item name="android:textViewStyle">@style/TextViewStyle</item>
     </style>
 
     <style name="EmojisBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="TextViewStyle" parent="TextAppearance.AppCompat">
         <item name="android:background">@android:color/transparent</item>
     </style>
 </resources>
