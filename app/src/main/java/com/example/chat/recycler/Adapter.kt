@@ -1,8 +1,6 @@
 package com.example.chat.recycler
 
-import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
-import com.example.chat.R
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

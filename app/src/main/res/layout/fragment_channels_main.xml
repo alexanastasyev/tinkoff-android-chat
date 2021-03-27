@@ -7,12 +7,49 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".activities.ChannelsMainFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarChannels"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/editTextSearchChannels"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/imageSearchChannels"
+                android:inputType="textShortMessage"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:hint="@string/search"
+                android:textColor="@color/white"
+                android:textColorHint="@android:color/darker_gray"/>
+
+            <ImageView
+                android:id="@+id/imageSearchChannels"
+                app:layout_constraintTop_toTopOf="@id/editTextSearchChannels"
+                app:layout_constraintBottom_toBottomOf="@id/editTextSearchChannels"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:padding="4dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/search"
+                android:contentDescription="@string/search" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tabTextColor="@color/tab_item_color"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/toolbarChannels"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/fragmentViewPager"

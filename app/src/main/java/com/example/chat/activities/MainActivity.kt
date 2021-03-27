@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         actionBar?.hide()
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        val toolbar = findViewById<Toolbar>(R.id.toolbarMain)
         setSupportActionBar(toolbar)
 
         showChannelsFragment()

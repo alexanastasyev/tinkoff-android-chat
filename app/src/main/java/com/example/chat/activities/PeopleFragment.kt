@@ -24,8 +24,8 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).supportActionBar?.title = "Users"
-        (activity as AppCompatActivity).supportActionBar?.show()
+//        (activity as AppCompatActivity).supportActionBar?.title = "Users"
+        (activity as AppCompatActivity).supportActionBar?.hide()
         return inflater.inflate(R.layout.fragment_people, container, false)
     }
 

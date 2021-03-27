@@ -19,4 +19,5 @@
     <string name="error_receive_user_info">Error! Can\'t receive user info</string>
     <string name="error_receive_user_status">Error! Can\'t receive user status</string>
     <string name="error_receive_topics">Error! Can\'t receive topics</string>
+    <string name="users">Users</string>
 </resources>
