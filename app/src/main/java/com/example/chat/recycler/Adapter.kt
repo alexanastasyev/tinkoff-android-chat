@@ -1,14 +1,27 @@
 package com.example.chat.recycler
 
-class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holderFactory) {
-    private val localItems: MutableList<T> = mutableListOf()
+import androidx.recyclerview.widget.AsyncListDiffer
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
-    override var items: ArrayList<T>
-        get() = localItems as ArrayList<T>
+class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holderFactory) {
+    private val differ = AsyncListDiffer(this, DiffCallback())
+
+    override var items: List<T> = emptyList()
+        // Elvis operator is needed to make property have a backing field
+        get() = ((differ.currentList ?: field) as List<T>)
         set(newItems) {
-            localItems.clear()
-            localItems.addAll(newItems)
-            notifyDataSetChanged()
+            val dispose = Single.just(Unit)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    differ.submitList(newItems)
+                    notifyDataSetChanged()
+                },
+                {
+
+                })
         }
 
     fun addItemsAtPosition(position: Int, newItems: List<T>) {

@@ -87,12 +87,12 @@ class ChatActivity : AppCompatActivity() {
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         messages = if (savedInstanceState == null) {
             val messagesDisposable = MessageRepository.getMessagesList()
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ message ->
                     messages.add(message)
                     messageUis.add(messageToUi(listOf(message))[0])
-                    adapter.items.add(messageToUi(listOf(message))[0])
+                    adapter.items = messageUis
                     recyclerView.scrollToPosition(adapter.itemCount - 1)
                 }, {
                     // Error
@@ -260,7 +260,7 @@ class ChatActivity : AppCompatActivity() {
             if (newMessage.text.isNotEmpty()) {
                 messages.add(newMessage)
                 messageUis.add(messageToUi(listOf(newMessage))[0])
-                adapter.items.add(messageToUi(listOf(newMessage))[0])
+                adapter.items = messageUis
                 clearEditText()
                 recyclerView.scrollToPosition(adapter.itemCount - 1)
             }

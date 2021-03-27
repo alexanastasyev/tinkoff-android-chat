@@ -4,7 +4,7 @@ import java.io.Serializable
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Message(
+data class Message(
     val text: String,
     val author: String,
     val date: Date,
