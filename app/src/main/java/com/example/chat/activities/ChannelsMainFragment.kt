@@ -28,7 +28,6 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-//        (activity as AppCompatActivity).supportActionBar?.title = "Search..."
         (activity as AppCompatActivity).supportActionBar?.hide()
         return inflater.inflate(R.layout.fragment_channels_main, container, false)
     }

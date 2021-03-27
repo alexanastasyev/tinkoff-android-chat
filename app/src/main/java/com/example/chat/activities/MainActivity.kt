@@ -55,9 +55,4 @@ class MainActivity : AppCompatActivity() {
             .add(R.id.fragmentContainer, ProfileFragment())
             .commit()
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.toolbar_menu, menu)
-        return true
-    }
 }
