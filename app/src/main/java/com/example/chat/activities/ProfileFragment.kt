@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import com.example.chat.Database
 import com.example.chat.entities.Contact
 import com.example.chat.R
 import com.squareup.picasso.Picasso
@@ -30,7 +31,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val profileDisposable = getProfileDetails()
+        val profileDisposable = Database.getProfileDetails()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ profile ->
@@ -49,7 +50,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
             })
         disposeBag.add(profileDisposable)
 
-        val isOnlineDisposable = getProfileStatus()
+        val isOnlineDisposable = Database.getProfileStatus()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ isOnline ->
@@ -68,21 +69,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         disposeBag.add(isOnlineDisposable)
     }
 
-    private fun getProfileDetails(): Single<Contact> {
-        return Single.create { subscriber ->
-            val profile = Contact(
-                "Alexey Anastasyev",
-                "https://assets.gitlab-static.net/uploads/-/system/user/avatar/8174750/avatar.png"
-            )
-            subscriber.onSuccess(profile)
-        }
-    }
 
-    private fun getProfileStatus(): Single<Boolean> {
-        return Single.create{ subscriber ->
-            subscriber.onSuccess(true)
-        }
-    }
 
     override fun onDestroyView() {
         disposeBag.clear()

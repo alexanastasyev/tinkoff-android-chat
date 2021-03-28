@@ -87,14 +87,13 @@ class ChatActivity : AppCompatActivity() {
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         messages = if (savedInstanceState == null) {
-            val messagesDisposable = MessageRepository.getMessagesList()
+            val messagesDisposable = Database.getMessagesList()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ message ->
                     messages.add(message)
                     messageUis.add(messageToUi(listOf(message))[0])
                     adapter.items = messageUis
-                    recyclerView.scrollToPosition(adapter.itemCount - 1)
                 }, {
                     Toast.makeText(this, getString(R.string.error_receive_messages), Toast.LENGTH_SHORT).show()
                 })
@@ -256,14 +255,18 @@ class ChatActivity : AppCompatActivity() {
 
     private fun setClickListenerForSendImage() {
         findViewById<ImageView>(R.id.imageSend).setOnClickListener {
-
-            val newMessage = generateNewMessage()
-            if (newMessage.text.isNotEmpty()) {
-                messages.add(newMessage)
-                messageUis.add(messageToUi(listOf(newMessage))[0])
-                adapter.items = messageUis
-                clearEditText()
-                recyclerView.scrollToPosition(adapter.itemCount - 1)
+            try {
+                val newMessage = generateNewMessage()
+                if (newMessage.text.isNotEmpty()) {
+                    messages.add(newMessage)
+                    messageUis.add(messageToUi(listOf(newMessage))[0])
+                    adapter.items = messageUis
+                    clearEditText()
+                    recyclerView.scrollToPosition(adapter.itemCount - 1)
+                }
+            } catch (e: CannotSendMessageException) {
+                Toast.makeText(this, getString(R.string.error_send_message), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
         }
     }
@@ -278,6 +281,8 @@ class ChatActivity : AppCompatActivity() {
         val avatarUrl = THIS_USER_AVATAR_URL
         val reactions = arrayListOf<Reaction>()
 
+        maybeThrowException()
+
         return Message(
             text,
             author,
@@ -287,6 +292,12 @@ class ChatActivity : AppCompatActivity() {
             avatarUrl,
             reactions
         )
+    }
+
+    private fun maybeThrowException() {
+        if ((Math.random() * 100).toInt() % 4 == 0) {
+            throw CannotSendMessageException()
+        }
     }
 
     private fun clearEditText() {

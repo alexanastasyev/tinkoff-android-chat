@@ -20,4 +20,7 @@
     <string name="error_receive_user_status">Error! Can\'t receive user status</string>
     <string name="error_receive_topics">Error! Can\'t receive topics</string>
     <string name="users">Users</string>
+    <string name="subscribed">Subscribed</string>
+    <string name="all_channels">All streams</string>
+    <string name="error_send_message">Error! Can\'t send message</string>
 </resources>

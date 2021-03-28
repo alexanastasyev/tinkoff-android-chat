@@ -7,15 +7,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
+import com.example.chat.Database
 import com.example.chat.PagerAdapter
 import com.example.chat.R
 import com.example.chat.entities.Channel
-import com.example.chat.entities.Contact
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.Observable
-import io.reactivex.Scheduler
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -43,7 +40,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         viewPager.adapter = adapter
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
-        val tabs: List<String> = listOf("Subscribed", "All streams")
+        val tabs: List<String> = listOf(getString(R.string.subscribed), getString(R.string.all_channels))
 
         if (tabLayout != null && viewPager != null) {
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -51,7 +48,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             }.attach()
         }
 
-        val myChannelsDisposable = getMyChannels()
+        val myChannelsDisposable = Database.getMyChannels()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channel ->
@@ -63,7 +60,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             })
         disposeBag.add(myChannelsDisposable)
 
-        val allChannelsDisposable = getAllChannels()
+        val allChannelsDisposable = Database.getAllChannels()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channel ->
@@ -74,25 +71,6 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 Toast.makeText(this.context, getString(R.string.error_receive_channels), Toast.LENGTH_SHORT).show()
             })
         disposeBag.add(allChannelsDisposable)
-    }
-
-    private fun getAllChannels(): Observable<Channel> {
-        return Observable.create{ subscriber ->
-            for (i in 1..10) {
-                val channel = Channel("Channel $i", i.toLong())
-                subscriber.onNext(channel)
-            }
-            subscriber.onComplete()
-        }
-    }
-
-    private fun getMyChannels(): Observable<Channel> {
-        return Observable.create{ subscriber ->
-            for (i in 1..10 step 3) {
-                val channel = Channel("Channel $i", i.toLong())
-                subscriber.onNext(channel)
-            }
-        }
     }
 
     override fun onDestroyView() {

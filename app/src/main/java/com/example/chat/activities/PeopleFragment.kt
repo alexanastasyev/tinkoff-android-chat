@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chat.Database
 import com.example.chat.entities.Contact
 import com.example.chat.R
 import com.example.chat.recycler.*
@@ -30,7 +31,7 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val contactsDisposable = getContacts()
+        val contactsDisposable = Database.getContacts()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ contacts ->
@@ -47,22 +48,6 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
 
             })
         disposeBag.add(contactsDisposable)
-    }
-
-    private fun getContacts() : Single<List<Contact>> {
-        return Single.create { subscriber ->
-            val contacts = listOf(
-                Contact(
-                    "Sherlock Holmes",
-                    "https://aif-s3.aif.ru/images/020/856/92c446222800f644b2a57f05a8025a9b.jpg"
-                ),
-                Contact(
-                    "John Watson",
-                    "https://cdn.fishki.net/upload/post/2017/12/03/2447213/tn/4de61c308551534ae848c984a4d7cb74.jpg"
-                )
-            )
-            subscriber.onSuccess(contacts)
-        }
     }
 
     override fun onDestroyView() {

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.activities.ChatActivity
 import com.example.chat.entities.Channel
-import com.example.chat.entities.Topic
 import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
 import com.example.chat.recycler.ViewTyped
@@ -19,7 +18,6 @@ import com.example.chat.recycler.converters.channelToUi
 import com.example.chat.recycler.converters.topicToUi
 import com.example.chat.recycler.uis.ChannelUi
 import com.example.chat.recycler.uis.TopicUi
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlin.collections.ArrayList
@@ -105,7 +103,7 @@ class PagerAdapter(
         val layout = view.parent as ConstraintLayout
         val textView = layout.findViewById<TextView>(R.id.channelName)
         val channelName = textView.text.toString()
-        val topicsDisposable = getTopics(channelName)
+        val topicsDisposable = Database.getTopics(channelName)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -135,17 +133,6 @@ class PagerAdapter(
         val position = getChildPosition(view)
         val currentAdapter = getCurrentAdapter(channelsType)
         return position < currentAdapter.items.size - 1 && currentAdapter.items[position + 1] is TopicUi
-    }
-
-    private fun getTopics(channelName: String): Single<List<Topic>> {
-        return Single.create{ subscriber ->
-            val topics = listOf(
-                Topic("First topic of $channelName"),
-                Topic("Second topic of $channelName"),
-                Topic("Third topic of $channelName")
-            )
-            subscriber.onSuccess(topics)
-        }
     }
 
     private fun collapseTopics(view: View, channelsType: Int) {

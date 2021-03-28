@@ -2,7 +2,6 @@ package com.example.chat.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
 import androidx.appcompat.widget.Toolbar
 import com.example.chat.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
