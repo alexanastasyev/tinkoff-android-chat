@@ -11,7 +11,8 @@ fun contactToUi (contacts: List<Contact>) : List<ViewTyped> {
         .subscribeOn(Schedulers.newThread())
         .map { ContactUi(
             it.imageUrl,
-            it.name
+            it.name,
+            it.isOnline
         ) }
     return resultObservable.toList().blockingGet()
 }

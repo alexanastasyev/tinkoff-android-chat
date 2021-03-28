@@ -13,6 +13,16 @@
         app:layout_constraintStart_toStartOf="parent"
         android:src="@drawable/default_avatar"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/onlineIndicator"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/imageContact"
+        app:layout_constraintEnd_toEndOf="@id/imageContact"
+        android:src="@android:color/holo_green_light"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"/>
+
     <TextView
         android:id="@+id/contactName"
         android:layout_width="0dp"
