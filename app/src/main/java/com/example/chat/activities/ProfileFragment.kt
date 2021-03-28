@@ -82,8 +82,6 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         disposeBag.add(profileDisposable)
     }
 
-
-
     override fun onDestroyView() {
         disposeBag.clear()
         super.onDestroyView()

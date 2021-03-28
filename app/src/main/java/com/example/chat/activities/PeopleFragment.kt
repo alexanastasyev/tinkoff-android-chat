@@ -56,8 +56,6 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
 
             })
         disposeBag.add(contactsDisposable)
-
-
     }
 
     override fun onDestroyView() {
