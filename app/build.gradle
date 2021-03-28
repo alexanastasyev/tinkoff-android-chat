@@ -43,4 +43,5 @@ dependencies {
     implementation "androidx.legacy:legacy-support-v4:$legacySupportVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "com.facebook.shimmer:shimmer:$shimmerVersion"
 }

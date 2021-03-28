@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.setPadding
@@ -56,6 +57,8 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity)
 
+        findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.INVISIBLE
+
         val extras = intent.extras
         if (extras != null) {
             val topicName = extras.getString(PagerAdapter.TOPIC_KEY)
@@ -86,7 +89,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
-        messages = if (savedInstanceState == null) {
+        if (savedInstanceState == null) {
             val messagesDisposable = Database.getMessagesList()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -95,13 +98,15 @@ class ChatActivity : AppCompatActivity() {
                     messageUis.add(messageToUi(listOf(message))[0])
                     adapter.items = messageUis
                     recyclerView.scrollToPosition(adapter.itemCount - 1)
+                    findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
                 }, {
                     Toast.makeText(this, getString(R.string.error_receive_messages), Toast.LENGTH_SHORT).show()
                 })
             disposeBag.add(messagesDisposable)
-            arrayListOf()
+            messages = arrayListOf()
         } else {
-            savedInstanceState.getSerializable(MESSAGES_LIST_KEY) as ArrayList<Message>
+            findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
+            messages = savedInstanceState.getSerializable(MESSAGES_LIST_KEY) as ArrayList<Message>
         }
     }
 

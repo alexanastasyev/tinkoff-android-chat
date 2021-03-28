@@ -9,7 +9,7 @@ import java.util.*
 object Database {
     fun getMessagesList(): Observable<Message> {
         return Observable.create{ subscriber ->
-            Thread.sleep(1000)
+            Thread.sleep(3000)
             subscriber.onNext(
                 Message("Hello, world!", "John Smith", Date(10000), 1, 1)
             )
@@ -68,7 +68,7 @@ object Database {
 
     fun getContacts() : Single<List<Contact>> {
         return Single.create { subscriber ->
-            Thread.sleep(1000)
+            Thread.sleep(3000)
             val contacts = listOf(
                     Contact(
                             "Sherlock Holmes",
@@ -85,29 +85,23 @@ object Database {
 
     fun getProfileDetails(): Single<Contact> {
         return Single.create { subscriber ->
-            Thread.sleep(500)
+            Thread.sleep(3000)
             val profile = Contact(
                     "Alexey Anastasyev",
-                    "https://assets.gitlab-static.net/uploads/-/system/user/avatar/8174750/avatar.png"
+                    "https://assets.gitlab-static.net/uploads/-/system/user/avatar/8174750/avatar.png",
+                true
             )
             subscriber.onSuccess(profile)
         }
     }
 
-    fun getProfileStatus(): Single<Boolean> {
-        Thread.sleep(200)
-        return Single.create{ subscriber ->
-            subscriber.onSuccess(true)
-        }
-    }
-
     fun getTopics(channelName: String): Single<List<Topic>> {
         return Single.create{ subscriber ->
-            Thread.sleep(800)
+            Thread.sleep(100)
             val topics = listOf(
-                    Topic("First topic of $channelName"),
-                    Topic("Second topic of $channelName"),
-                    Topic("Third topic of $channelName")
+                Topic("First topic of $channelName"),
+                Topic("Second topic of $channelName"),
+                Topic("Third topic of $channelName")
             )
             subscriber.onSuccess(topics)
         }

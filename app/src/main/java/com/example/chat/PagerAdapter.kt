@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.activities.ChatActivity
@@ -109,6 +108,8 @@ class PagerAdapter(
 
     private fun expandTopics(view: View, channelsType: Int) {
         val position = getChildPosition(view)
+        val currentAdapter = getCurrentAdapter(channelsType)
+        (currentAdapter.items[position] as ChannelUi).isExpanded = true
         val layout = view.parent as ConstraintLayout
         val textView = layout.findViewById<TextView>(R.id.channelName)
         val channelName = textView.text.toString()
@@ -118,12 +119,8 @@ class PagerAdapter(
             .subscribe(
             {topics ->
                 val topicUis = topicToUi(topics)
-                val currentAdapter = getCurrentAdapter(channelsType)
-
                 currentAdapter.addItemsAtPosition(position + 1, topicUis)
                 currentAdapter.notifyDataSetChanged()
-
-                (currentAdapter.items[position] as ChannelUi).isExpanded = true
             },
             {
                 Toast.makeText(view.context, view.context.getString(R.string.error_receive_topics), Toast.LENGTH_SHORT).show()
@@ -146,10 +143,11 @@ class PagerAdapter(
 
     private fun collapseTopics(view: View, channelsType: Int) {
         val position = getChildPosition(view)
+        val currentAdapter = getCurrentAdapter(channelsType)
+        (currentAdapter.items[position] as ChannelUi).isExpanded = false
+
         val deleteFrom = position + 1
         var deleteTo = deleteFrom
-
-        val currentAdapter = getCurrentAdapter(channelsType)
 
         for (i in position + 1 until currentAdapter.items.size) {
             if (currentAdapter.items[i] is ChannelUi) {
@@ -161,7 +159,6 @@ class PagerAdapter(
         currentAdapter.removeItems(deleteFrom, deleteTo)
         currentAdapter.notifyDataSetChanged()
 
-        (currentAdapter.items[position] as ChannelUi).isExpanded = false
     }
 
     private fun startChatActivity(view: View) {

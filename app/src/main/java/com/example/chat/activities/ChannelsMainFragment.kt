@@ -98,7 +98,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
 
         val imageSearchChannels = view.findViewById<ImageView>(R.id.imageSearchChannels)
         imageSearchChannels.setOnClickListener {
-            adapter.filterChannels(editTextSearchChannels.text.toString(), tabLayout.selectedTabPosition)
+            adapter.filterChannels(editTextSearchChannels.text.toString().trim(), tabLayout.selectedTabPosition)
         }
     }
 

@@ -8,11 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.Database
-import com.example.chat.entities.Contact
 import com.example.chat.R
 import com.example.chat.recycler.*
 import com.example.chat.recycler.converters.contactToUi
-import io.reactivex.Single
+import com.facebook.shimmer.ShimmerFrameLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -31,6 +30,11 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewContacts)
+        recyclerView.visibility = View.GONE
+        val shimmerPeople = view.findViewById<ShimmerFrameLayout>(R.id.shimmerPeople)
+        shimmerPeople.visibility = View.VISIBLE
+        shimmerPeople.startShimmer()
         val contactsDisposable = Database.getContacts()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
@@ -38,16 +42,22 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
                 val contactUis = contactToUi(contacts)
                 val holderFactory = ChatHolderFactory()
                 val adapter = Adapter<ViewTyped>(holderFactory)
-                val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewContacts)
                 recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
 
                 recyclerView.adapter = adapter
                 adapter.items = contactUis as ArrayList<ViewTyped>
+
+                shimmerPeople.stopShimmer()
+                shimmerPeople.visibility = View.GONE
+
+                recyclerView.visibility = View.VISIBLE
             },
             {
 
             })
         disposeBag.add(contactsDisposable)
+
+
     }
 
     override fun onDestroyView() {
