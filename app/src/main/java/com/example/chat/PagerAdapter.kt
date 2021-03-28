@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.children
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.activities.ChatActivity
@@ -35,6 +36,9 @@ class PagerAdapter(
 
         private lateinit var adapterMyChannels: Adapter<ViewTyped>
         private lateinit var adapterAllChannels: Adapter<ViewTyped>
+
+        private lateinit var itemsMyChannels: List<ViewTyped>
+        private lateinit var itemsAllChannels: List<ViewTyped>
     }
 
     private lateinit var adapter: Adapter<ViewTyped>
@@ -54,16 +58,21 @@ class PagerAdapter(
         )
         adapter = Adapter(holderFactory)
 
-        when (getItemViewType(position)) {
-            TYPE_MY_CHANNELS -> adapterMyChannels = adapter
-            TYPE_ALL_CHANNELS -> adapterAllChannels = adapter
-        }
-
         recyclerView = holder.itemView.findViewById(R.id.recyclerViewChannels)
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
 
         recyclerView.adapter = adapter
         adapter.items = channelUis as ArrayList<ViewTyped>
+        when (getItemViewType(position)) {
+            TYPE_MY_CHANNELS -> {
+                adapterMyChannels = adapter
+                itemsMyChannels = channelUis
+            }
+            TYPE_ALL_CHANNELS -> {
+                adapterAllChannels = adapter
+                itemsAllChannels = channelUis
+            }
+        }
     }
 
     private fun getChannelOrTopicClickListener(channelsType: Int): (View) -> Unit {
@@ -153,7 +162,6 @@ class PagerAdapter(
         currentAdapter.notifyDataSetChanged()
 
         (currentAdapter.items[position] as ChannelUi).isExpanded = false
-
     }
 
     private fun startChatActivity(view: View) {
@@ -172,6 +180,23 @@ class PagerAdapter(
             TYPE_MY_CHANNELS
         } else {
             TYPE_ALL_CHANNELS
+        }
+    }
+
+    fun filterChannels(key: String, channelsType: Int) {
+        val currentAdapter = getCurrentAdapter(channelsType)
+        val currentItems = when (channelsType) {
+            TYPE_MY_CHANNELS -> itemsMyChannels
+            TYPE_ALL_CHANNELS -> itemsAllChannels
+            else -> itemsAllChannels
+        }
+        currentAdapter.items.forEach {
+            if (it is ChannelUi && it.isExpanded) {
+                it.isExpanded = false
+            }
+        }
+        currentAdapter.items = currentItems.filter {
+                it is ChannelUi && it.name.contains(key)
         }
     }
 }
