@@ -94,6 +94,7 @@ class ChatActivity : AppCompatActivity() {
                     messages.add(message)
                     messageUis.add(messageToUi(listOf(message))[0])
                     adapter.items = messageUis
+                    recyclerView.scrollToPosition(adapter.itemCount - 1)
                 }, {
                     Toast.makeText(this, getString(R.string.error_receive_messages), Toast.LENGTH_SHORT).show()
                 })

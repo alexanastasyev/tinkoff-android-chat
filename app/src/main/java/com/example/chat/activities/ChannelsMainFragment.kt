@@ -34,6 +34,10 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         return inflater.inflate(R.layout.fragment_channels_main, container, false)
     }
 
+    companion object {
+        private const val SEARCH_DELAY_MILLISECONDS = 500L
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val viewPager = view.findViewById<ViewPager2>(R.id.fragmentViewPager)
 
@@ -53,28 +57,12 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             }.attach()
         }
 
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                if (tab != null) {
-                    adapter.filterChannels("", tab.position)
-                }
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-
-            }
-        })
-
         val myChannelsDisposable = Database.getMyChannels()
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channel ->
                 myChannels.add(channel)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(0)
             },
             {
                 Toast.makeText(this.context, getString(R.string.error_receive_channels), Toast.LENGTH_SHORT).show()
@@ -86,7 +74,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channel ->
                 allChannels.add(channel)
-                adapter.notifyDataSetChanged()
+                adapter.notifyItemChanged(1)
             },
             {
                 Toast.makeText(this.context, getString(R.string.error_receive_channels), Toast.LENGTH_SHORT).show()
@@ -102,7 +90,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
 
         val disposable = subject
                 .distinctUntilChanged()
-                .debounce(500, TimeUnit.MILLISECONDS)
+                .debounce(SEARCH_DELAY_MILLISECONDS, TimeUnit.MILLISECONDS)
                 .subscribe{ str ->
                     adapter.filterChannels(str, tabLayout.selectedTabPosition)
                 }

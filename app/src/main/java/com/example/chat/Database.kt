@@ -9,6 +9,7 @@ import java.util.*
 object Database {
     fun getMessagesList(): Observable<Message> {
         return Observable.create{ subscriber ->
+            Thread.sleep(1000)
             subscriber.onNext(
                 Message("Hello, world!", "John Smith", Date(10000), 1, 1)
             )
@@ -47,6 +48,7 @@ object Database {
     fun getAllChannels(): Observable<Channel> {
         return Observable.create{ subscriber ->
             for (i in 1..10) {
+                Thread.sleep(100)
                 val channel = Channel("Channel $i", i.toLong())
                 subscriber.onNext(channel)
             }
@@ -57,6 +59,7 @@ object Database {
     fun getMyChannels(): Observable<Channel> {
         return Observable.create{ subscriber ->
             for (i in 1..10 step 3) {
+                Thread.sleep(300)
                 val channel = Channel("Channel $i", i.toLong())
                 subscriber.onNext(channel)
             }
@@ -65,6 +68,7 @@ object Database {
 
     fun getContacts() : Single<List<Contact>> {
         return Single.create { subscriber ->
+            Thread.sleep(1000)
             val contacts = listOf(
                     Contact(
                             "Sherlock Holmes",
@@ -81,6 +85,7 @@ object Database {
 
     fun getProfileDetails(): Single<Contact> {
         return Single.create { subscriber ->
+            Thread.sleep(500)
             val profile = Contact(
                     "Alexey Anastasyev",
                     "https://assets.gitlab-static.net/uploads/-/system/user/avatar/8174750/avatar.png"
@@ -90,6 +95,7 @@ object Database {
     }
 
     fun getProfileStatus(): Single<Boolean> {
+        Thread.sleep(200)
         return Single.create{ subscriber ->
             subscriber.onSuccess(true)
         }
@@ -97,6 +103,7 @@ object Database {
 
     fun getTopics(channelName: String): Single<List<Topic>> {
         return Single.create{ subscriber ->
+            Thread.sleep(800)
             val topics = listOf(
                     Topic("First topic of $channelName"),
                     Topic("Second topic of $channelName"),
