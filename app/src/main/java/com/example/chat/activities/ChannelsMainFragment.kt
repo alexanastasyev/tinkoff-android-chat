@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.viewpager2.widget.ViewPager2
 import com.example.chat.Database
-import com.example.chat.PagerAdapter
+import com.example.chat.recycler.PagerAdapter
 import com.example.chat.R
 import com.example.chat.entities.Channel
 import com.google.android.material.tabs.TabLayout

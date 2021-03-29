@@ -1,4 +1,4 @@
-package com.example.chat
+package com.example.chat.exceptions
 
 import java.lang.Exception
 

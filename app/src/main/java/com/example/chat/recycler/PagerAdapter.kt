@@ -1,4 +1,4 @@
-package com.example.chat
+package com.example.chat.recycler
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -9,11 +9,10 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chat.Database
+import com.example.chat.R
 import com.example.chat.activities.ChatActivity
 import com.example.chat.entities.Channel
-import com.example.chat.recycler.Adapter
-import com.example.chat.recycler.ChatHolderFactory
-import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.channelToUi
 import com.example.chat.recycler.converters.topicToUi
 import com.example.chat.recycler.uis.ChannelUi

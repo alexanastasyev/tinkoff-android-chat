@@ -2,10 +2,7 @@ package com.example.chat.activities
 
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -19,8 +16,10 @@ import com.example.chat.*
 import com.example.chat.entities.Emoji
 import com.example.chat.entities.Message
 import com.example.chat.entities.Reaction
+import com.example.chat.exceptions.CannotSendMessageException
 import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
+import com.example.chat.recycler.PagerAdapter
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.messageToUi
 import com.example.chat.views.EmojiView
@@ -63,7 +62,9 @@ class ChatActivity : AppCompatActivity() {
         if (extras != null) {
             val topicName = extras.getString(PagerAdapter.TOPIC_KEY)
             val toolbar = findViewById<Toolbar>(R.id.toolbarChat)
-            toolbar?.title = topicName
+            toolbar?.title = ""
+            val textViewTitle = toolbar?.findViewById<TextView>(R.id.titleChat)
+            textViewTitle?.text = topicName
             setSupportActionBar(toolbar)
         }
 
@@ -86,6 +87,10 @@ class ChatActivity : AppCompatActivity() {
         setEditTextListener()
 
         recyclerView.scrollToPosition(adapter.itemCount - 1)
+
+        findViewById<ImageView>(R.id.arrowBack).setOnClickListener {
+            this.finish()
+        }
     }
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
