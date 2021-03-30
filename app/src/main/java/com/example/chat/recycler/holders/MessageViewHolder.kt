@@ -60,6 +60,8 @@ class MessageViewHolder(
 
         if (!shouldShowDate(messageHolder)) {
             dateHolder.visibility = View.GONE
+        } else {
+            dateHolder.visibility = View.VISIBLE
         }
     }
 
