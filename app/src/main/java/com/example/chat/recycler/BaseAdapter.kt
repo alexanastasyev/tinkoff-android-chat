@@ -32,6 +32,4 @@ abstract class BaseAdapter<T: ViewTyped>(internal val holderFactory: HolderFacto
     override fun getItemViewType(position: Int): Int {
         return items[position].viewType
     }
-
-    fun isEmpty(): Boolean = items.isEmpty()
 }

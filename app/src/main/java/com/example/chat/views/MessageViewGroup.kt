@@ -16,7 +16,7 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.*
-import com.example.chat.Emoji
+import com.example.chat.entities.Emoji
 import com.example.chat.R
 import com.example.chat.dpToPx
 import com.example.chat.spToPx
@@ -29,14 +29,14 @@ class MessageViewGroup @JvmOverloads constructor(
 ) : ViewGroup(context, attrs, defStyleAttr, defStyleRes) {
 
     companion object {
-        private const val AVATAR_SIZE = 50F
-        private const val MESSAGE_MINIMAL_SIDE_MARGIN = 80F
-        private const val EMOJIS_LAYOUT_MARGIN = 4F
+        private const val AVATAR_SIZE_DP = 50F
+        private const val MESSAGE_MINIMAL_SIDE_MARGIN_DP = 80F
+        private const val EMOJIS_LAYOUT_MARGIN_DP = 4F
 
-        const val EMOJIS_PADDING = 2F
+        const val EMOJIS_PADDING_DP = 2F
 
-        private const val DEFAULT_TEXT_SIZE = 16
-        private const val DEFAULT_EMOJIS_TEXT_SIZE = 14F
+        private const val DEFAULT_TEXT_SIZE_SP = 6F
+        private const val DEFAULT_EMOJIS_TEXT_SIZE_SP = 14F
 
         const val ALIGN_LEFT = 0
         const val ALIGN_RIGHT = 1
@@ -44,11 +44,11 @@ class MessageViewGroup @JvmOverloads constructor(
 
     var messageId: Long? = null
 
-    var textSize: Int = DEFAULT_TEXT_SIZE
+    var textSize: Int = spToPx(DEFAULT_TEXT_SIZE_SP, resources)
         set(value) {
             if (field != value) {
                 field = value
-                requestLayout()
+                invalidate()
             }
         }
 
@@ -56,20 +56,20 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                requestLayout()
+                invalidate()
             }
         }
 
     var avatar: Drawable? = null
-    set(value) {
-        if (field != value) {
-            field = value
-            if (align == ALIGN_LEFT) {
-                avatarImageView.setImageDrawable(field)
+        set(value) {
+            if (field != value) {
+                field = value
+                if (align == ALIGN_LEFT) {
+                    avatarImageView.setImageDrawable(field)
+                }
+                invalidate()
             }
-            requestLayout()
         }
-    }
 
     // All these null-checks below are necessary. Otherwise the app crushes.
 
@@ -77,10 +77,7 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                if (nameTextView != null) {
-                    nameTextView.text = field
-                }
-                requestLayout()
+                nameTextView?.text = field
             }
         }
 
@@ -88,10 +85,8 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                if (messageTextView != null) {
-                    messageTextView.text = field
-                }
-                requestLayout()
+                messageTextView?.text = field
+                invalidate()
             }
         }
 
@@ -99,10 +94,8 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                if (nameAndTextLayout != null) {
-                    nameAndTextLayout.background = field
-                }
-                requestLayout()
+                nameAndTextLayout?.background = field
+                invalidate()
             }
         }
 
@@ -115,7 +108,7 @@ class MessageViewGroup @JvmOverloads constructor(
                     setOnClickListenerForEmojiViews(clickListenerForEmojis)
                     setOnPlusClickListener(emojiPlusClickListener)
                 }
-                requestLayout()
+                invalidate()
             }
         }
 
@@ -137,7 +130,7 @@ class MessageViewGroup @JvmOverloads constructor(
 
         context.obtainStyledAttributes(attrs, R.styleable.MessageViewGroup).apply {
 
-            textSize = getDimensionPixelSize(R.styleable.MessageViewGroup_text_size,  DEFAULT_TEXT_SIZE)
+            textSize = getDimensionPixelSize(R.styleable.MessageViewGroup_text_size,  spToPx(DEFAULT_TEXT_SIZE_SP, resources))
             userName = getString(R.styleable.MessageViewGroup_user_name).toString()
             messageText = getString(R.styleable.MessageViewGroup_message_text).toString()
             avatar = getDrawable(R.styleable.MessageViewGroup_avatar_src)
@@ -181,7 +174,7 @@ class MessageViewGroup @JvmOverloads constructor(
     private fun setAvatarSize() {
         when (align) {
             ALIGN_LEFT -> {
-                layoutParams = LinearLayout.LayoutParams(dpToPx(AVATAR_SIZE, resources), dpToPx(AVATAR_SIZE, resources))
+                layoutParams = LinearLayout.LayoutParams(dpToPx(AVATAR_SIZE_DP, resources), dpToPx(AVATAR_SIZE_DP, resources))
             }
             ALIGN_RIGHT -> {
                 layoutParams = LinearLayout.LayoutParams(dpToPx(0F, resources), dpToPx(0F, resources))
@@ -195,8 +188,8 @@ class MessageViewGroup @JvmOverloads constructor(
         val avatarImageViewLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
         when (align) {
             ALIGN_LEFT -> {
-                avatarImageViewLayoutParams.width = dpToPx(AVATAR_SIZE, resources)
-                avatarImageViewLayoutParams.height = dpToPx(AVATAR_SIZE, resources)
+                avatarImageViewLayoutParams.width = dpToPx(AVATAR_SIZE_DP, resources)
+                avatarImageViewLayoutParams.height = dpToPx(AVATAR_SIZE_DP, resources)
             }
             ALIGN_RIGHT -> {
                 avatarImageViewLayoutParams.width = 0
@@ -210,10 +203,10 @@ class MessageViewGroup @JvmOverloads constructor(
         val nameAndTextLayoutParams = nameAndTextLayout.layoutParams as MarginLayoutParams
         when (align) {
             ALIGN_LEFT -> {
-                nameAndTextLayoutParams.setMargins(nameAndTextLayoutParams.leftMargin, nameAndTextLayoutParams.topMargin, dpToPx(MESSAGE_MINIMAL_SIDE_MARGIN, resources), 0)
+                nameAndTextLayoutParams.setMargins(nameAndTextLayoutParams.leftMargin, nameAndTextLayoutParams.topMargin, dpToPx(MESSAGE_MINIMAL_SIDE_MARGIN_DP, resources), 0)
             }
             ALIGN_RIGHT -> {
-                nameAndTextLayoutParams.setMargins(dpToPx(MESSAGE_MINIMAL_SIDE_MARGIN, resources), nameAndTextLayoutParams.topMargin, nameAndTextLayoutParams.rightMargin, 0)
+                nameAndTextLayoutParams.setMargins(dpToPx(MESSAGE_MINIMAL_SIDE_MARGIN_DP, resources), nameAndTextLayoutParams.topMargin, nameAndTextLayoutParams.rightMargin, 0)
             }
         }
         measureChildWithMargins(nameAndTextLayout, widthMeasureSpec, avatarImageViewWidth, heightMeasureSpec, 0)
@@ -225,12 +218,12 @@ class MessageViewGroup @JvmOverloads constructor(
             ALIGN_LEFT -> {
                 val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
                 val rightMargin = parentWidth - nameAndTextLayoutWidth - avatarImageViewWidth - avatarImageViewLayoutParams.leftMargin - avatarImageViewLayoutParams.rightMargin - nameAndTextLayoutParams.leftMargin
-                emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(0F, resources), rightMargin + nameAndTextLayoutParams.rightMargin, dpToPx(EMOJIS_LAYOUT_MARGIN, resources))
+                emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(0F, resources), rightMargin + nameAndTextLayoutParams.rightMargin, dpToPx(EMOJIS_LAYOUT_MARGIN_DP, resources))
             }
             ALIGN_RIGHT -> {
                 val parentWidth = MeasureSpec.getSize(widthMeasureSpec)
                 val leftMargin = parentWidth - nameAndTextLayoutWidth
-                emojisLayoutParams.setMargins(leftMargin + nameAndTextLayoutParams.leftMargin, dpToPx(0F, resources), 0, dpToPx(EMOJIS_LAYOUT_MARGIN, resources))
+                emojisLayoutParams.setMargins(leftMargin + nameAndTextLayoutParams.leftMargin, dpToPx(0F, resources), 0, dpToPx(EMOJIS_LAYOUT_MARGIN_DP, resources))
             }
         }
         measureChildWithMargins(emojisLayout, widthMeasureSpec, 0, heightMeasureSpec, maxOf(avatarImageViewHeight, nameAndTextLayoutHeight))
@@ -250,7 +243,7 @@ class MessageViewGroup @JvmOverloads constructor(
         val avatarLayoutParams = avatarImageView.layoutParams as MarginLayoutParams
         val nameAndTextLayoutParams = nameAndTextLayout.layoutParams as MarginLayoutParams
         val emojisLayoutParams = emojisLayout.layoutParams as MarginLayoutParams
-        emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(EMOJIS_LAYOUT_MARGIN, resources), 0, 0)
+        emojisLayoutParams.setMargins(avatarImageView.measuredWidth + nameAndTextLayoutParams.marginStart, dpToPx(EMOJIS_LAYOUT_MARGIN_DP, resources), 0, 0)
 
         when (align) {
             ALIGN_LEFT -> {
@@ -329,15 +322,15 @@ class MessageViewGroup @JvmOverloads constructor(
                 LinearLayout.LayoutParams.WRAP_CONTENT
         )
         emojiLayoutParams.setMargins(
-                dpToPx(EMOJIS_LAYOUT_MARGIN, resources),
-                dpToPx(EMOJIS_LAYOUT_MARGIN, resources),
-                dpToPx(EMOJIS_LAYOUT_MARGIN, resources),
-                dpToPx(EMOJIS_LAYOUT_MARGIN, resources)
+                dpToPx(EMOJIS_LAYOUT_MARGIN_DP, resources),
+                dpToPx(EMOJIS_LAYOUT_MARGIN_DP, resources),
+                dpToPx(EMOJIS_LAYOUT_MARGIN_DP, resources),
+                dpToPx(EMOJIS_LAYOUT_MARGIN_DP, resources)
         )
         emojiView.layoutParams = emojiLayoutParams
-        emojiView.size = spToPx(DEFAULT_EMOJIS_TEXT_SIZE, resources)
+        emojiView.size = spToPx(DEFAULT_EMOJIS_TEXT_SIZE_SP, resources)
         emojiView.background = ResourcesCompat.getDrawable(resources, R.drawable.emoji_view_bg, null)
-        emojiView.setPadding(dpToPx(EMOJIS_PADDING, resources))
+        emojiView.setPadding(dpToPx(EMOJIS_PADDING_DP, resources))
         emojiView.textColor = ResourcesCompat.getColor(resources, R.color.text_color, null)
     }
 

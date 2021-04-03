@@ -18,7 +18,13 @@
     <color name="text_color">#f4f4f4</color>
     <color name="message_bg_color">#1c1c1c</color>
     <color name="my_message_bg_color">#117a6c</color>
+    <color name="channel_bg_color">#1c1c1c</color>
+    <color name="button_bg_color">#1c1c1c</color>
     <color name="edit_text_bg_color">#1c1c1c</color>
     <color name="edit_text_hint_color">#777777</color>
     <color name="my_name_color">#1c1c1c</color>
+    <color name="status_online_color">#3D9200</color>
+    <color name="status_offline_color">#A60000</color>
+    <color name="topic_bg_color">#FFD100</color>
+    <color name="toolbar_color">#1c1c1c</color>
 </resources>

@@ -9,7 +9,7 @@ import androidx.core.view.marginBottom
 import androidx.core.view.marginEnd
 import androidx.core.view.marginStart
 import androidx.core.view.marginTop
-import com.example.chat.Emoji
+import com.example.chat.entities.Emoji
 import com.example.chat.R
 import com.example.chat.spToPx
 import java.io.Serializable

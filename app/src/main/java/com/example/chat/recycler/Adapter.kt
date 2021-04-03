@@ -10,4 +10,29 @@ class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holde
             localItems.addAll(newItems)
             notifyDataSetChanged()
         }
+
+    fun addItemsAtPosition(position: Int, newItems: List<T>) {
+        val newItemsList: MutableList<T> = ArrayList()
+        for (i in 0 until position) {
+            newItemsList.add(items[i])
+        }
+        for (item in newItems) {
+            newItemsList.add(item)
+        }
+        for (i in position until items.size) {
+            newItemsList.add(items[i])
+        }
+        items = newItemsList as ArrayList<T>
+    }
+
+    fun removeItems(from: Int, to: Int) {
+        val newItemsList: MutableList<T> = ArrayList()
+        for (i in 0 until from) {
+            newItemsList.add(items[i])
+        }
+        for (i in to + 1 until items.size) {
+            newItemsList.add(items[i])
+        }
+        items = newItemsList as ArrayList<T>
+    }
 }

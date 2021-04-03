@@ -3,35 +3,19 @@ package com.example.chat.recycler.holders
 import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.example.chat.*
-import com.example.chat.recycler.ViewTyped
+import com.example.chat.activities.ChatActivity
+import com.example.chat.recycler.uis.MessageUi
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
-import java.text.SimpleDateFormat
-import java.util.*
-
-class MessageUi(
-        var messageId: Long,
-        var text: String,
-        var author: String,
-        var authorId: Long,
-        var avatarUrl: String?,
-        var reactions: ArrayList<Reaction>,
-        var date: Date,
-        override val viewType: Int = R.layout.item_message
-) : ViewTyped
 
 class MessageViewHolder(
-        view: View,
-        click: ((View) -> Unit)?,
-        action: ((View) -> Unit)?,
-        private val setBackground: ((View) -> Unit),
-        private val shouldShowDate: ((View) -> Boolean)
+    view: View,
+    click: ((View) -> Unit)?,
+    action: ((View) -> Unit)?,
+    private val shouldShowDate: ((View) -> Boolean)
 ) : BaseViewHolder<MessageUi>(view) {
-
-    companion object {
-        private const val MINIMAL_MESSAGE_WIDTH = 100
-    }
 
     private val messageHolder = view.findViewById<MessageViewGroup>(R.id.message)
     private val dateHolder = view.findViewById<TextView>(R.id.date)
@@ -54,7 +38,7 @@ class MessageViewHolder(
         bindReactions(item)
         bindAndShowDateIfNecessary(item)
 
-        if (item.authorId == MainActivity.THIS_USER_ID) {
+        if (item.authorId == ChatActivity.THIS_USER_ID) {
             messageHolder.align = MessageViewGroup.ALIGN_RIGHT
             messageHolder.avatarImageView.setImageDrawable(null)
             messageHolder.findViewById<TextView>(R.id.name).setTextColor(ContextCompat.getColor(context, R.color.my_name_color))
@@ -72,9 +56,7 @@ class MessageViewHolder(
     }
 
     private fun bindAndShowDateIfNecessary(item: MessageUi) {
-        val formatter = SimpleDateFormat("d MMM", Locale.getDefault())
-        val dateAsString = formatter.format(item.date)
-        dateHolder.text = dateAsString
+        dateHolder.text = item.date
 
         if (!shouldShowDate(messageHolder)) {
             dateHolder.height = 0
@@ -82,10 +64,29 @@ class MessageViewHolder(
     }
 
     private fun bindReactions(item: MessageUi) {
-        messageHolder.reactions = item.reactions.map { Pair(it.emoji, it.amount) } as ArrayList<Pair<Emoji, Int>>
+        messageHolder.reactions = item.reactions
         for (i in item.reactions.indices) {
-            if (item.reactions[i].reactedUsersId.contains(MainActivity.THIS_USER_ID))
+            if (item.isEmojiSelected[i]) {
                 messageHolder.emojisLayout.getChildAt(i).isSelected = true
+            }
+        }
+    }
+
+    private fun setBackground(messageViewGroup: MessageViewGroup) {
+        if (messageViewGroup.align == MessageViewGroup.ALIGN_RIGHT) {
+            messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.my_message_name_and_text_bg, null)
+            messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.my_message_name_and_text_bg, null)
+            messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.my_message_name_and_text_bg, null)
+        } else {
+            messageViewGroup.nameAndTextLayout.background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.message_name_and_text_bg, null)
+            messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.name).background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.message_name_and_text_bg, null)
+            messageViewGroup.nameAndTextLayout.findViewById<TextView>(R.id.messageText).background = ResourcesCompat.getDrawable(messageViewGroup.resources,
+                    R.drawable.message_name_and_text_bg, null)
         }
     }
 }
