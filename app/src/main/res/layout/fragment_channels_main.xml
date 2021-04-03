@@ -6,56 +6,73 @@
     android:layout_height="match_parent"
     tools:context=".activities.ChannelsMainFragment">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarChannels"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <EditText
-                android:id="@+id/editTextSearchChannels"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:hint="@string/search"
-                android:inputType="textShortMessage"
-                android:textColor="@color/white"
-                android:textColorHint="@android:color/darker_gray"
-                android:textSize="24sp"
-                app:layout_constraintEnd_toStartOf="@id/imageSearchChannels"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/imageSearchChannels"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:contentDescription="@string/search"
-                android:padding="4dp"
-                android:src="@drawable/search"
-                app:layout_constraintBottom_toBottomOf="@id/editTextSearchChannels"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/editTextSearchChannels" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.appcompat.widget.Toolbar>
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbarChannels"
-        app:tabTextColor="@color/tab_item_color" />
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/fragmentViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <ProgressBar
+        android:id="@+id/progressBarChannels"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/channelsContentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarChannels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/editTextSearchChannels"
+                    android:layout_width="0dp"
+                    android:layout_height="50dp"
+                    android:hint="@string/search"
+                    android:inputType="textShortMessage"
+                    android:textColor="@color/white"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:textSize="24sp"
+                    app:layout_constraintEnd_toStartOf="@id/imageSearchChannels"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageSearchChannels"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:contentDescription="@string/search"
+                    android:padding="4dp"
+                    android:src="@drawable/search"
+                    app:layout_constraintBottom_toBottomOf="@id/editTextSearchChannels"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/editTextSearchChannels" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/toolbarChannels"
+            app:tabTextColor="@color/tab_item_color" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/fragmentViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

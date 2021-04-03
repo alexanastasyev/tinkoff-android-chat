@@ -6,8 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.viewpager2.widget.ViewPager2
 import com.example.chat.internet.ZulipService
@@ -16,7 +18,7 @@ import com.example.chat.entities.Channel
 import com.example.chat.recycler.PagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -58,11 +60,15 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             tab.text = tabs[position]
         }.attach()
 
-        val myChannelsDisposable = Observable.fromCallable { ZulipService.getMyChannels() }
+        val myChannelsDisposable = Single.fromCallable { ZulipService.getMyChannels() }
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channelsResponse ->
                 if (channelsResponse != null) {
+
+                    view.findViewById<ProgressBar>(R.id.progressBarChannels).visibility = View.GONE
+                    view.findViewById<ConstraintLayout>(R.id.channelsContentLayout).visibility = View.VISIBLE
+
                     myChannels.addAll(0, channelsResponse.channels)
                     adapter.notifyDataSetChanged()
                 }
@@ -76,7 +82,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 })
         disposeBag.add(myChannelsDisposable)
 
-        val allChannelsDisposable = Observable.fromCallable { ZulipService.getAllChannels() }
+        val allChannelsDisposable = Single.fromCallable { ZulipService.getAllChannels() }
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channelsResponse ->
