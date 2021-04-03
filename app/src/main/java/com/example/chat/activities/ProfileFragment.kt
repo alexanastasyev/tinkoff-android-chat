@@ -1,22 +1,20 @@
 package com.example.chat.activities
 
-import android.R.attr.src
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.example.chat.Database
 import com.example.chat.R
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.squareup.picasso.Picasso
-import de.hdodenhof.circleimageview.CircleImageView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -35,7 +33,10 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         (activity as AppCompatActivity).supportActionBar?.hide()
 
-        val imageViewProfile = view.findViewById<CircleImageView>(R.id.profilePicture)
+        val cardView = view.findViewById<CardView>(R.id.cardViewProfilePicture)
+        cardView.visibility = View.GONE
+
+        val imageViewProfile = view.findViewById<ImageView>(R.id.profilePicture)
         imageViewProfile.visibility = View.GONE
 
         val textViewName = view.findViewById<TextView>(R.id.profileName)
@@ -43,9 +44,6 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
         val textViewStatus = view.findViewById<TextView>(R.id.status)
         textViewStatus.visibility = View.GONE
-
-        val buttonLogOut = view.findViewById<Button>(R.id.buttonLogOut)
-        buttonLogOut.visibility = View.INVISIBLE
 
         val shimmerProfile = view.findViewById<ShimmerFrameLayout>(R.id.shimmerProfile)
         shimmerProfile.visibility = View.VISIBLE
@@ -86,10 +84,10 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                 shimmerProfile.stopShimmer()
                 shimmerProfile.visibility = View.GONE
 
+                cardView.visibility = View.VISIBLE
                 imageViewProfile.visibility = View.VISIBLE
                 textViewName.visibility = View.VISIBLE
                 textViewStatus.visibility = View.VISIBLE
-                buttonLogOut.visibility = View.VISIBLE
             },
                 {
                     Toast.makeText(
