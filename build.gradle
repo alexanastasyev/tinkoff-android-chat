@@ -38,7 +38,6 @@ ext {
     constraintLayoutVersion = "2.0.4"
     circleImageViewVersion = "3.1.0"
     picassoVersion = "2.5.2"
-    legacySupportVersion = "1.0.0"
     rxJavaVersion = "2.2.21"
     rxAndroidVersion = "2.1.1"
     shimmerVersion = "0.5.0"

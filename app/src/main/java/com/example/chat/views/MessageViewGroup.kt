@@ -48,7 +48,7 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                invalidate()
+                requestLayout()
             }
         }
 
@@ -56,7 +56,7 @@ class MessageViewGroup @JvmOverloads constructor(
         set(value) {
             if (field != value) {
                 field = value
-                invalidate()
+                requestLayout()
             }
         }
 
@@ -86,7 +86,7 @@ class MessageViewGroup @JvmOverloads constructor(
             if (field != value) {
                 field = value
                 messageTextView?.text = field
-                invalidate()
+                requestLayout()
             }
         }
 
@@ -108,7 +108,7 @@ class MessageViewGroup @JvmOverloads constructor(
                     setOnClickListenerForEmojiViews(clickListenerForEmojis)
                     setOnPlusClickListener(emojiPlusClickListener)
                 }
-                invalidate()
+                requestLayout()
             }
         }
 

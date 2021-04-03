@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.viewpager2.widget.ViewPager2
 import com.example.chat.Database
-import com.example.chat.recycler.PagerAdapter
 import com.example.chat.R
 import com.example.chat.entities.Channel
+import com.example.chat.recycler.PagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -30,7 +30,6 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).supportActionBar?.hide()
         return inflater.inflate(R.layout.fragment_channels_main, container, false)
     }
 
@@ -39,6 +38,8 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (activity as AppCompatActivity).supportActionBar?.hide()
+
         val viewPager = view.findViewById<ViewPager2>(R.id.fragmentViewPager)
 
         val myChannels = mutableListOf<Channel>()
@@ -49,13 +50,12 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         viewPager.adapter = adapter
 
         val tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
-        val tabs: List<String> = listOf(getString(R.string.subscribed), getString(R.string.all_channels))
+        val tabs: List<String> =
+            listOf(getString(R.string.subscribed), getString(R.string.all_channels))
 
-        if (tabLayout != null && viewPager != null) {
-            TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-                tab.text = tabs[position]
-            }.attach()
-        }
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabs[position]
+        }.attach()
 
         val myChannelsDisposable = Database.getMyChannels()
             .subscribeOn(Schedulers.newThread())
@@ -64,9 +64,13 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 myChannels.add(channel)
                 adapter.notifyItemChanged(0)
             },
-            {
-                Toast.makeText(this.context, getString(R.string.error_receive_channels), Toast.LENGTH_SHORT).show()
-            })
+                {
+                    Toast.makeText(
+                        this.context,
+                        getString(R.string.error_receive_channels),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
         disposeBag.add(myChannelsDisposable)
 
         val allChannelsDisposable = Database.getAllChannels()
@@ -76,29 +80,36 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 allChannels.add(channel)
                 adapter.notifyItemChanged(1)
             },
-            {
-                Toast.makeText(this.context, getString(R.string.error_receive_channels), Toast.LENGTH_SHORT).show()
-            })
+                {
+                    Toast.makeText(
+                        this.context,
+                        getString(R.string.error_receive_channels),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
         disposeBag.add(allChannelsDisposable)
 
         val subject = PublishSubject.create<String>()
 
         val editTextSearchChannels = view.findViewById<EditText>(R.id.editTextSearchChannels)
-        editTextSearchChannels.addTextChangedListener{str ->
+        editTextSearchChannels.addTextChangedListener { str ->
             subject.onNext(str.toString().trim())
         }
 
         val disposable = subject
-                .distinctUntilChanged()
-                .debounce(SEARCH_DELAY_MILLISECONDS, TimeUnit.MILLISECONDS)
-                .subscribe{ str ->
-                    adapter.filterChannels(str, tabLayout.selectedTabPosition)
-                }
+            .distinctUntilChanged()
+            .debounce(SEARCH_DELAY_MILLISECONDS, TimeUnit.MILLISECONDS)
+            .subscribe { str ->
+                adapter.filterChannels(str, tabLayout.selectedTabPosition)
+            }
         disposeBag.add(disposable)
 
         val imageSearchChannels = view.findViewById<ImageView>(R.id.imageSearchChannels)
         imageSearchChannels.setOnClickListener {
-            adapter.filterChannels(editTextSearchChannels.text.toString().trim(), tabLayout.selectedTabPosition)
+            adapter.filterChannels(
+                editTextSearchChannels.text.toString().trim(),
+                tabLayout.selectedTabPosition
+            )
         }
     }
 

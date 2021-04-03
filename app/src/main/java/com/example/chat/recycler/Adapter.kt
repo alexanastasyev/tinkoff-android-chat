@@ -22,7 +22,7 @@ class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holde
         }
 
     fun addItemsAtPosition(position: Int, newItems: List<T>) {
-        val newItemsList: MutableList<T> = ArrayList()
+        val newItemsList: ArrayList<T> = ArrayList()
         for (i in 0 until position) {
             newItemsList.add(items[i])
         }
@@ -32,7 +32,7 @@ class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holde
         for (i in position until items.size) {
             newItemsList.add(items[i])
         }
-        items = newItemsList as ArrayList<T>
+        items = newItemsList
     }
 
     fun removeItems(from: Int, to: Int) {

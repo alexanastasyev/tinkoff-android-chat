@@ -1,5 +1,6 @@
 package com.example.chat.activities
 
+import android.R.attr.src
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.example.chat.Database
 import com.example.chat.R
 import com.facebook.shimmer.ShimmerFrameLayout
@@ -18,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
+
 class ProfileFragment : androidx.fragment.app.Fragment() {
     private val disposeBag = CompositeDisposable()
     override fun onCreateView(
@@ -25,11 +29,11 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).supportActionBar?.hide()
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (activity as AppCompatActivity).supportActionBar?.hide()
 
         val imageViewProfile = view.findViewById<CircleImageView>(R.id.profilePicture)
         imageViewProfile.visibility = View.GONE
@@ -61,10 +65,22 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
                 if (profile.isOnline) {
                     textViewStatus.text = getString(R.string.online)
-                    textViewStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.status_online_color, null))
+                    textViewStatus.setTextColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.status_online_color,
+                            null
+                        )
+                    )
                 } else {
                     textViewStatus.text = getString(R.string.offline)
-                    textViewStatus.setTextColor(ResourcesCompat.getColor(resources, R.color.status_offline_color, null))
+                    textViewStatus.setTextColor(
+                        ResourcesCompat.getColor(
+                            resources,
+                            R.color.status_offline_color,
+                            null
+                        )
+                    )
                 }
 
                 shimmerProfile.stopShimmer()
@@ -75,9 +91,13 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                 textViewStatus.visibility = View.VISIBLE
                 buttonLogOut.visibility = View.VISIBLE
             },
-            {
-                Toast.makeText(this.context, getString(R.string.error_receive_user_info), Toast.LENGTH_SHORT).show()
-            })
+                {
+                    Toast.makeText(
+                        this.context,
+                        getString(R.string.error_receive_user_info),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
         disposeBag.add(profileDisposable)
     }
 

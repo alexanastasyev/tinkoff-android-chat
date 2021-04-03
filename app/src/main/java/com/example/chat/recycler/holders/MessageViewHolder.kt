@@ -6,13 +6,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.example.chat.*
 import com.example.chat.activities.ChatActivity
+import com.example.chat.entities.Emoji
 import com.example.chat.recycler.uis.MessageUi
 import com.example.chat.views.MessageViewGroup
 import com.squareup.picasso.Picasso
 
 class MessageViewHolder(
     view: View,
-    click: ((View) -> Unit)?,
+    onClickListener: ((View) -> Unit)?,
     action: ((View) -> Unit)?,
     private val shouldShowDate: ((View) -> Boolean)
 ) : BaseViewHolder<MessageUi>(view) {
@@ -21,8 +22,8 @@ class MessageViewHolder(
     private val dateHolder = view.findViewById<TextView>(R.id.date)
 
     init {
-        if (click != null) {
-            messageHolder.setOnClickListener(click)
+        if (onClickListener != null) {
+            messageHolder.setOnClickListener(onClickListener)
         }
         if (action != null) {
             action(messageHolder)
@@ -66,7 +67,7 @@ class MessageViewHolder(
     }
 
     private fun bindReactions(item: MessageUi) {
-        messageHolder.reactions = item.reactions
+        messageHolder.reactions = item.reactions as ArrayList<Pair<Emoji, Int>>
         for (i in item.reactions.indices) {
             if (item.isEmojiSelected[i]) {
                 messageHolder.emojisLayout.getChildAt(i).isSelected = true

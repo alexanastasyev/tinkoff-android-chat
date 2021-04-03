@@ -10,19 +10,24 @@ import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun messageToUi(messages: List<Message>): List<ViewTyped> {
+fun convertMessageToUi(messages: List<Message>): List<ViewTyped> {
     val resultObservable = Observable.fromIterable(messages)
         .subscribeOn(Schedulers.newThread())
         .map { message ->
             MessageUi(
-                message.messageId,
-                message.text,
-                message.author,
-                message.authorId,
-                message.avatarUrl,
-                message.reactions.map { Pair(it.emoji, it.amount)} as ArrayList<Pair<Emoji, Int>>,
-                message.reactions.map {it.reactedUsersId.contains(ChatActivity.THIS_USER_ID)},
-                SimpleDateFormat("d MMM", Locale.getDefault()).format(message.date)
+                messageId = message.messageId,
+                text = message.text,
+                author = message.author,
+                authorId = message.authorId,
+                avatarUrl = message.avatarUrl,
+                reactions = message.reactions.map {
+                    Pair(
+                        it.emoji,
+                        it.amount
+                    )
+                } as ArrayList<Pair<Emoji, Int>>,
+                isEmojiSelected = message.reactions.map { it.reactedUsersId.contains(ChatActivity.THIS_USER_ID) },
+                date = SimpleDateFormat("d MMM", Locale.getDefault()).format(message.date)
             )
         }
     return resultObservable.toList().blockingGet()

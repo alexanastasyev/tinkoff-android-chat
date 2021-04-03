@@ -6,7 +6,7 @@ import com.example.chat.recycler.uis.TopicUi
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 
-fun topicToUi(topics: List<Topic>) : List<ViewTyped> {
+fun convertTopicToUi(topics: List<Topic>) : List<ViewTyped> {
     val resultObservable = Observable.fromIterable(topics)
         .subscribeOn(Schedulers.newThread())
         .map {

@@ -21,7 +21,7 @@ import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
 import com.example.chat.recycler.PagerAdapter
 import com.example.chat.recycler.ViewTyped
-import com.example.chat.recycler.converters.messageToUi
+import com.example.chat.recycler.converters.convertMessageToUi
 import com.example.chat.views.EmojiView
 import com.example.chat.views.MessageViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -35,10 +35,11 @@ import kotlin.collections.ArrayList
 class ChatActivity : AppCompatActivity() {
 
     companion object {
-        const val THIS_USER_ID = 1234567890L
-        const val THIS_USER_NAME = "Alexey Anastasyev"
-        const val THIS_USER_AVATAR_URL = "https://sun9-62.userapi.com/impf/c841630/v841630065/113e0/lpOMX1Dm8Ao.jpg?size=225x225&quality=96&sign=5c18b2e9ed3f0f0dd9795f4e37012341&type=album"
+        const val THIS_USER_ID = Database.THIS_USER_ID
+        const val THIS_USER_NAME = Database.THIS_USER_NAME
+        const val THIS_USER_AVATAR_URL = Database.THIS_USER_AVATAR_URL
 
+        const val TOPIC_KEY = "topic"
         const val MESSAGES_LIST_KEY = "messages"
         private const val DIVIDER_FOR_GENERATING_ID = 1_000_000_000
     }
@@ -60,7 +61,7 @@ class ChatActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            val topicName = extras.getString(PagerAdapter.TOPIC_KEY)
+            val topicName = extras.getString(TOPIC_KEY)
             val toolbar = findViewById<Toolbar>(R.id.toolbarChat)
             toolbar?.title = ""
             val textViewTitle = toolbar?.findViewById<TextView>(R.id.titleChat)
@@ -69,7 +70,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         restoreOrReceiveMessages(savedInstanceState)
-        messageUis = messageToUi(messages) as ArrayList<ViewTyped>
+        messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
 
         val holderFactory = ChatHolderFactory(
             action = getActionForMessageViewGroups(),
@@ -100,7 +101,7 @@ class ChatActivity : AppCompatActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ message ->
                     messages.add(message)
-                    messageUis.add(messageToUi(listOf(message))[0])
+                    messageUis.add(convertMessageToUi(listOf(message))[0])
                     adapter.items = messageUis
                     recyclerView.scrollToPosition(adapter.itemCount - 1)
                     findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
@@ -212,7 +213,7 @@ class ChatActivity : AppCompatActivity() {
                 indexOfReactionToRemove = i
             }
         }
-        messages[messageIndex].reactions.removeAt(indexOfReactionToRemove)
+        (messages[messageIndex].reactions as ArrayList).removeAt(indexOfReactionToRemove)
     }
 
     private fun getOnPlusClickListener(messageViewGroup: MessageViewGroup): View.OnClickListener {
@@ -274,7 +275,7 @@ class ChatActivity : AppCompatActivity() {
             }
             if (newMessage.text.isNotEmpty()) {
                 messages.add(newMessage)
-                messageUis.add(messageToUi(listOf(newMessage))[0])
+                messageUis.add(convertMessageToUi(listOf(newMessage))[0])
                 adapter.items = messageUis
                 clearEditText()
                 recyclerView.scrollToPosition(adapter.itemCount - 1)

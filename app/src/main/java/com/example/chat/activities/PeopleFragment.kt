@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.Database
 import com.example.chat.R
 import com.example.chat.recycler.*
-import com.example.chat.recycler.converters.contactToUi
+import com.example.chat.recycler.converters.convertContactToUi
 import com.facebook.shimmer.ShimmerFrameLayout
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -24,11 +24,12 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).supportActionBar?.hide()
         return inflater.inflate(R.layout.fragment_people, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (activity as AppCompatActivity).supportActionBar?.hide()
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewContacts)
         recyclerView.visibility = View.GONE
         val shimmerPeople = view.findViewById<ShimmerFrameLayout>(R.id.shimmerPeople)
@@ -38,7 +39,7 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ contacts ->
-                val contactUis = contactToUi(contacts)
+                val contactUis = convertContactToUi(contacts)
                 val holderFactory = ChatHolderFactory()
                 val adapter = Adapter<ViewTyped>(holderFactory)
                 recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)

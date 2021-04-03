@@ -7,18 +7,18 @@ import com.example.chat.recycler.uis.TopicUi
 
 class TopicViewHolder (
     view: View,
-    click: ((View) -> Unit)?,
+    onClickListener: ((View) -> Unit)?,
 ) : BaseViewHolder<TopicUi>(view) {
 
-    private val topicViewHolder = view.findViewById<TextView>(R.id.topicName)
+    private val topicView = view.findViewById<TextView>(R.id.topicName)
 
     init {
-        if (click != null) {
-            topicViewHolder.setOnClickListener(click)
+        if (onClickListener != null) {
+            topicView.setOnClickListener(onClickListener)
         }
     }
 
     override fun bind(item: TopicUi) {
-        topicViewHolder.text = item.name
+        topicView.text = item.name
     }
 }

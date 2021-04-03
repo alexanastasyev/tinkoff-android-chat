@@ -9,7 +9,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class ContactViewHolder(
     view: View,
-    click: ((View) -> Unit)?,
+    onClickListener: ((View) -> Unit)?,
 ) : BaseViewHolder<ContactUi>(view) {
 
     private val contactNameHolder = view.findViewById<TextView>(R.id.contactName)
@@ -17,19 +17,18 @@ class ContactViewHolder(
     private val onlineIndicator = view.findViewById<CircleImageView>(R.id.onlineIndicator)
 
     init {
-        if (click != null) {
-            contactNameHolder.setOnClickListener(click)
-            contactPictureHolder.setOnClickListener(click)
+        if (onClickListener != null) {
+            view.setOnClickListener(onClickListener)
         }
     }
 
     override fun bind(item: ContactUi) {
         contactNameHolder.text = item.name
         Picasso
-                .with(contactPictureHolder.context)
-                .load(item.imageUrl)
-                .placeholder(R.drawable.default_avatar)
-                .into(contactPictureHolder)
+            .with(contactPictureHolder.context)
+            .load(item.imageUrl)
+            .placeholder(R.drawable.default_avatar)
+            .into(contactPictureHolder)
         if (item.isOnline) {
             onlineIndicator.visibility = View.VISIBLE
         } else {

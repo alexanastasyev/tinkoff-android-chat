@@ -11,7 +11,7 @@ data class MessageUi(
         var author: String,
         var authorId: Long,
         var avatarUrl: String?,
-        var reactions: ArrayList<Pair<Emoji, Int>>,
+        var reactions: List<Pair<Emoji, Int>>,
         var isEmojiSelected: List<Boolean>,
         var date: String,
         override val viewType: Int = R.layout.item_message,

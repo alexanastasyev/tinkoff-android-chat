@@ -1,9 +1,7 @@
 package com.example.chat.activities
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.example.chat.R
 
 class ChannelsListFragment : androidx.fragment.app.Fragment() {

@@ -6,38 +6,37 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.Database
 import com.example.chat.R
 import com.example.chat.activities.ChatActivity
+import com.example.chat.activities.MainActivity
 import com.example.chat.entities.Channel
-import com.example.chat.recycler.converters.channelToUi
-import com.example.chat.recycler.converters.topicToUi
+import com.example.chat.recycler.converters.convertChannelToUi
+import com.example.chat.recycler.converters.convertTopicToUi
 import com.example.chat.recycler.uis.ChannelUi
 import com.example.chat.recycler.uis.TopicUi
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import kotlin.collections.ArrayList
 
 class PagerAdapter(
-        private val channels: List<List<Channel>>
+    private val channels: List<List<Channel>>
 ) : RecyclerView.Adapter<PagerAdapter.PagerViewHolder>() {
 
     companion object {
         private const val LAYOUT_CHANNEL_ITEM_TAG = "layoutChannelItem"
-        const val TOPIC_KEY = "topic"
+        const val TOPIC_KEY = ChatActivity.TOPIC_KEY
 
         private const val TYPE_MY_CHANNELS = 0
         private const val TYPE_ALL_CHANNELS = 1
 
-        private lateinit var adapterMyChannels: Adapter<ViewTyped>
-        private lateinit var adapterAllChannels: Adapter<ViewTyped>
-
         private lateinit var itemsMyChannels: List<ViewTyped>
         private lateinit var itemsAllChannels: List<ViewTyped>
     }
+
+    private lateinit var adapterMyChannels: Adapter<ViewTyped>
+    private lateinit var adapterAllChannels: Adapter<ViewTyped>
 
     private lateinit var adapter: Adapter<ViewTyped>
     private lateinit var recyclerView: RecyclerView
@@ -45,14 +44,15 @@ class PagerAdapter(
     inner class PagerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PagerViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.fragment_channels_list, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.fragment_channels_list, parent, false)
         return PagerViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: PagerViewHolder, position: Int) {
-        val channelUis = channelToUi(channels[position])
+        val channelUis = convertChannelToUi(channels[position])
         val holderFactory = ChatHolderFactory(
-                click = getChannelOrTopicClickListener(getItemViewType(position))
+            click = getChannelOrTopicClickListener(getItemViewType(position))
         )
         adapter = Adapter(holderFactory)
 
@@ -84,7 +84,7 @@ class PagerAdapter(
     }
 
     private fun isChannel(view: View): Boolean {
-        return (view.parent as ConstraintLayout).tag == LAYOUT_CHANNEL_ITEM_TAG
+        return view.tag == LAYOUT_CHANNEL_ITEM_TAG
     }
 
     private fun showOrHideTopics(view: View, channelsType: Int) {
@@ -102,28 +102,32 @@ class PagerAdapter(
     }
 
     private fun getChildPosition(view: View): Int {
-        return recyclerView.getChildLayoutPosition(view.parent as ConstraintLayout)
+        return recyclerView.getChildLayoutPosition(view)
     }
 
     private fun expandTopics(view: View, channelsType: Int) {
         val position = getChildPosition(view)
         val currentAdapter = getCurrentAdapter(channelsType)
         (currentAdapter.items[position] as ChannelUi).isExpanded = true
-        val layout = view.parent as ConstraintLayout
+        val layout = view
         val textView = layout.findViewById<TextView>(R.id.channelName)
         val channelName = textView.text.toString()
         val topicsDisposable = Database.getTopics(channelName)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-            {topics ->
-                val topicUis = topicToUi(topics)
-                currentAdapter.addItemsAtPosition(position + 1, topicUis)
-                currentAdapter.notifyDataSetChanged()
-            },
-            {
-                Toast.makeText(view.context, view.context.getString(R.string.error_receive_topics), Toast.LENGTH_SHORT).show()
-            })
+                { topics ->
+                    val topicUis = convertTopicToUi(topics)
+                    currentAdapter.addItemsAtPosition(position + 1, topicUis)
+                    currentAdapter.notifyDataSetChanged()
+                },
+                {
+                    Toast.makeText(
+                        view.context,
+                        view.context.getString(R.string.error_receive_topics),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                })
     }
 
     private fun getCurrentAdapter(channelsType: Int): Adapter<ViewTyped> {
@@ -192,7 +196,7 @@ class PagerAdapter(
             }
         }
         currentAdapter.items = currentItems.filter {
-                it is ChannelUi && it.name.contains(key)
+            it is ChannelUi && it.name.contains(key)
         }
     }
 }

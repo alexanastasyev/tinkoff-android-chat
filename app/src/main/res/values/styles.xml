@@ -10,7 +10,6 @@
     </style>
 
     <style name="ButtonStyle">
-        <item name="background">@color/button_bg_color</item>
         <item name="backgroundTint">@color/button_bg_color</item>
         <item name="android:padding">4dp</item>
         <item name="android:textColor">@android:color/darker_gray</item>

@@ -8,20 +8,20 @@ import com.example.chat.recycler.uis.ChannelUi
 
 class ChannelViewHolder (
     view: View,
-    click: ((View) -> Unit)?,
+    onClickListener: ((View) -> Unit)?,
 ) : BaseViewHolder<ChannelUi>(view) {
 
-    private val channelViewHolder = view.findViewById<TextView>(R.id.channelName)
+    private val textViewChannelName = view.findViewById<TextView>(R.id.channelName)
     private val imageArrow = view.findViewById<ImageView>(R.id.imageArrow)
 
     init {
-        if (click != null) {
-            imageArrow.setOnClickListener(click)
+        if (onClickListener != null) {
+            view.setOnClickListener(onClickListener)
         }
     }
 
     override fun bind(item: ChannelUi) {
-        channelViewHolder.text = item.name
+        textViewChannelName.text = item.name
         if (item.isExpanded) {
             imageArrow.setImageResource(R.drawable.arrow_up)
         } else {
