@@ -17,9 +17,9 @@ import com.example.chat.entities.Emoji
 import com.example.chat.entities.Message
 import com.example.chat.entities.Reaction
 import com.example.chat.exceptions.CannotSendMessageException
+import com.example.chat.internet.ZulipService
 import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
-import com.example.chat.recycler.PagerAdapter
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.convertMessageToUi
 import com.example.chat.views.EmojiView
@@ -35,9 +35,9 @@ import kotlin.collections.ArrayList
 class ChatActivity : AppCompatActivity() {
 
     companion object {
-        const val THIS_USER_ID = Database.THIS_USER_ID
-        const val THIS_USER_NAME = Database.THIS_USER_NAME
-        const val THIS_USER_AVATAR_URL = Database.THIS_USER_AVATAR_URL
+        const val THIS_USER_ID = ThisUserInfo.THIS_USER_ID
+        const val THIS_USER_NAME = ThisUserInfo.THIS_USER_NAME
+        const val THIS_USER_AVATAR_URL = ThisUserInfo.THIS_USER_AVATAR_URL
 
         const val TOPIC_KEY = "topic"
         const val MESSAGES_LIST_KEY = "messages"
@@ -96,7 +96,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            val messagesDisposable = Database.getMessagesList()
+            val messagesDisposable = ZulipService.getMessagesList()
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ message ->

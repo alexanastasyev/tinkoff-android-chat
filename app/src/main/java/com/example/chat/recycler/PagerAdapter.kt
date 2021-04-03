@@ -8,15 +8,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chat.Database
+import com.example.chat.internet.ZulipService
 import com.example.chat.R
 import com.example.chat.activities.ChatActivity
-import com.example.chat.activities.MainActivity
 import com.example.chat.entities.Channel
 import com.example.chat.recycler.converters.convertChannelToUi
 import com.example.chat.recycler.converters.convertTopicToUi
 import com.example.chat.recycler.uis.ChannelUi
 import com.example.chat.recycler.uis.TopicUi
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -111,15 +111,18 @@ class PagerAdapter(
         (currentAdapter.items[position] as ChannelUi).isExpanded = true
         val layout = view
         val textView = layout.findViewById<TextView>(R.id.channelName)
-        val channelName = textView.text.toString()
-        val topicsDisposable = Database.getTopics(channelName)
+        val channelName = textView.text.toString().substring(1)
+        val channelId = findChannelByName(channelsType, channelName)
+        val topicsDisposable = Single.fromCallable{ZulipService.getTopics(channelId)}
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { topics ->
-                    val topicUis = convertTopicToUi(topics)
-                    currentAdapter.addItemsAtPosition(position + 1, topicUis)
-                    currentAdapter.notifyDataSetChanged()
+                { topicsResponse ->
+                    if (topicsResponse != null) {
+                        val topicUis = convertTopicToUi(topicsResponse.topics)
+                        currentAdapter.addItemsAtPosition(position + 1, topicUis)
+                        currentAdapter.notifyDataSetChanged()
+                    }
                 },
                 {
                     Toast.makeText(
@@ -136,6 +139,15 @@ class PagerAdapter(
             TYPE_ALL_CHANNELS -> adapterAllChannels
             else -> adapterAllChannels
         }
+    }
+
+    private fun findChannelByName(channelsType: Int, channelName: String): Int {
+        for (channel in channels[channelsType]) {
+            if (channel.name == channelName) {
+                return channel.id
+            }
+        }
+        return -1;
     }
 
     private fun isExpanded(view: View, channelsType: Int): Boolean {

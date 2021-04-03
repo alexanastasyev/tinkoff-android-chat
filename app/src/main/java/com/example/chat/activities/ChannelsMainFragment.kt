@@ -10,12 +10,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.viewpager2.widget.ViewPager2
-import com.example.chat.Database
+import com.example.chat.internet.ZulipService
 import com.example.chat.R
 import com.example.chat.entities.Channel
 import com.example.chat.recycler.PagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -57,12 +58,14 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             tab.text = tabs[position]
         }.attach()
 
-        val myChannelsDisposable = Database.getMyChannels()
+        val myChannelsDisposable = Observable.fromCallable { ZulipService.getMyChannels() }
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ channel ->
-                myChannels.add(channel)
-                adapter.notifyItemChanged(0)
+            .subscribe({ channelsResponse ->
+                if (channelsResponse != null) {
+                    myChannels.addAll(0, channelsResponse.channels)
+                    adapter.notifyDataSetChanged()
+                }
             },
                 {
                     Toast.makeText(
@@ -73,12 +76,14 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 })
         disposeBag.add(myChannelsDisposable)
 
-        val allChannelsDisposable = Database.getAllChannels()
+        val allChannelsDisposable = Observable.fromCallable { ZulipService.getAllChannels() }
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ channel ->
-                allChannels.add(channel)
-                adapter.notifyItemChanged(1)
+            .subscribe({ channelsResponse ->
+                if (channelsResponse != null) {
+                    allChannels.addAll(0, channelsResponse.channels)
+                    adapter.notifyDataSetChanged()
+                }
             },
                 {
                     Toast.makeText(
@@ -86,7 +91,8 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                         getString(R.string.error_receive_channels),
                         Toast.LENGTH_SHORT
                     ).show()
-                })
+                }
+            )
         disposeBag.add(allChannelsDisposable)
 
         val subject = PublishSubject.create<String>()
