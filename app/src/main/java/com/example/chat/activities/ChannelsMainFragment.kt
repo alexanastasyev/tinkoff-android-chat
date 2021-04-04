@@ -63,13 +63,13 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         val myChannelsDisposable = Single.fromCallable { ZulipService.getMyChannels() }
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ channelsResponse ->
-                if (channelsResponse != null) {
+            .subscribe({ channels ->
+                if (channels != null) {
 
                     view.findViewById<ProgressBar>(R.id.progressBarChannels).visibility = View.GONE
                     view.findViewById<ConstraintLayout>(R.id.channelsContentLayout).visibility = View.VISIBLE
 
-                    myChannels.addAll(0, channelsResponse.channels)
+                    myChannels.addAll(0, channels)
                     adapter.notifyDataSetChanged()
                 }
             },
@@ -85,9 +85,9 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         val allChannelsDisposable = Single.fromCallable { ZulipService.getAllChannels() }
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ channelsResponse ->
-                if (channelsResponse != null) {
-                    allChannels.addAll(0, channelsResponse.channels)
+            .subscribe({ channels ->
+                if (channels != null) {
+                    allChannels.addAll(0, channels)
                     adapter.notifyDataSetChanged()
                 }
             },

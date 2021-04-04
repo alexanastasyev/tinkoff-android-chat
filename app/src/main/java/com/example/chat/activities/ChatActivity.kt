@@ -25,6 +25,9 @@ import com.example.chat.recycler.converters.convertMessageToUi
 import com.example.chat.views.EmojiView
 import com.example.chat.views.MessageViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import io.reactivex.Completable.fromCallable
+import io.reactivex.Observable.fromCallable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -96,12 +99,12 @@ class ChatActivity : AppCompatActivity() {
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            val messagesDisposable = ZulipService.getMessagesList()
+            val messagesDisposable = Single.fromCallable{ZulipService.getMessages()}
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ message ->
-                    messages.add(message)
-                    messageUis.add(convertMessageToUi(listOf(message))[0])
+                .subscribe({ messagesFromServer ->
+                    messages.addAll(messagesFromServer)
+                    messageUis.addAll(convertMessageToUi(messages))
                     adapter.items = messageUis
                     recyclerView.scrollToPosition(adapter.itemCount - 1)
                     findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE

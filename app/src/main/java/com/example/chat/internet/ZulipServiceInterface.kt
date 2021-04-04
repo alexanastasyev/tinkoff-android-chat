@@ -1,13 +1,11 @@
 package com.example.chat.internet
 
 import com.example.chat.entities.Contact
-import com.example.chat.internet.responses.GetAllChannelsResponse
-import com.example.chat.internet.responses.GetContactsResponse
-import com.example.chat.internet.responses.GetMyChannelsResponse
-import com.example.chat.internet.responses.GetTopicsResponse
+import com.example.chat.internet.responses.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface ZulipServiceInterface {
 
@@ -25,4 +23,11 @@ interface ZulipServiceInterface {
 
     @GET("users/me")
     fun getMyProfileDetails(): Call<Contact>
+
+    @GET("messages")
+    fun getMessages(
+        @Query("anchor") anchor: String,
+        @Query("num_before") numBefore: Int,
+        @Query("num_after") numAfter: Int
+    ): Call<GetMessagesResponse>
 }

@@ -117,9 +117,9 @@ class PagerAdapter(
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { topicsResponse ->
-                    if (topicsResponse != null) {
-                        val topicUis = convertTopicToUi(topicsResponse.topics)
+                { topics ->
+                    if (topics != null) {
+                        val topicUis = convertTopicToUi(topics)
                         currentAdapter.addItemsAtPosition(position + 1, topicUis)
                         currentAdapter.notifyDataSetChanged()
                     }

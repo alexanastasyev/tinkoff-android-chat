@@ -39,9 +39,9 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
         val contactsDisposable = Single.fromCallable{ZulipService.getContacts()}
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ contactsResponse ->
-                if (contactsResponse != null) {
-                    val contactUis = convertContactToUi(contactsResponse.contacts)
+            .subscribe({ contacts->
+                if (contacts!= null) {
+                    val contactUis = convertContactToUi(contacts)
                     val holderFactory = ChatHolderFactory()
                     val adapter = Adapter<ViewTyped>(holderFactory)
                     recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
