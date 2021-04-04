@@ -4,10 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class SendMessageResponse(
+class AddReactionResponse(
     @SerialName("result")
-    val result: String,
-
-    @SerialName("id")
-    val messageId: Int
+    val result: String
 )

@@ -42,7 +42,7 @@ class MessageViewGroup @JvmOverloads constructor(
         const val ALIGN_RIGHT = 1
     }
 
-    var messageId: Long? = null
+    var messageId: Long = -1
 
     var textSize: Int = DEFAULT_TEXT_SIZE_SP
         set(value) {

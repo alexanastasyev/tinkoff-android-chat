@@ -45,7 +45,6 @@ class ChatActivity : AppCompatActivity() {
         const val TOPIC_KEY = "topic"
         const val CHANNEL_KEY = "channel"
         const val MESSAGES_LIST_KEY = "messages"
-        private const val DIVIDER_FOR_GENERATING_ID = 1_000_000_000
     }
 
     private val disposeBag = CompositeDisposable()
@@ -160,18 +159,28 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun unselectEmoji(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
-        emojiView.isSelected = false
-        emojiView.amount -= 1
+        val removeReactionDisposable = Single.fromCallable{ZulipService.removeReaction(messageViewGroup.messageId.toInt(), emojiView.emoji)}
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (it) {
+                    emojiView.isSelected = false
+                    emojiView.amount -= 1
 
-        if (!emojiHasVotes(emojiView)) {
-            removeEmojiView(messageViewGroup, emojiView)
-        } else {
-            removeReaction(messageViewGroup, emojiView)
-        }
+                    if (!emojiHasVotes(emojiView)) {
+                        removeEmojiView(messageViewGroup, emojiView)
+                    } else {
+                        removeReaction(messageViewGroup, emojiView)
+                    }
 
-        if (!messageHasReactions(messageViewGroup)) {
-            messageViewGroup.emojisLayout.removeAllViews()
-        }
+                    if (!messageHasReactions(messageViewGroup)) {
+                        messageViewGroup.emojisLayout.removeAllViews()
+                    }
+                }
+            }, {
+
+            })
+        disposeBag.add(removeReactionDisposable)
     }
 
     private fun emojiHasVotes(emojiView: EmojiView): Boolean {
@@ -191,10 +200,19 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun selectEmoji(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
-        emojiView.isSelected = true
-        emojiView.amount += 1
+        val addReactionDisposable = Single.fromCallable{ZulipService.addReaction(messageViewGroup.messageId.toInt(), emojiView.emoji)}
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+               if (it) {
+                   emojiView.isSelected = true
+                   emojiView.amount += 1
+                   addReaction(messageViewGroup, emojiView)
+               }
+            }, {
 
-        addReaction(messageViewGroup, emojiView)
+            })
+        disposeBag.add(addReactionDisposable)
     }
 
     private fun addReaction(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
@@ -281,7 +299,8 @@ class ChatActivity : AppCompatActivity() {
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                       if (it) {
+                       if (it > 0) {
+                           newMessage.messageId = it.toLong()
                            messages.add(newMessage)
                            messageUis.add(convertMessageToUi(listOf(newMessage))[0])
                            adapter.items = messageUis
@@ -303,7 +322,7 @@ class ChatActivity : AppCompatActivity() {
         val author = THIS_USER_NAME
         val date = Calendar.getInstance().time
         val authorId = THIS_USER_ID
-        val messageId = "${THIS_USER_ID % DIVIDER_FOR_GENERATING_ID}${date.time % DIVIDER_FOR_GENERATING_ID}".toLong()
+        val messageId = -1L
         val avatarUrl = THIS_USER_AVATAR_URL
         val reactions = arrayListOf<Reaction>()
 
@@ -316,12 +335,6 @@ class ChatActivity : AppCompatActivity() {
             avatarUrl,
             reactions
         )
-    }
-
-    private fun maybeThrowException() {
-        if ((Math.random() * 100).toInt() % 4 == 0) {
-            throw CannotSendMessageException()
-        }
     }
 
     private fun clearEditText() {
@@ -356,11 +369,21 @@ class ChatActivity : AppCompatActivity() {
                 }
             }
         } else {
-            val newEmojiView = createNewEmojiView(emojiView.emoji)
-            newEmojiView.setOnClickListener(getOnClickListenerForEmojiView(messageViewGroup))
-            messageViewGroup.addEmojiView(newEmojiView)
-            createReaction(messageViewGroup, emojiView)
-            refreshSelectedEmojis(messageViewGroup)
+            val createReactionDisposable = Single.fromCallable{ZulipService.addReaction(messageViewGroup.messageId.toInt(), emojiView.emoji)}
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                   if (it) {
+                       val newEmojiView = createNewEmojiView(emojiView.emoji)
+                       newEmojiView.setOnClickListener(getOnClickListenerForEmojiView(messageViewGroup))
+                       messageViewGroup.addEmojiView(newEmojiView)
+                       createReaction(messageViewGroup, emojiView)
+                       refreshSelectedEmojis(messageViewGroup)
+                   }
+                }, {
+
+                })
+            disposeBag.add(createReactionDisposable)
         }
     }
 

@@ -22,7 +22,7 @@ class EmojiView @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr, defStyleRes), Serializable {
 
     companion object {
-        private val DEFAULT_EMOJI = Emoji.FACE_SMILING
+        private val DEFAULT_EMOJI = Emoji(0x1F600)
         private const val DEFAULT_AMOUNT = 0
         private const val DEFAULT_FONT_SIZE_PX = 14F
         private const val DEFAULT_COLOR = Color.BLACK

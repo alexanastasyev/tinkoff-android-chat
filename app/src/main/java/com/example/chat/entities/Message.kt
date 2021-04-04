@@ -9,7 +9,7 @@ data class Message(
     val author: String,
     val date: Date,
     val authorId: Long,
-    val messageId: Long,
+    var messageId: Long,
     val avatarUrl: String? = null,
     var reactions: ArrayList<Reaction> = arrayListOf()
 ) : Serializable

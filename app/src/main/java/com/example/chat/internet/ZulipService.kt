@@ -80,9 +80,25 @@ object ZulipService {
         return messages
     }
 
-    fun sendMessage(channelName: String, topicName: String, messageText: String): Boolean {
+    fun sendMessage(channelName: String, topicName: String, messageText: String): Int {
         val zulipService = RetrofitZulipService.getInstance()
         val response = zulipService.sendMessage("stream", channelName, messageText, topicName).execute().body()
+        return if (response?.result == "success") {
+            response.messageId
+        } else {
+            -1
+        }
+    }
+
+    fun addReaction(messageId: Int, emoji: Emoji): Boolean {
+        val zulipService = RetrofitZulipService.getInstance()
+        val response = zulipService.addReaction(messageId, Emoji.getEmojiNameByUnicode(emoji.unicode), Integer.toHexString(emoji.unicode), "unicode_emoji").execute().body()
+        return response?.result == "success"
+    }
+
+    fun removeReaction(messageId: Int, emoji: Emoji): Boolean {
+        val zulipService = RetrofitZulipService.getInstance()
+        val response = zulipService.removeReaction(messageId, Emoji.getEmojiNameByUnicode(emoji.unicode), Integer.toHexString(emoji.unicode), "unicode_emoji").execute().body()
         return response?.result == "success"
     }
 }

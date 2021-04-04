@@ -37,4 +37,22 @@ interface ZulipServiceInterface {
         @Field("content") text: String,
         @Field("topic") topicName: String
     ): Call<SendMessageResponse>
+
+    @FormUrlEncoded
+    @POST("messages/{messageId}/reactions")
+    fun addReaction(
+        @Path("messageId") messageId: Int,
+        @Field("emoji_name") emojiName: String,
+        @Field("emoji_code") emojiCode: String,
+        @Field("reaction_type") reactionType: String
+    ): Call<AddReactionResponse>
+
+    @FormUrlEncoded
+    @DELETE("messages/{messageId}/reactions")
+    fun removeReaction(
+        @Path("messageId") messageId: Int,
+        @Field("emoji_name") emojiName: String,
+        @Field("emoji_code") emojiCode: String,
+        @Field("reaction_type") reactionType: String
+    ): Call<RemoveReactionResponse>
 }

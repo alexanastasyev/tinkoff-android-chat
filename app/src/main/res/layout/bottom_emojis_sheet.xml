@@ -48,10 +48,6 @@
 
             <com.example.chat.views.EmojiView
                 style="@style/EmojiViewStyle"
-                app:emoji_unicode="0x1F928" />
-
-            <com.example.chat.views.EmojiView
-                style="@style/EmojiViewStyle"
                 app:emoji_unicode="0x1F61B" />
 
             <com.example.chat.views.EmojiView
@@ -85,10 +81,6 @@
             <com.example.chat.views.EmojiView
                 style="@style/EmojiViewStyle"
                 app:emoji_unicode="0x1F62D" />
-
-            <com.example.chat.views.EmojiView
-                style="@style/EmojiViewStyle"
-                app:emoji_unicode="0x1F973" />
 
             <com.example.chat.views.EmojiView
                 style="@style/EmojiViewStyle"
