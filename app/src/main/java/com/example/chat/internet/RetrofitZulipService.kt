@@ -14,7 +14,7 @@ object RetrofitZulipService {
     private const val apiKey = "QGBIOe7ritlaJqqwar03NWMVZtF9aTRd"
     private const val baseUrl = "https://tfs-android-2021-spring.zulipchat.com/api/v1/"
 
-    val interceptor : HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+    private val interceptor : HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
         this.level = HttpLoggingInterceptor.Level.BODY
     }
 

@@ -37,7 +37,7 @@ object ZulipService {
 
     fun getMessages(topicName: String): List<Message> {
         val zulipService = RetrofitZulipService.getInstance()
-        val response = zulipService.getMessages("newest",1000, 0).execute().body()
+        val response = zulipService.getMessages("newest", 1000, 0).execute().body()
 
         val messages = arrayListOf<Message>()
         if (response != null) {
@@ -98,7 +98,9 @@ object ZulipService {
 
     fun removeReaction(messageId: Int, emoji: Emoji): Boolean {
         val zulipService = RetrofitZulipService.getInstance()
-        val response = zulipService.removeReaction(messageId, Emoji.getEmojiNameByUnicode(emoji.unicode), Integer.toHexString(emoji.unicode), "unicode_emoji").execute().body()
+        val emojiName = Emoji.getEmojiNameByUnicode(emoji.unicode)
+        val unicodeString = Integer.toHexString(emoji.unicode)
+        val response = zulipService.removeReaction(messageId, emojiName, unicodeString, "unicode_emoji").execute().body()
         return response?.result == "success"
     }
 }

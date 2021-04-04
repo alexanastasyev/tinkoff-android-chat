@@ -175,7 +175,6 @@ class PagerAdapter(
 
         currentAdapter.removeItems(deleteFrom, deleteTo)
         currentAdapter.notifyDataSetChanged()
-
     }
 
     private fun startChatActivity(view: View, channelsType: Int) {
@@ -186,10 +185,11 @@ class PagerAdapter(
 
         val position = getChildPosition(view.parent as ConstraintLayout)
         for (i in position downTo 0) {
-            val currentView = recyclerView.getChildAt(i)
-            if (isChannel(currentView)) {
-                val channelName = (currentView as ConstraintLayout).findViewById<TextView>(R.id.channelName).text
+            val currentViewTyped = getCurrentAdapter(channelsType).items[i]
+            if (currentViewTyped is ChannelUi) {
+                val channelName = currentViewTyped.name
                 intent.putExtra(CHANNEL_KEY, channelName)
+                break
             }
         }
 

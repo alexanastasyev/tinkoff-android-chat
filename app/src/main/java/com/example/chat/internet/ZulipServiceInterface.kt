@@ -48,7 +48,7 @@ interface ZulipServiceInterface {
     ): Call<AddReactionResponse>
 
     @FormUrlEncoded
-    @DELETE("messages/{messageId}/reactions")
+    @HTTP(method = "DELETE", path = "messages/{messageId}/reactions", hasBody = true)
     fun removeReaction(
         @Path("messageId") messageId: Int,
         @Field("emoji_name") emojiName: String,
