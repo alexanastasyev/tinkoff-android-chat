@@ -275,26 +275,29 @@ class ChatActivity : AppCompatActivity() {
 
     private fun setClickListenerForSendImage() {
         findViewById<ImageView>(R.id.imageSend).setOnClickListener {
-            val newMessage = try {
-                generateNewMessage()
-            } catch (e: CannotSendMessageException) {
-                Toast.makeText(this, getString(R.string.error_send_message), Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            val newMessage = generateNewMessage()
             if (newMessage.text.isNotEmpty()) {
-                messages.add(newMessage)
-                messageUis.add(convertMessageToUi(listOf(newMessage))[0])
-                adapter.items = messageUis
-                clearEditText()
-                recyclerView.scrollToPosition(adapter.itemCount - 1)
+                val sendMessageDisposable = Single.fromCallable{ZulipService.sendMessage(channelName.substring(1), topicName, newMessage.text)}
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                       if (it) {
+                           messages.add(newMessage)
+                           messageUis.add(convertMessageToUi(listOf(newMessage))[0])
+                           adapter.items = messageUis
+                           clearEditText()
+                           recyclerView.scrollToPosition(adapter.itemCount - 1)
+                       } else {
+                           Toast.makeText(this, getString(R.string.error_send_message), Toast.LENGTH_SHORT).show()
+                       }
+                    }, {
+                        Toast.makeText(this, getString(R.string.error_send_message), Toast.LENGTH_SHORT).show()
+                    })
             }
-
         }
     }
 
     private fun generateNewMessage(): Message {
-        maybeThrowException()
-
         val editText = findViewById<EditText>(R.id.editText)
         val text = editText.text.toString().trim()
         val author = THIS_USER_NAME

@@ -29,6 +29,7 @@ interface ZulipServiceInterface {
         @Query("num_after") numAfter: Int
     ): Call<GetMessagesResponse>
 
+    @FormUrlEncoded
     @POST("messages")
     fun sendMessage(
         @Field("type") type: String,
