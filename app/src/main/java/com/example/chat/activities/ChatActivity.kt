@@ -38,11 +38,12 @@ import kotlin.collections.ArrayList
 class ChatActivity : AppCompatActivity() {
 
     companion object {
-        const val THIS_USER_ID = ThisUserInfo.THIS_USER_ID
+        const val THIS_USER_ID = ThisUserInfo.THIS_USER_ID.toLong()
         const val THIS_USER_NAME = ThisUserInfo.THIS_USER_NAME
         const val THIS_USER_AVATAR_URL = ThisUserInfo.THIS_USER_AVATAR_URL
 
         const val TOPIC_KEY = "topic"
+        const val CHANNEL_KEY = "channel"
         const val MESSAGES_LIST_KEY = "messages"
         private const val DIVIDER_FOR_GENERATING_ID = 1_000_000_000
     }
@@ -56,6 +57,9 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var clickedMessageViewGroup: MessageViewGroup
     private lateinit var emojisDialog: BottomSheetDialog
 
+    private var topicName = ""
+    private var channelName = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity)
@@ -64,11 +68,12 @@ class ChatActivity : AppCompatActivity() {
 
         val extras = intent.extras
         if (extras != null) {
-            val topicName = extras.getString(TOPIC_KEY)
+            topicName = extras.getString(TOPIC_KEY).toString()
+            channelName = extras.getString(CHANNEL_KEY).toString()
             val toolbar = findViewById<Toolbar>(R.id.toolbarChat)
             toolbar?.title = ""
             val textViewTitle = toolbar?.findViewById<TextView>(R.id.titleChat)
-            textViewTitle?.text = topicName
+            textViewTitle?.text = String.format("%s of %s", topicName, channelName)
             setSupportActionBar(toolbar)
         }
 
@@ -99,7 +104,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            val messagesDisposable = Single.fromCallable{ZulipService.getMessages()}
+            val messagesDisposable = Single.fromCallable{ZulipService.getMessages(topicName)}
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ messagesFromServer ->

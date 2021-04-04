@@ -3,9 +3,7 @@ package com.example.chat.internet
 import com.example.chat.entities.Contact
 import com.example.chat.internet.responses.*
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ZulipServiceInterface {
 
@@ -30,4 +28,12 @@ interface ZulipServiceInterface {
         @Query("num_before") numBefore: Int,
         @Query("num_after") numAfter: Int
     ): Call<GetMessagesResponse>
+
+    @POST("messages")
+    fun sendMessage(
+        @Field("type") type: String,
+        @Field("to") channelName: String,
+        @Field("content") text: String,
+        @Field("topic") topicName: String
+    ): Call<SendMessageResponse>
 }

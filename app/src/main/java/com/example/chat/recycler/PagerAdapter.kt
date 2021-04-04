@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.chat.internet.ZulipService
@@ -27,6 +28,7 @@ class PagerAdapter(
     companion object {
         private const val LAYOUT_CHANNEL_ITEM_TAG = "layoutChannelItem"
         const val TOPIC_KEY = ChatActivity.TOPIC_KEY
+        const val CHANNEL_KEY = ChatActivity.CHANNEL_KEY
 
         private const val TYPE_MY_CHANNELS = 0
         private const val TYPE_ALL_CHANNELS = 1
@@ -78,7 +80,7 @@ class PagerAdapter(
             if (isChannel(view)) {
                 showOrHideTopics(view, channelsType)
             } else {
-                startChatActivity(view)
+                startChatActivity(view, channelsType)
             }
         }
     }
@@ -176,10 +178,21 @@ class PagerAdapter(
 
     }
 
-    private fun startChatActivity(view: View) {
+    private fun startChatActivity(view: View, channelsType: Int) {
         val intent = Intent(view.context, ChatActivity::class.java)
+
         val topicName = (view as TextView).text
         intent.putExtra(TOPIC_KEY, topicName)
+
+        val position = getChildPosition(view.parent as ConstraintLayout)
+        for (i in position downTo 0) {
+            val currentView = recyclerView.getChildAt(i)
+            if (isChannel(currentView)) {
+                val channelName = (currentView as ConstraintLayout).findViewById<TextView>(R.id.channelName).text
+                intent.putExtra(CHANNEL_KEY, channelName)
+            }
+        }
+
         view.context.startActivity(intent)
     }
 
