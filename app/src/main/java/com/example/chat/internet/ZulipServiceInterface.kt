@@ -29,6 +29,9 @@ interface ZulipServiceInterface {
         @Query("num_after") numAfter: Int
     ): Call<GetMessagesResponse>
 
+    @GET("users/{userId}/presence")
+    fun getUserPresence(@Path("userId") userId: Int): Call<GetUserPresenceResponse>
+
     @FormUrlEncoded
     @POST("messages")
     fun sendMessage(

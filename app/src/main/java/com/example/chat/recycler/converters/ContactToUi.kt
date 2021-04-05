@@ -12,7 +12,7 @@ fun convertContactToUi (contacts: List<Contact>) : List<ViewTyped> {
         .map { ContactUi(
             it.imageUrl,
             it.name,
-            it.isOnline
+            it.status
         ) }
     return resultObservable.toList().blockingGet()
 }

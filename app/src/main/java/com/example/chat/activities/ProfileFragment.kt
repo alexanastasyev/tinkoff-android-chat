@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.res.ResourcesCompat
 import com.example.chat.internet.ZulipService
 import com.example.chat.R
+import com.example.chat.entities.Status
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.squareup.picasso.Picasso
 import io.reactivex.Single
@@ -61,24 +62,37 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                         .placeholder(R.drawable.default_avatar)
                         .into(imageViewProfile)
 
-                    if (profile.isOnline) {
-                        textViewStatus.text = getString(R.string.online)
-                        textViewStatus.setTextColor(
-                            ResourcesCompat.getColor(
-                                resources,
-                                R.color.status_online_color,
-                                null
+                    when(profile.status) {
+                        Status.ACTIVE -> {
+                            textViewStatus.text = getString(R.string.online)
+                            textViewStatus.setTextColor(
+                                ResourcesCompat.getColor(
+                                    resources,
+                                    R.color.status_active_color,
+                                    null
+                                )
                             )
-                        )
-                    } else {
-                        textViewStatus.text = getString(R.string.offline)
-                        textViewStatus.setTextColor(
-                            ResourcesCompat.getColor(
-                                resources,
-                                R.color.status_offline_color,
-                                null
+                        }
+                        Status.IDLE -> {
+                            textViewStatus.text = getString(R.string.idle)
+                            textViewStatus.setTextColor(
+                                ResourcesCompat.getColor(
+                                    resources,
+                                    R.color.status_idle_color,
+                                    null
+                                )
                             )
-                        )
+                        }
+                        Status.OFFLINE -> {
+                            textViewStatus.text = getString(R.string.offline)
+                            textViewStatus.setTextColor(
+                                ResourcesCompat.getColor(
+                                    resources,
+                                    R.color.status_offline_color,
+                                    null
+                                )
+                            )
+                        }
                     }
 
                     shimmerProfile.stopShimmer()

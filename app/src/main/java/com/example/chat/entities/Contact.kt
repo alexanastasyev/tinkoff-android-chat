@@ -12,8 +12,7 @@ class Contact(
     @SerialName("avatar_url")
     val imageUrl: String?,
 
-    @SerialName("is_active")
-    val isOnline: Boolean = false,
+    var status: Status = Status.OFFLINE,
 
     @SerialName("user_id")
     val id: Int

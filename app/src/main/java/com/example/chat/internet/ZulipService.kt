@@ -26,12 +26,41 @@ object ZulipService {
     fun getContacts(): List<Contact>? {
         val zulipService = RetrofitZulipService.getInstance()
         val response = zulipService.getContacts().execute().body()
-        return response?.contacts
+        val contactsList = response?.contacts
+        if (contactsList != null) {
+            for (contact in contactsList) {
+                val status = getUserStatus((contact.id))
+                contact.status = status
+            }
+        }
+        return contactsList
+    }
+
+    private fun getUserStatus(userId: Int): Status {
+        val zulipService = RetrofitZulipService.getInstance()
+        val response = zulipService.getUserPresence(userId).execute().body()
+        val presence = response?.presence?.userPresenceAggregated?.status
+        val lastActive = response?.presence?.userPresenceAggregated?.lastActiveTimeInSeconds
+        if (lastActive != null) {
+            val currentTime = System.currentTimeMillis() / 1000
+            if (currentTime - lastActive > 300) {
+                return Status.OFFLINE
+            }
+        }
+        return when (presence) {
+            "active" -> Status.ACTIVE
+            "idle" -> Status.IDLE
+            else -> Status.OFFLINE
+        }
     }
 
     fun getProfileDetails(): Contact? {
         val zulipService = RetrofitZulipService.getInstance()
         val response = zulipService.getMyProfileDetails().execute().body()
+        if (response != null) {
+            val status = getUserStatus(response.id)
+            response.status = status
+        }
         return response
     }
 

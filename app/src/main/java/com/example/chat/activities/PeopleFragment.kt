@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chat.internet.ZulipService
 import com.example.chat.R
-import com.example.chat.recycler.*
+import com.example.chat.internet.ZulipService
+import com.example.chat.recycler.Adapter
+import com.example.chat.recycler.ChatHolderFactory
+import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.convertContactToUi
 import com.facebook.shimmer.ShimmerFrameLayout
 import io.reactivex.Single
@@ -36,11 +38,11 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
         val shimmerPeople = view.findViewById<ShimmerFrameLayout>(R.id.shimmerPeople)
         shimmerPeople.visibility = View.VISIBLE
         shimmerPeople.startShimmer()
-        val contactsDisposable = Single.fromCallable{ZulipService.getContacts()}
+        val contactsDisposable = Single.fromCallable { ZulipService.getContacts() }
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ contacts->
-                if (contacts!= null) {
+            .subscribe({ contacts ->
+                if (contacts != null) {
                     val contactUis = convertContactToUi(contacts)
                     val holderFactory = ChatHolderFactory()
                     val adapter = Adapter<ViewTyped>(holderFactory)
@@ -55,9 +57,9 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
                     recyclerView.visibility = View.VISIBLE
                 }
             },
-            {
+                {
 
-            })
+                })
         disposeBag.add(contactsDisposable)
     }
 

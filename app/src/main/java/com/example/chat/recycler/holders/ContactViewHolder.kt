@@ -2,7 +2,9 @@ package com.example.chat.recycler.holders
 
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import com.example.chat.R
+import com.example.chat.entities.Status
 import com.example.chat.recycler.uis.ContactUi
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
@@ -29,10 +31,18 @@ class ContactViewHolder(
             .load(item.imageUrl)
             .placeholder(R.drawable.default_avatar)
             .into(contactPictureHolder)
-        if (item.isOnline) {
-            onlineIndicator.visibility = View.VISIBLE
-        } else {
-            onlineIndicator.visibility = View.GONE
+        when(item.status) {
+            Status.ACTIVE -> {
+                onlineIndicator.visibility = View.VISIBLE
+                onlineIndicator.setImageResource(R.color.status_active_color)
+            }
+            Status.IDLE -> {
+                onlineIndicator.visibility = View.VISIBLE
+                onlineIndicator.setImageResource(R.color.status_idle_color)
+            }
+            Status.OFFLINE -> {
+                onlineIndicator.visibility = View.INVISIBLE
+            }
         }
     }
 }

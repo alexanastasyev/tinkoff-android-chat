@@ -23,4 +23,5 @@
     <string name="subscribed">Subscribed</string>
     <string name="all_channels">All streams</string>
     <string name="error_send_message">Error! Can\'t send message</string>
+    <string name="idle">idle</string>
 </resources>

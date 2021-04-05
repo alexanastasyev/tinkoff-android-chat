@@ -23,8 +23,11 @@
     <color name="edit_text_bg_color">#1c1c1c</color>
     <color name="edit_text_hint_color">#777777</color>
     <color name="my_name_color">#1c1c1c</color>
-    <color name="status_online_color">#3D9200</color>
+
+    <color name="status_active_color">#3D9200</color>
+    <color name="status_idle_color">#FF8B00</color>
     <color name="status_offline_color">#A60000</color>
+
     <color name="topic_bg_color">#2A9D8F</color>
     <color name="toolbar_color">#1c1c1c</color>
 </resources>
