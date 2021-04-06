@@ -61,12 +61,14 @@
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
+            android:background="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/toolbarChannels"
             app:tabTextColor="@color/tab_item_color" />
 
         <androidx.viewpager2.widget.ViewPager2
+            android:layout_marginTop="4dp"
             android:id="@+id/fragmentViewPager"
             android:layout_width="match_parent"
             android:layout_height="0dp"

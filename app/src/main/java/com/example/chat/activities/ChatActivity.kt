@@ -112,6 +112,7 @@ class ChatActivity : AppCompatActivity() {
                     adapter.items = messageUis
                     recyclerView.scrollToPosition(adapter.itemCount - 1)
                     findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
+                    findViewById<ProgressBar>(R.id.progressBarChat).visibility = View.GONE
                 }, {
                     Toast.makeText(this, getString(R.string.error_receive_messages), Toast.LENGTH_SHORT).show()
                 })
