@@ -16,7 +16,6 @@ import com.example.chat.*
 import com.example.chat.entities.Emoji
 import com.example.chat.entities.Message
 import com.example.chat.entities.Reaction
-import com.example.chat.exceptions.CannotSendMessageException
 import com.example.chat.internet.ZulipService
 import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
@@ -25,8 +24,6 @@ import com.example.chat.recycler.converters.convertMessageToUi
 import com.example.chat.views.EmojiView
 import com.example.chat.views.MessageViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import io.reactivex.Completable.fromCallable
-import io.reactivex.Observable.fromCallable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

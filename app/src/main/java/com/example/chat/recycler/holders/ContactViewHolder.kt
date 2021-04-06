@@ -2,7 +2,6 @@ package com.example.chat.recycler.holders
 
 import android.view.View
 import android.widget.TextView
-import androidx.appcompat.content.res.AppCompatResources
 import com.example.chat.R
 import com.example.chat.entities.Status
 import com.example.chat.recycler.uis.ContactUi

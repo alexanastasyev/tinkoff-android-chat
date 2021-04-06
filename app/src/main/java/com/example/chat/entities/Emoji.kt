@@ -1,6 +1,5 @@
 package com.example.chat.entities
 
-import de.ppi.oss.kzulip.api.common.EmojiEnum
 import java.io.Serializable
 
 class Emoji(val unicode: Int): Serializable {

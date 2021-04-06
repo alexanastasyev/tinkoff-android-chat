@@ -1,4 +1,4 @@
-package de.ppi.oss.kzulip.api.common
+package com.example.chat.entities
 
 /**
  * Based on <a href="https://raw.githubusercontent.com/zulip/zulip/a2a695dfa7a3fbd9d406dcce9c6299e41c6a445d/tools/setup/emoji/emoji_map.json">emoji_map.json</a>
