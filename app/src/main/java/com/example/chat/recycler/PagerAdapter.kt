@@ -9,10 +9,10 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chat.internet.ZulipService
 import com.example.chat.R
 import com.example.chat.activities.ChatActivity
 import com.example.chat.entities.Channel
+import com.example.chat.internet.ZulipService
 import com.example.chat.recycler.converters.convertChannelToUi
 import com.example.chat.recycler.converters.convertTopicToUi
 import com.example.chat.recycler.uis.ChannelUi
@@ -115,8 +115,8 @@ class PagerAdapter(
         val textView = layout.findViewById<TextView>(R.id.channelName)
         val channelName = textView.text.toString().substring(1)
         val channelId = findChannelByName(channelsType, channelName)
-        val topicsDisposable = Single.fromCallable{ZulipService.getTopics(channelId)}
-            .subscribeOn(Schedulers.newThread())
+        val topicsDisposable = Single.fromCallable { ZulipService.getTopics(channelId) }
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { topics ->

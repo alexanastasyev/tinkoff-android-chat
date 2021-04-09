@@ -4,5 +4,5 @@ object ThisUserInfo {
     const val THIS_USER_ID = 402228
     const val THIS_USER_NAME = "alexanastasyev"
     const val THIS_USER_AVATAR_URL =
-        "https://sun9-62.userapi.com/impf/c841630/v841630065/113e0/lpOMX1Dm8Ao.jpg?size=225x225&quality=96&sign=5c18b2e9ed3f0f0dd9795f4e37012341&type=album"
+        "https://secure.gravatar.com/avatar/663814e1c6b6b419957db68e62eecfdf?d=identicon&version=1"
 }

@@ -4,7 +4,7 @@ import com.example.chat.R
 import com.example.chat.entities.Emoji
 import com.example.chat.recycler.ViewTyped
 
-data class MessageUi(
+class MessageUi(
         var messageId: Long,
         var text: String,
         var author: String,

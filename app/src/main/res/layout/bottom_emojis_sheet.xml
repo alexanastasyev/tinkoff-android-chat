@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     app:behavior_hideable="true"
     app:behavior_peekHeight="80dp"
+    android:background="@color/black"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <!--  ConstraintLayout is necessary to align ScrollView center  -->

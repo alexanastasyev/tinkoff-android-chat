@@ -50,7 +50,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         shimmerProfile.startShimmer()
 
         val profileDisposable = Single.fromCallable{ZulipService.getProfileDetails()}
-            .subscribeOn(Schedulers.newThread())
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ profile ->
                 if (profile != null) {

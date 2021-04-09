@@ -9,7 +9,7 @@
         android:layout_width="70dp"
         android:layout_height="70dp"
         android:layout_margin="8dp"
-        android:background="@color/grey"
+        android:src="@color/grey"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
@@ -17,14 +17,12 @@
         android:background="@color/grey"
         android:id="@+id/contactName"
         android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_margin="8dp"
-        android:gravity="center_vertical"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="100dp"
         app:layout_constraintTop_toTopOf="@id/imageContact"
         app:layout_constraintStart_toEndOf="@id/imageContact"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/imageContact"
-        android:textColor="@color/white"
-        android:textSize="30sp"/>
+        app:layout_constraintBottom_toBottomOf="@id/imageContact"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -101,7 +101,7 @@ class ChatActivity : AppCompatActivity() {
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
             val messagesDisposable = Single.fromCallable{ZulipService.getMessages(topicName)}
-                .subscribeOn(Schedulers.computation())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ messagesFromServer ->
                     messages.addAll(messagesFromServer)
@@ -237,7 +237,7 @@ class ChatActivity : AppCompatActivity() {
                 indexOfReactionToRemove = i
             }
         }
-        (messages[messageIndex].reactions as ArrayList).removeAt(indexOfReactionToRemove)
+        (messages[messageIndex].reactions).removeAt(indexOfReactionToRemove)
     }
 
     private fun getOnPlusClickListener(messageViewGroup: MessageViewGroup): View.OnClickListener {
@@ -310,6 +310,7 @@ class ChatActivity : AppCompatActivity() {
                     }, {
                         Toast.makeText(this, getString(R.string.error_send_message), Toast.LENGTH_SHORT).show()
                     })
+                disposeBag.add(sendMessageDisposable)
             }
         }
     }

@@ -13,11 +13,8 @@ class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holde
         get() = ((differ.currentList ?: field) as List<T>)
         set(newItems) {
             val dispose = Single.just(Unit)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     differ.submitList(newItems)
-                    notifyDataSetChanged()
                 }, {})
         }
 
