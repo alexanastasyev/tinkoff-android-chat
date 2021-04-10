@@ -3,7 +3,6 @@ package com.example.chat.recycler.holders
 import android.view.View
 import android.widget.TextView
 import com.example.chat.R
-import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.uis.TopicUi
 
 class TopicViewHolder (
@@ -22,5 +21,4 @@ class TopicViewHolder (
     override fun bind(item: TopicUi) {
         topicViewHolder.text = item.name
     }
-
 }

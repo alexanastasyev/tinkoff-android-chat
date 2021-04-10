@@ -1,13 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.PeopleFragment">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarPeople"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:text="@string/users"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerPeople"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbarPeople"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/placeholder_item_contact"/>
+            <include layout="@layout/placeholder_item_contact"/>
+            <include layout="@layout/placeholder_item_contact"/>
+            <include layout="@layout/placeholder_item_contact"/>
+            <include layout="@layout/placeholder_item_contact"/>
+
+        </LinearLayout>
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <androidx.recyclerview.widget.RecyclerView
+        app:layout_constraintTop_toBottomOf="@id/toolbarPeople"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/recyclerViewContacts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"/>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

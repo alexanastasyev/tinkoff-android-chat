@@ -1,23 +1,25 @@
-package com.example.chat
+package com.example.chat.recycler
 
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.chat.Database
+import com.example.chat.R
 import com.example.chat.activities.ChatActivity
 import com.example.chat.entities.Channel
-import com.example.chat.entities.Topic
-import com.example.chat.recycler.Adapter
-import com.example.chat.recycler.ChatHolderFactory
-import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.channelToUi
 import com.example.chat.recycler.converters.topicToUi
 import com.example.chat.recycler.uis.ChannelUi
 import com.example.chat.recycler.uis.TopicUi
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlin.collections.ArrayList
 
 class PagerAdapter(
         private val channels: List<List<Channel>>
@@ -32,6 +34,9 @@ class PagerAdapter(
 
         private lateinit var adapterMyChannels: Adapter<ViewTyped>
         private lateinit var adapterAllChannels: Adapter<ViewTyped>
+
+        private lateinit var itemsMyChannels: List<ViewTyped>
+        private lateinit var itemsAllChannels: List<ViewTyped>
     }
 
     private lateinit var adapter: Adapter<ViewTyped>
@@ -51,16 +56,21 @@ class PagerAdapter(
         )
         adapter = Adapter(holderFactory)
 
-        when (getItemViewType(position)) {
-            TYPE_MY_CHANNELS -> adapterMyChannels = adapter
-            TYPE_ALL_CHANNELS -> adapterAllChannels = adapter
-        }
-
         recyclerView = holder.itemView.findViewById(R.id.recyclerViewChannels)
         recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
 
         recyclerView.adapter = adapter
         adapter.items = channelUis as ArrayList<ViewTyped>
+        when (getItemViewType(position)) {
+            TYPE_MY_CHANNELS -> {
+                adapterMyChannels = adapter
+                itemsMyChannels = channelUis
+            }
+            TYPE_ALL_CHANNELS -> {
+                adapterAllChannels = adapter
+                itemsAllChannels = channelUis
+            }
+        }
     }
 
     private fun getChannelOrTopicClickListener(channelsType: Int): (View) -> Unit {
@@ -97,18 +107,23 @@ class PagerAdapter(
 
     private fun expandTopics(view: View, channelsType: Int) {
         val position = getChildPosition(view)
+        val currentAdapter = getCurrentAdapter(channelsType)
+        (currentAdapter.items[position] as ChannelUi).isExpanded = true
         val layout = view.parent as ConstraintLayout
         val textView = layout.findViewById<TextView>(R.id.channelName)
         val channelName = textView.text.toString()
-        val topics = getTopics(channelName)
-        val topicUis = topicToUi(topics)
-
-        val currentAdapter = getCurrentAdapter(channelsType)
-
-        currentAdapter.addItemsAtPosition(position + 1, topicUis)
-        currentAdapter.notifyDataSetChanged()
-
-        (currentAdapter.items[position] as ChannelUi).isExpanded = true
+        val topicsDisposable = Database.getTopics(channelName)
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+            {topics ->
+                val topicUis = topicToUi(topics)
+                currentAdapter.addItemsAtPosition(position + 1, topicUis)
+                currentAdapter.notifyDataSetChanged()
+            },
+            {
+                Toast.makeText(view.context, view.context.getString(R.string.error_receive_topics), Toast.LENGTH_SHORT).show()
+            })
     }
 
     private fun getCurrentAdapter(channelsType: Int): Adapter<ViewTyped> {
@@ -125,20 +140,13 @@ class PagerAdapter(
         return position < currentAdapter.items.size - 1 && currentAdapter.items[position + 1] is TopicUi
     }
 
-    private fun getTopics(channelName: String): List<Topic> {
-        return listOf(
-            Topic("First topic of $channelName"),
-            Topic("Second topic of $channelName"),
-            Topic("Third topic of $channelName")
-        )
-    }
-
     private fun collapseTopics(view: View, channelsType: Int) {
         val position = getChildPosition(view)
+        val currentAdapter = getCurrentAdapter(channelsType)
+        (currentAdapter.items[position] as ChannelUi).isExpanded = false
+
         val deleteFrom = position + 1
         var deleteTo = deleteFrom
-
-        val currentAdapter = getCurrentAdapter(channelsType)
 
         for (i in position + 1 until currentAdapter.items.size) {
             if (currentAdapter.items[i] is ChannelUi) {
@@ -149,8 +157,6 @@ class PagerAdapter(
 
         currentAdapter.removeItems(deleteFrom, deleteTo)
         currentAdapter.notifyDataSetChanged()
-
-        (currentAdapter.items[position] as ChannelUi).isExpanded = false
 
     }
 
@@ -170,6 +176,23 @@ class PagerAdapter(
             TYPE_MY_CHANNELS
         } else {
             TYPE_ALL_CHANNELS
+        }
+    }
+
+    fun filterChannels(key: String, channelsType: Int) {
+        val currentAdapter = getCurrentAdapter(channelsType)
+        val currentItems = when (channelsType) {
+            TYPE_MY_CHANNELS -> itemsMyChannels
+            TYPE_ALL_CHANNELS -> itemsAllChannels
+            else -> itemsAllChannels
+        }
+        currentAdapter.items.forEach {
+            if (it is ChannelUi && it.isExpanded) {
+                it.isExpanded = false
+            }
+        }
+        currentAdapter.items = currentItems.filter {
+                it is ChannelUi && it.name.contains(key)
         }
     }
 }

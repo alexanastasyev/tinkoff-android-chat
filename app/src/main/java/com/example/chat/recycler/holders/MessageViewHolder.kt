@@ -59,7 +59,9 @@ class MessageViewHolder(
         dateHolder.text = item.date
 
         if (!shouldShowDate(messageHolder)) {
-            dateHolder.height = 0
+            dateHolder.visibility = View.GONE
+        } else {
+            dateHolder.visibility = View.VISIBLE
         }
     }
 

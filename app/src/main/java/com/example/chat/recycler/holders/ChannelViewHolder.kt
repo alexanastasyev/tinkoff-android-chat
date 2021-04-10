@@ -4,7 +4,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import com.example.chat.R
-import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.uis.ChannelUi
 
 class ChannelViewHolder (

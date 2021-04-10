@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import com.example.chat.R
 
 class ChannelsListFragment : androidx.fragment.app.Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

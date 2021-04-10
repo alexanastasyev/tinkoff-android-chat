@@ -7,38 +7,58 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.chat.entities.Contact
+import com.example.chat.Database
 import com.example.chat.R
 import com.example.chat.recycler.*
 import com.example.chat.recycler.converters.contactToUi
+import com.facebook.shimmer.ShimmerFrameLayout
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 class PeopleFragment : androidx.fragment.app.Fragment() {
+    private val disposeBag = CompositeDisposable()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as AppCompatActivity).supportActionBar?.title = "Users"
-        (activity as AppCompatActivity).supportActionBar?.show()
+        (activity as AppCompatActivity).supportActionBar?.hide()
         return inflater.inflate(R.layout.fragment_people, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val contacts = getContacts()
-        val contactUis = contactToUi(contacts)
-        val holderFactory = ChatHolderFactory()
-        val adapter = Adapter<ViewTyped>(holderFactory)
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerViewContacts)
-        recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+        recyclerView.visibility = View.GONE
+        val shimmerPeople = view.findViewById<ShimmerFrameLayout>(R.id.shimmerPeople)
+        shimmerPeople.visibility = View.VISIBLE
+        shimmerPeople.startShimmer()
+        val contactsDisposable = Database.getContacts()
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ contacts ->
+                val contactUis = contactToUi(contacts)
+                val holderFactory = ChatHolderFactory()
+                val adapter = Adapter<ViewTyped>(holderFactory)
+                recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
 
-        recyclerView.adapter = adapter
-        adapter.items = contactUis as ArrayList<ViewTyped>
+                recyclerView.adapter = adapter
+                adapter.items = contactUis as ArrayList<ViewTyped>
+
+                shimmerPeople.stopShimmer()
+                shimmerPeople.visibility = View.GONE
+
+                recyclerView.visibility = View.VISIBLE
+            },
+            {
+
+            })
+        disposeBag.add(contactsDisposable)
     }
 
-    private fun getContacts() : List<Contact> {
-        return listOf(
-            Contact("Sherlock Holmes", "https://aif-s3.aif.ru/images/020/856/92c446222800f644b2a57f05a8025a9b.jpg"),
-            Contact("John Watson", "https://cdn.fishki.net/upload/post/2017/12/03/2447213/tn/4de61c308551534ae848c984a4d7cb74.jpg")
-        )
+    override fun onDestroyView() {
+        disposeBag.clear()
+        super.onDestroyView()
     }
 }

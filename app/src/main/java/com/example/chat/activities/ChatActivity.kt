@@ -2,11 +2,10 @@ package com.example.chat.activities
 
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import androidx.core.view.setPadding
@@ -17,13 +16,18 @@ import com.example.chat.*
 import com.example.chat.entities.Emoji
 import com.example.chat.entities.Message
 import com.example.chat.entities.Reaction
+import com.example.chat.exceptions.CannotSendMessageException
 import com.example.chat.recycler.Adapter
 import com.example.chat.recycler.ChatHolderFactory
+import com.example.chat.recycler.PagerAdapter
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.messageToUi
 import com.example.chat.views.EmojiView
 import com.example.chat.views.MessageViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -39,6 +43,8 @@ class ChatActivity : AppCompatActivity() {
         private const val DIVIDER_FOR_GENERATING_ID = 1_000_000_000
     }
 
+    private val disposeBag = CompositeDisposable()
+
     private lateinit var messages: ArrayList<Message>
     private lateinit var messageUis: ArrayList<ViewTyped>
     private lateinit var recyclerView: RecyclerView
@@ -50,11 +56,15 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity)
 
+        findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.INVISIBLE
+
         val extras = intent.extras
         if (extras != null) {
             val topicName = extras.getString(PagerAdapter.TOPIC_KEY)
             val toolbar = findViewById<Toolbar>(R.id.toolbarChat)
-            toolbar?.title = topicName
+            toolbar?.title = ""
+            val textViewTitle = toolbar?.findViewById<TextView>(R.id.titleChat)
+            textViewTitle?.text = topicName
             setSupportActionBar(toolbar)
         }
 
@@ -77,13 +87,31 @@ class ChatActivity : AppCompatActivity() {
         setEditTextListener()
 
         recyclerView.scrollToPosition(adapter.itemCount - 1)
+
+        findViewById<ImageView>(R.id.arrowBack).setOnClickListener {
+            this.finish()
+        }
     }
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
-        messages = if (savedInstanceState == null) {
-            ArrayList(MessageRepository.getMessagesList())
+        if (savedInstanceState == null) {
+            val messagesDisposable = Database.getMessagesList()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ message ->
+                    messages.add(message)
+                    messageUis.add(messageToUi(listOf(message))[0])
+                    adapter.items = messageUis
+                    recyclerView.scrollToPosition(adapter.itemCount - 1)
+                    findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
+                }, {
+                    Toast.makeText(this, getString(R.string.error_receive_messages), Toast.LENGTH_SHORT).show()
+                })
+            disposeBag.add(messagesDisposable)
+            messages = arrayListOf()
         } else {
-            savedInstanceState.getSerializable(MESSAGES_LIST_KEY) as ArrayList<Message>
+            findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
+            messages = savedInstanceState.getSerializable(MESSAGES_LIST_KEY) as ArrayList<Message>
         }
     }
 
@@ -238,19 +266,26 @@ class ChatActivity : AppCompatActivity() {
 
     private fun setClickListenerForSendImage() {
         findViewById<ImageView>(R.id.imageSend).setOnClickListener {
-
-            val newMessage = generateNewMessage()
+            val newMessage = try {
+                generateNewMessage()
+            } catch (e: CannotSendMessageException) {
+                Toast.makeText(this, getString(R.string.error_send_message), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (newMessage.text.isNotEmpty()) {
                 messages.add(newMessage)
                 messageUis.add(messageToUi(listOf(newMessage))[0])
-                adapter.items.add(messageToUi(listOf(newMessage))[0])
+                adapter.items = messageUis
                 clearEditText()
                 recyclerView.scrollToPosition(adapter.itemCount - 1)
             }
+
         }
     }
 
     private fun generateNewMessage(): Message {
+        maybeThrowException()
+
         val editText = findViewById<EditText>(R.id.editText)
         val text = editText.text.toString().trim()
         val author = THIS_USER_NAME
@@ -271,6 +306,12 @@ class ChatActivity : AppCompatActivity() {
         )
     }
 
+    private fun maybeThrowException() {
+        if ((Math.random() * 100).toInt() % 4 == 0) {
+            throw CannotSendMessageException()
+        }
+    }
+
     private fun clearEditText() {
         findViewById<EditText>(R.id.editText).text.clear()
     }
@@ -286,11 +327,10 @@ class ChatActivity : AppCompatActivity() {
     }
 
     // The function is used!
-
     fun onDialogEmojiClick(view: View) {
         addEmojiView(
-                messageViewGroup = clickedMessageViewGroup,
-                view as EmojiView
+            messageViewGroup = clickedMessageViewGroup,
+            view as EmojiView
         )
         emojisDialog.dismiss()
     }
@@ -336,5 +376,10 @@ class ChatActivity : AppCompatActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putSerializable(MESSAGES_LIST_KEY, messages)
+    }
+
+    override fun onDestroy() {
+        disposeBag.clear()
+        super.onDestroy()
     }
 }
