@@ -219,6 +219,9 @@ class ChatActivity : AppCompatActivity() {
 
         messages[messageIndex].reactions[emojiIndex].reactedUsersId.add(THIS_USER_ID)
         messages[messageIndex].reactions[emojiIndex].amount += 1
+
+        messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
+        adapter.items = messageUis
     }
 
     private fun removeEmojiView(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
@@ -405,6 +408,8 @@ class ChatActivity : AppCompatActivity() {
     private fun createReaction(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
         val messageIndex = getIndexOfMessage(messageViewGroup)
         messages[messageIndex].reactions.add(Reaction(emojiView.emoji, 1, arrayListOf(THIS_USER_ID)))
+        messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
+        adapter.items = messageUis
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -359,6 +359,8 @@ class MessageViewGroup @JvmOverloads constructor(
         setReactionsInEmojisLayout(reactions)
         setOnClickListenerForEmojiViews(clickListenerForEmojis)
         setOnPlusClickListener(emojiPlusClickListener)
+        emojisLayout.requestLayout()
+        requestLayout()
     }
 
     fun removeEmojiView(emojiView: EmojiView) {
@@ -372,5 +374,6 @@ class MessageViewGroup @JvmOverloads constructor(
 
         setReactionsInEmojisLayout(reactions)
         setOnClickListenerForEmojiViews(clickListenerForEmojis)
+        requestLayout()
     }
 }

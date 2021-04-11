@@ -79,7 +79,7 @@ object ZulipService {
             for (zulipMessage in response.messages) {
                 if (zulipMessage.topic == topicName) {
                     val newMessage = Message(
-                        text = zulipMessage.text,
+                        text = zulipMessage.text.replace("<p>", "").replace("</p>", ""),
                         author = zulipMessage.author,
                         date = Date(zulipMessage.dateInSeconds * 1000L),
                         authorId = zulipMessage.authorId.toLong(),
