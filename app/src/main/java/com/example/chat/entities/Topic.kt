@@ -1,11 +1,15 @@
 package com.example.chat.entities
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-@Serializable
+@Entity(tableName = "topics", primaryKeys = ["name", "channelId"])
 class Topic(
 
-    @SerialName("name")
-    val name: String
+    @ColumnInfo(name = "name")
+    val name: String,
+
+    @ColumnInfo(name = "channelId")
+    val channelId: Int
 )

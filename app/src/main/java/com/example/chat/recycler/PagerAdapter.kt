@@ -1,28 +1,34 @@
 package com.example.chat.recycler
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.example.chat.R
 import com.example.chat.activities.ChatActivity
+import com.example.chat.database.AppDatabase
 import com.example.chat.entities.Channel
+import com.example.chat.entities.Topic
 import com.example.chat.internet.ZulipService
 import com.example.chat.recycler.converters.convertChannelToUi
 import com.example.chat.recycler.converters.convertTopicToUi
 import com.example.chat.recycler.uis.ChannelUi
 import com.example.chat.recycler.uis.TopicUi
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class PagerAdapter(
-    private val channels: List<List<Channel>>
+    private val channels: List<List<Channel>>,
 ) : RecyclerView.Adapter<PagerAdapter.PagerViewHolder>() {
 
     companion object {
@@ -108,6 +114,7 @@ class PagerAdapter(
     }
 
     private fun expandTopics(view: View, channelsType: Int) {
+
         val position = getChildPosition(view)
         val currentAdapter = getCurrentAdapter(channelsType)
         (currentAdapter.items[position] as ChannelUi).isExpanded = true
@@ -115,16 +122,33 @@ class PagerAdapter(
         val textView = layout.findViewById<TextView>(R.id.channelName)
         val channelName = textView.text.toString().substring(1)
         val channelId = findChannelByName(channelsType, channelName)
+
+        val getTopicsFromDatabaseDisposable = Single.fromCallable{getTopicsFromDatabase(channelId)}
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ topics ->
+                if (topics.isNotEmpty()) {
+                    val topicUis = convertTopicToUi(topics)
+                    currentAdapter.addItemsAtPosition(position + 1, topicUis)
+                    currentAdapter.notifyDataSetChanged()
+                }
+            }, {})
+
         val topicsDisposable = Single.fromCallable { ZulipService.getTopics(channelId) }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { topics ->
                     if (topics != null) {
-                        val topicUis = convertTopicToUi(topics)
+                        val topicUis = convertTopicToUi(topics).filter { topicUi -> !(currentAdapter.items.map { it.uid }.contains(topicUi.uid)) }
                         currentAdapter.addItemsAtPosition(position + 1, topicUis)
                         currentAdapter.notifyDataSetChanged()
                     }
+                    val disposable = Observable.fromArray(topics)
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({ topics ->
+                           addTopicsToDatabase(topics)
+                        }, {})
                 },
                 {
                     Toast.makeText(
@@ -133,6 +157,28 @@ class PagerAdapter(
                         Toast.LENGTH_SHORT
                     ).show()
                 })
+    }
+
+    private fun getTopicsFromDatabase(channelId: Int): List<Topic> {
+        val db = Room.databaseBuilder(
+            recyclerView.context,
+            AppDatabase::class.java,
+            "database"
+        ).fallbackToDestructiveMigration().build()
+        return db.topicDao().getByChannelId(channelId)
+    }
+
+    private fun addTopicsToDatabase(topics: List<Topic>?) {
+        val db = Room.databaseBuilder(
+            recyclerView.context,
+            AppDatabase::class.java,
+            "database"
+        ).fallbackToDestructiveMigration().build()
+        if (topics != null) {
+            for (topic in topics) {
+                db.topicDao().insert(topic)
+            }
+        }
     }
 
     private fun getCurrentAdapter(channelsType: Int): Adapter<ViewTyped> {

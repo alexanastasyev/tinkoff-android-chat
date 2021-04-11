@@ -1,6 +1,7 @@
 package com.example.chat.internet.responses
 
 import com.example.chat.entities.Topic
+import com.example.chat.internet.zulip.entities.ZulipTopic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -8,5 +9,5 @@ import kotlinx.serialization.Serializable
 class GetTopicsResponse (
 
     @SerialName("topics")
-    val topics: List<Topic>
+    val topics: List<ZulipTopic>
 )

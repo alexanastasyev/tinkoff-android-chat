@@ -13,10 +13,10 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.room.Room
 import androidx.viewpager2.widget.ViewPager2
-import com.example.chat.internet.ZulipService
 import com.example.chat.R
 import com.example.chat.database.AppDatabase
 import com.example.chat.entities.Channel
+import com.example.chat.internet.ZulipService
 import com.example.chat.recycler.PagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -70,7 +70,8 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 if (channels != null) {
 
                     view.findViewById<ProgressBar>(R.id.progressBarChannels).visibility = View.GONE
-                    view.findViewById<ConstraintLayout>(R.id.channelsContentLayout).visibility = View.VISIBLE
+                    view.findViewById<ConstraintLayout>(R.id.channelsContentLayout).visibility =
+                        View.VISIBLE
 
                     myChannels.clear()
                     myChannels.addAll(0, channels)
@@ -79,7 +80,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                     val disposable = Observable.fromArray(channels)
                         .subscribeOn(Schedulers.io())
                         .subscribe({
-                           addChannelsToDatabase(channels)
+                            addChannelsToDatabase(channels)
                         }, {})
                     disposeBag.add(disposable)
                 }
@@ -143,21 +144,24 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             )
         }
 
-        val disposableGetSubscribedFromDb = Single.fromCallable{getSubscribedChannelsFromDatabase()}
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ channelsFromDatabase ->
-                if (channelsFromDatabase.isNotEmpty()) {
-                    view.findViewById<ProgressBar>(R.id.progressBarChannels).visibility = View.GONE
-                    view.findViewById<ConstraintLayout>(R.id.channelsContentLayout).visibility = View.VISIBLE
+        val disposableGetSubscribedFromDb =
+            Single.fromCallable { getSubscribedChannelsFromDatabase() }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ channelsFromDatabase ->
+                    if (channelsFromDatabase.isNotEmpty()) {
+                        view.findViewById<ProgressBar>(R.id.progressBarChannels).visibility =
+                            View.GONE
+                        view.findViewById<ConstraintLayout>(R.id.channelsContentLayout).visibility =
+                            View.VISIBLE
 
-                    myChannels.addAll(0, channelsFromDatabase)
-                    adapter.notifyDataSetChanged()
-                }
-            }, {})
+                        myChannels.addAll(0, channelsFromDatabase)
+                        adapter.notifyDataSetChanged()
+                    }
+                }, {})
         disposeBag.add(disposableGetSubscribedFromDb)
 
-        val disposableGetAllFromDb = Single.fromCallable{getAllChannelsFromDatabase()}
+        val disposableGetAllFromDb = Single.fromCallable { getAllChannelsFromDatabase() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channelsFromDatabase ->
@@ -174,7 +178,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         val db = Room.databaseBuilder(
             requireContext(),
             AppDatabase::class.java,
-        "database"
+            "database"
         ).fallbackToDestructiveMigration().build()
         for (channel in channels) {
             db.channelDao().insert(channel)

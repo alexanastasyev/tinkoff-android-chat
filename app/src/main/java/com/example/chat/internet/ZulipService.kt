@@ -24,7 +24,9 @@ object ZulipService {
     fun getTopics(channelId: Int): List<Topic>? {
         val zulipService = RetrofitZulipService.getInstance()
         val response = zulipService.getTopics(channelId).execute().body()
-        return response?.topics
+        return response?.topics?.map {
+            Topic(it.name, channelId)
+        }
     }
 
     fun getContacts(): List<Contact>? {
