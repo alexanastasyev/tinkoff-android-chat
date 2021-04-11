@@ -8,13 +8,17 @@ object ZulipService {
     fun getAllChannels(): List<Channel>? {
         val zulipService = RetrofitZulipService.getInstance()
         val response = zulipService.getChannels().execute().body()
-        return response?.channels
+        return response?.channels?.map {
+            Channel(it.id, it.name, false)
+        }
     }
 
     fun getMyChannels(): List<Channel>? {
         val zulipService = RetrofitZulipService.getInstance()
         val response = zulipService.getMyChannels().execute().body()
-        return response?.channels
+        return response?.channels?.map {
+            Channel(it.id, it.name, true)
+        }
     }
 
     fun getTopics(channelId: Int): List<Topic>? {
