@@ -1,6 +1,9 @@
 package com.example.chat.internet
 
 import com.example.chat.entities.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonBuilder
+import org.json.JSONObject
 import java.util.*
 
 object ZulipService {
@@ -70,16 +73,17 @@ object ZulipService {
         return response
     }
 
-    fun getMessages(topicName: String): List<Message> {
+    fun getMessages(topicName: String, channelName: String): List<Message> {
         val zulipService = RetrofitZulipService.getInstance()
-        val response = zulipService.getMessages("newest", 1000, 0).execute().body()
+        val response = zulipService.getMessages("newest", 1000, 0,
+            """[{"operator":"stream","operand":"${channelName.substring(1)}"}]""").execute().body()
 
         val messages = arrayListOf<Message>()
         if (response != null) {
             for (zulipMessage in response.messages) {
                 if (zulipMessage.topic == topicName) {
                     val newMessage = Message(
-                        text = zulipMessage.text.replace("<p>", "").replace("</p>", ""),
+                        text = zulipMessage.text,
                         author = zulipMessage.author,
                         date = Date(zulipMessage.dateInSeconds * 1000L),
                         authorId = zulipMessage.authorId.toLong(),

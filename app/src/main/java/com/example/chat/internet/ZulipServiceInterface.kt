@@ -2,6 +2,10 @@ package com.example.chat.internet
 
 import com.example.chat.entities.Contact
 import com.example.chat.internet.responses.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -26,7 +30,9 @@ interface ZulipServiceInterface {
     fun getMessages(
         @Query("anchor") anchor: String,
         @Query("num_before") numBefore: Int,
-        @Query("num_after") numAfter: Int
+        @Query("num_after") numAfter: Int,
+        @Query("narrow") narrow: String,
+        @Query("apply_markdown") applyMarkDown: Boolean = false
     ): Call<GetMessagesResponse>
 
     @GET("users/{userId}/presence")
@@ -59,3 +65,12 @@ interface ZulipServiceInterface {
         @Field("reaction_type") reactionType: String
     ): Call<RemoveReactionResponse>
 }
+
+@Serializable
+class Narrow(
+    @SerialName("operator")
+    val operator: String,
+
+    @SerialName("operand")
+    val operand: String
+)

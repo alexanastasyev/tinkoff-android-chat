@@ -100,7 +100,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            val messagesDisposable = Single.fromCallable{ZulipService.getMessages(topicName)}
+            val messagesDisposable = Single.fromCallable{ZulipService.getMessages(topicName, channelName)}
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ messagesFromServer ->
