@@ -1,8 +1,11 @@
 package com.example.chat.activities
 
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,6 +21,7 @@ import com.example.chat.entities.Message
 import com.example.chat.entities.Reaction
 import com.example.chat.internet.ZulipService
 import com.example.chat.recycler.Adapter
+import com.example.chat.recycler.BaseAdapter
 import com.example.chat.recycler.ChatHolderFactory
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.convertMessageToUi
@@ -30,7 +34,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ChatActivity : AppCompatActivity() {
 
@@ -50,12 +53,17 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var messageUis: ArrayList<ViewTyped>
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: Adapter<ViewTyped>
+    private lateinit var holderFactory: ChatHolderFactory
     private lateinit var clickedMessageViewGroup: MessageViewGroup
     private lateinit var emojisDialog: BottomSheetDialog
 
     private var topicName = ""
     private var channelName = ""
 
+    private var lastMessageId = 10000000000000000
+    private var isBeingUpdated = false
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.chat_activity)
@@ -76,7 +84,7 @@ class ChatActivity : AppCompatActivity() {
         restoreOrReceiveMessages(savedInstanceState)
         messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
 
-        val holderFactory = ChatHolderFactory(
+        holderFactory = ChatHolderFactory(
             action = getActionForMessageViewGroups(),
             shouldShowDate = getShouldDateBeShown()
         )
@@ -96,22 +104,71 @@ class ChatActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.arrowBack).setOnClickListener {
             this.finish()
         }
+
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val position = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+                if (position == 5 && !isBeingUpdated) {
+                    isBeingUpdated = true
+                    val messagesDisposable = ZulipService.getMessages(
+                        topicName,
+                        channelName,
+                        lastMessageId
+                    )
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ messagesFromServer ->
+                            if (messagesFromServer.size > 1) {
+                                recyclerView.scrollToPosition(adapter.itemCount - 1)
+
+                                messages = (messagesFromServer + messages) as ArrayList<Message>
+                                messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
+                                adapter.items = messageUis
+                                adapter.notifyDataSetChanged()
+
+                                lastMessageId = messages[0].messageId
+
+                            }
+                        }, {
+                            Toast.makeText(
+                                applicationContext,
+                                getString(R.string.error_receive_messages),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        })
+                    disposeBag.add(messagesDisposable)
+                    isBeingUpdated = false
+                }
+            }
+        })
     }
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) {
-            val messagesDisposable = Single.fromCallable{ZulipService.getMessages(topicName, channelName)}
+            val messagesDisposable = ZulipService.getMessages(
+                topicName,
+                channelName
+            )
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ messagesFromServer ->
+                    messages.clear()
                     messages.addAll(messagesFromServer)
+                    messageUis.clear()
                     messageUis.addAll(convertMessageToUi(messages))
                     adapter.items = messageUis
                     recyclerView.scrollToPosition(adapter.itemCount - 1)
                     findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
                     findViewById<ProgressBar>(R.id.progressBarChat).visibility = View.GONE
+
+                    lastMessageId = messages[0].messageId
                 }, {
-                    Toast.makeText(this, getString(R.string.error_receive_messages), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.error_receive_messages),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 })
             disposeBag.add(messagesDisposable)
             messages = arrayListOf()
@@ -124,8 +181,16 @@ class ChatActivity : AppCompatActivity() {
     private fun getActionForMessageViewGroups() : (View) -> Unit {
         return { message ->
             val messageViewGroup = message as MessageViewGroup
-            messageViewGroup.setOnClickListenerForEmojiViews(getOnClickListenerForEmojiView(messageViewGroup))
-            messageViewGroup.setOnLongClickListenerForMessages(getOnLongClickListenerForMessages(messageViewGroup))
+            messageViewGroup.setOnClickListenerForEmojiViews(
+                getOnClickListenerForEmojiView(
+                    messageViewGroup
+                )
+            )
+            messageViewGroup.setOnLongClickListenerForMessages(
+                getOnLongClickListenerForMessages(
+                    messageViewGroup
+                )
+            )
             messageViewGroup.setOnPlusClickListener(getOnPlusClickListener(messageViewGroup))
         }
     }
@@ -157,7 +222,10 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun unselectEmoji(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
-        val removeReactionDisposable = Single.fromCallable{ZulipService.removeReaction(messageViewGroup.messageId.toInt(), emojiView.emoji)}
+        val removeReactionDisposable = Single.fromCallable{ZulipService.removeReaction(
+            messageViewGroup.messageId.toInt(),
+            emojiView.emoji
+        )}
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -198,15 +266,18 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun selectEmoji(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
-        val addReactionDisposable = Single.fromCallable{ZulipService.addReaction(messageViewGroup.messageId.toInt(), emojiView.emoji)}
+        val addReactionDisposable = Single.fromCallable{ZulipService.addReaction(
+            messageViewGroup.messageId.toInt(),
+            emojiView.emoji
+        )}
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-               if (it) {
-                   emojiView.isSelected = true
-                   emojiView.amount += 1
-                   addReaction(messageViewGroup, emojiView)
-               }
+                if (it) {
+                    emojiView.isSelected = true
+                    emojiView.amount += 1
+                    addReaction(messageViewGroup, emojiView)
+                }
             }, {
 
             })
@@ -231,7 +302,10 @@ class ChatActivity : AppCompatActivity() {
         messageViewGroup.setOnPlusClickListener(getOnPlusClickListener(messageViewGroup))
     }
 
-    private fun removeReactionFromMessagesList(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
+    private fun removeReactionFromMessagesList(
+        messageViewGroup: MessageViewGroup,
+        emojiView: EmojiView
+    ) {
         val messageIndex = getIndexOfMessage(messageViewGroup)
 
         var indexOfReactionToRemove = -1
@@ -296,22 +370,34 @@ class ChatActivity : AppCompatActivity() {
         findViewById<ImageView>(R.id.imageSend).setOnClickListener {
             val newMessage = generateNewMessage()
             if (newMessage.text.isNotEmpty()) {
-                val sendMessageDisposable = Single.fromCallable{ZulipService.sendMessage(channelName.substring(1), topicName, newMessage.text)}
+                val sendMessageDisposable = Single.fromCallable{ZulipService.sendMessage(
+                    channelName.substring(
+                        1
+                    ), topicName, newMessage.text
+                )}
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                       if (it > 0) {
-                           newMessage.messageId = it.toLong()
-                           messages.add(newMessage)
-                           messageUis.add(convertMessageToUi(listOf(newMessage))[0])
-                           adapter.items = messageUis
-                           clearEditText()
-                           recyclerView.scrollToPosition(adapter.itemCount - 1)
-                       } else {
-                           Toast.makeText(this, getString(R.string.error_send_message), Toast.LENGTH_SHORT).show()
-                       }
+                        if (it > 0) {
+                            newMessage.messageId = it.toLong()
+                            messages.add(newMessage)
+                            messageUis.add(convertMessageToUi(listOf(newMessage))[0])
+                            adapter.items = messageUis
+                            clearEditText()
+                            recyclerView.scrollToPosition(adapter.itemCount - 1)
+                        } else {
+                            Toast.makeText(
+                                this,
+                                getString(R.string.error_send_message),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }, {
-                        Toast.makeText(this, getString(R.string.error_send_message), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this,
+                            getString(R.string.error_send_message),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     })
                 disposeBag.add(sendMessageDisposable)
             }
@@ -371,17 +457,24 @@ class ChatActivity : AppCompatActivity() {
                 }
             }
         } else {
-            val createReactionDisposable = Single.fromCallable{ZulipService.addReaction(messageViewGroup.messageId.toInt(), emojiView.emoji)}
+            val createReactionDisposable = Single.fromCallable{ZulipService.addReaction(
+                messageViewGroup.messageId.toInt(),
+                emojiView.emoji
+            )}
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                   if (it) {
-                       val newEmojiView = createNewEmojiView(emojiView.emoji)
-                       newEmojiView.setOnClickListener(getOnClickListenerForEmojiView(messageViewGroup))
-                       messageViewGroup.addEmojiView(newEmojiView)
-                       createReaction(messageViewGroup, emojiView)
-                       refreshSelectedEmojis(messageViewGroup)
-                   }
+                    if (it) {
+                        val newEmojiView = createNewEmojiView(emojiView.emoji)
+                        newEmojiView.setOnClickListener(
+                            getOnClickListenerForEmojiView(
+                                messageViewGroup
+                            )
+                        )
+                        messageViewGroup.addEmojiView(newEmojiView)
+                        createReaction(messageViewGroup, emojiView)
+                        refreshSelectedEmojis(messageViewGroup)
+                    }
                 }, {
 
                 })
@@ -395,7 +488,10 @@ class ChatActivity : AppCompatActivity() {
 
     private fun createNewEmojiView(emoji: Emoji): EmojiView {
         val newEmojiView = EmojiView(this)
-        newEmojiView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        newEmojiView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
         newEmojiView.amount = 1
         newEmojiView.emoji = emoji
         newEmojiView.isSelected = true
@@ -407,7 +503,13 @@ class ChatActivity : AppCompatActivity() {
 
     private fun createReaction(messageViewGroup: MessageViewGroup, emojiView: EmojiView) {
         val messageIndex = getIndexOfMessage(messageViewGroup)
-        messages[messageIndex].reactions.add(Reaction(emojiView.emoji, 1, arrayListOf(THIS_USER_ID)))
+        messages[messageIndex].reactions.add(
+            Reaction(
+                emojiView.emoji,
+                1,
+                arrayListOf(THIS_USER_ID)
+            )
+        )
         messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
         adapter.items = messageUis
     }

@@ -26,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class ChannelsMainFragment : androidx.fragment.app.Fragment() {
@@ -106,7 +107,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                     val disposable = Observable.fromArray(channels)
                         .subscribeOn(Schedulers.io())
                         .subscribe({
-                            addChannelsToDatabase(channels)
+                            replaceChannelsInDatabase(channels)
                         }, {})
                     disposeBag.add(disposable)
                 }
@@ -180,6 +181,18 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             AppDatabase::class.java,
             "database"
         ).fallbackToDestructiveMigration().build()
+        for (channel in channels) {
+            db.channelDao().insert(channel)
+        }
+    }
+
+    private fun replaceChannelsInDatabase(channels: List<Channel>) {
+        val db = Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java,
+            "database"
+        ).fallbackToDestructiveMigration().build()
+        db.channelDao().deleteAll()
         for (channel in channels) {
             db.channelDao().insert(channel)
         }

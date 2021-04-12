@@ -1,9 +1,8 @@
 package com.example.chat.internet
 
+import com.example.chat.ThisUserInfo
 import com.example.chat.entities.*
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonBuilder
-import org.json.JSONObject
+import io.reactivex.Observable
 import java.util.*
 
 object ZulipService {
@@ -12,7 +11,7 @@ object ZulipService {
         val zulipService = RetrofitZulipService.getInstance()
         val response = zulipService.getChannels().execute().body()
         return response?.channels?.map {
-            Channel(it.id, it.name, false)
+            Channel(it.id, it.name, getSubscriptionStatus(ThisUserInfo.THIS_USER_ID, it.id))
         }
     }
 
@@ -73,15 +72,16 @@ object ZulipService {
         return response
     }
 
-    fun getMessages(topicName: String, channelName: String): List<Message> {
-        val zulipService = RetrofitZulipService.getInstance()
-        val response = zulipService.getMessages("newest", 1000, 0,
-            """[{"operator":"stream","operand":"${channelName.substring(1)}"}]""").execute().body()
+    fun getMessages(topicName: String, channelName: String, anchor: Long = 10000000000000000): Observable<List<Message>> {
+        return Observable.create { subscriber ->
+            val zulipService = RetrofitZulipService.getInstance()
+            val response = zulipService.getMessages(anchor, 20, 0,
+                """[{"operator":"stream","operand":"${channelName.substring(1)}"}, 
+                    {"operator":"topic","operand":"$topicName"}]""".trimMargin()).execute().body()
 
-        val messages = arrayListOf<Message>()
-        if (response != null) {
-            for (zulipMessage in response.messages) {
-                if (zulipMessage.topic == topicName) {
+            val messages = arrayListOf<Message>()
+            if (response != null) {
+                for (zulipMessage in response.messages) {
                     val newMessage = Message(
                         text = zulipMessage.text,
                         author = zulipMessage.author,
@@ -115,8 +115,8 @@ object ZulipService {
                     messages.add(newMessage)
                 }
             }
+            subscriber.onNext(messages)
         }
-        return messages
     }
 
     fun sendMessage(channelName: String, topicName: String, messageText: String): Int {
@@ -141,5 +141,11 @@ object ZulipService {
         val unicodeString = Integer.toHexString(emoji.unicode)
         val response = zulipService.removeReaction(messageId, emojiName, unicodeString, "unicode_emoji").execute().body()
         return response?.result == "success"
+    }
+
+    private fun getSubscriptionStatus(userId: Int, channelId: Int): Boolean? {
+        val zulipService = RetrofitZulipService.getInstance()
+        val response = zulipService.getSubscriptionStatus(userId, channelId).execute().body()
+        return response?.isSubscribed
     }
 }

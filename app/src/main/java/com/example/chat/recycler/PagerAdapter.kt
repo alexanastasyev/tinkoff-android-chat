@@ -265,7 +265,7 @@ class PagerAdapter(
             }
         }
         currentAdapter.items = currentItems.filter {
-            it is ChannelUi && it.name.contains(key)
+            it is ChannelUi && it.name.toLowerCase().contains(key.toLowerCase())
         }
     }
 }

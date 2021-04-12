@@ -22,4 +22,7 @@ interface ChannelDao {
 
     @Delete
     fun delete(channel: Channel)
+
+    @Query("DELETE FROM channels")
+    fun deleteAll()
 }

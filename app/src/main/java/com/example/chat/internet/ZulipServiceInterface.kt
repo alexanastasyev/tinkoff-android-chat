@@ -4,8 +4,6 @@ import com.example.chat.entities.Contact
 import com.example.chat.internet.responses.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -35,8 +33,23 @@ interface ZulipServiceInterface {
         @Query("apply_markdown") applyMarkDown: Boolean = false
     ): Call<GetMessagesResponse>
 
+    @GET("messages")
+    fun getMessages(
+        @Query("anchor") anchor: Long,
+        @Query("num_before") numBefore: Int,
+        @Query("num_after") numAfter: Int,
+        @Query("narrow") narrow: String,
+        @Query("apply_markdown") applyMarkDown: Boolean = false
+    ): Call<GetMessagesResponse>
+
     @GET("users/{userId}/presence")
     fun getUserPresence(@Path("userId") userId: Int): Call<GetUserPresenceResponse>
+
+    @GET("users/{userId}/subscriptions/{channelId}")
+    fun getSubscriptionStatus(
+        @Path("userId") userId: Int,
+        @Path("channelId") channelId: Int
+    ): Call<GetSubscriptionStatusResponse>
 
     @FormUrlEncoded
     @POST("messages")

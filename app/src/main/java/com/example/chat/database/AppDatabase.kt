@@ -10,7 +10,7 @@ import com.example.chat.entities.Topic
 @Database(entities = [
     Channel::class,
     Topic::class
-], version = 8, exportSchema = false)
+], version = 9, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun channelDao(): ChannelDao
     abstract fun topicDao(): TopicDao

@@ -16,5 +16,5 @@ class Channel (
     val name: String,
 
     @ColumnInfo(name = "isSubscribed")
-    val isSubscribed: Boolean
+    val isSubscribed: Boolean?
 )
