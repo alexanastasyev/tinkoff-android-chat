@@ -2,7 +2,6 @@ package com.example.chat.activities
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
@@ -21,7 +20,6 @@ import com.example.chat.entities.Message
 import com.example.chat.entities.Reaction
 import com.example.chat.internet.ZulipService
 import com.example.chat.recycler.Adapter
-import com.example.chat.recycler.BaseAdapter
 import com.example.chat.recycler.ChatHolderFactory
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.converters.convertMessageToUi
@@ -56,12 +54,14 @@ class ChatActivity : AppCompatActivity() {
     private lateinit var holderFactory: ChatHolderFactory
     private lateinit var clickedMessageViewGroup: MessageViewGroup
     private lateinit var emojisDialog: BottomSheetDialog
+    private lateinit var progressBar: ProgressBar
 
     private var topicName = ""
     private var channelName = ""
 
     private var lastMessageId = 10000000000000000
     private var isBeingUpdated = false
+    private var justHaveUpdated = false
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,11 +105,18 @@ class ChatActivity : AppCompatActivity() {
             this.finish()
         }
 
+        progressBar = findViewById(R.id.progressBarMessagesUploading)
+        progressBar.visibility = View.GONE
+
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
+                if (dy < -5) {
+                    justHaveUpdated = false
+                }
                 val position = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-                if (position == 5 && !isBeingUpdated) {
+                if (position <= 5 && !isBeingUpdated && !justHaveUpdated) {
+                    progressBar.visibility = View.VISIBLE
                     isBeingUpdated = true
                     val messagesDisposable = ZulipService.getMessages(
                         topicName,
@@ -119,10 +126,8 @@ class ChatActivity : AppCompatActivity() {
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ messagesFromServer ->
-                            if (messagesFromServer.size > 1) {
-                                recyclerView.scrollToPosition(adapter.itemCount - 1)
-
-                                messages = (messagesFromServer + messages) as ArrayList<Message>
+                            if (messagesFromServer.isNotEmpty()) {
+                                messages = (messagesFromServer.subList(0, messagesFromServer.size - 1) + messages) as ArrayList<Message>
                                 messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
                                 adapter.items = messageUis
                                 adapter.notifyDataSetChanged()
@@ -130,6 +135,9 @@ class ChatActivity : AppCompatActivity() {
                                 lastMessageId = messages[0].messageId
 
                             }
+                            progressBar.visibility = View.GONE
+                            isBeingUpdated = false
+                            justHaveUpdated = true
                         }, {
                             Toast.makeText(
                                 applicationContext,
@@ -138,7 +146,6 @@ class ChatActivity : AppCompatActivity() {
                             ).show()
                         })
                     disposeBag.add(messagesDisposable)
-                    isBeingUpdated = false
                 }
             }
         })
