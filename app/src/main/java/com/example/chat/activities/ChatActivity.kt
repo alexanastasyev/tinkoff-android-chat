@@ -32,6 +32,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class ChatActivity : AppCompatActivity() {
 
@@ -59,7 +60,8 @@ class ChatActivity : AppCompatActivity() {
     private var topicName = ""
     private var channelName = ""
 
-    private var lastMessageId = 10000000000000000
+    private var currentFirstMessageId = 10000000000000000
+    private var lastMessageId = -1
     private var isBeingUpdated = false
     private var justHaveUpdated = false
 
@@ -121,7 +123,7 @@ class ChatActivity : AppCompatActivity() {
                     val messagesDisposable = ZulipService.getMessages(
                         topicName,
                         channelName,
-                        lastMessageId
+                        currentFirstMessageId
                     )
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
@@ -132,7 +134,7 @@ class ChatActivity : AppCompatActivity() {
                                 adapter.items = messageUis
                                 adapter.notifyDataSetChanged()
 
-                                lastMessageId = messages[0].messageId
+                                currentFirstMessageId = messages[0].messageId
 
                             }
                             progressBar.visibility = View.GONE
@@ -149,6 +151,36 @@ class ChatActivity : AppCompatActivity() {
                 }
             }
         })
+
+        val updateMessagesDisposable = Single.just(true)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.newThread())
+            .subscribe({
+                while (true) {
+                    Thread.sleep(5000)
+                    Single.fromCallable {
+                        ZulipService.checkNewMessages(
+                            topicName,
+                            channelName,
+                            lastMessageId
+                        )
+                    }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ newMessages ->
+                            if (newMessages.size > 1) {
+                                messages.addAll(newMessages.subList(1, newMessages.size ))
+                                messageUis.addAll(convertMessageToUi(newMessages.subList(1, newMessages.size)))
+                                adapter.items = messageUis
+                                adapter.notifyDataSetChanged()
+                                recyclerView.scrollToPosition(adapter.itemCount - 1)
+
+                                lastMessageId = newMessages.last().messageId.toInt()
+                            }
+                        }, {})
+                }
+            }, {})
+        disposeBag.add(updateMessagesDisposable)
     }
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
@@ -165,11 +197,13 @@ class ChatActivity : AppCompatActivity() {
                     messageUis.clear()
                     messageUis.addAll(convertMessageToUi(messages))
                     adapter.items = messageUis
+                    adapter.notifyDataSetChanged()
                     recyclerView.scrollToPosition(adapter.itemCount - 1)
                     findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
                     findViewById<ProgressBar>(R.id.progressBarChat).visibility = View.GONE
 
-                    lastMessageId = messages[0].messageId
+                    currentFirstMessageId = messages[0].messageId
+                    lastMessageId = messages.last().messageId.toInt()
                 }, {
                     Toast.makeText(
                         this,
@@ -392,6 +426,7 @@ class ChatActivity : AppCompatActivity() {
                             adapter.items = messageUis
                             clearEditText()
                             recyclerView.scrollToPosition(adapter.itemCount - 1)
+                            lastMessageId = newMessage.messageId.toInt()
                         } else {
                             Toast.makeText(
                                 this,
