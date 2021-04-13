@@ -26,7 +26,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class ChannelsMainFragment : androidx.fragment.app.Fragment() {
@@ -102,7 +101,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                 if (channels != null) {
                     allChannels.clear()
                     allChannels.addAll(0, channels)
-                    adapter.notifyDataSetChanged()
+                    adapter.notifyItemChanged(1)
 
                     val disposable = Observable.fromArray(channels)
                         .subscribeOn(Schedulers.io())

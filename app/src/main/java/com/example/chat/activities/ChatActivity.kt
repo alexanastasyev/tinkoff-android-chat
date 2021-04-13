@@ -14,7 +14,9 @@ import androidx.core.view.setPadding
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.example.chat.*
+import com.example.chat.database.AppDatabase
 import com.example.chat.entities.Emoji
 import com.example.chat.entities.Message
 import com.example.chat.entities.Reaction
@@ -32,7 +34,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 class ChatActivity : AppCompatActivity() {
 
@@ -83,6 +84,7 @@ class ChatActivity : AppCompatActivity() {
             setSupportActionBar(toolbar)
         }
 
+        loadMessagesFromDatabase()
         restoreOrReceiveMessages(savedInstanceState)
         messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
 
@@ -156,9 +158,9 @@ class ChatActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.newThread())
             .subscribe({
-                while (true) {
+                while (!this.isDestroyed) {
                     Thread.sleep(5000)
-                    Single.fromCallable {
+                    val checkNewMessageDisposable = Single.fromCallable {
                         ZulipService.checkNewMessages(
                             topicName,
                             channelName,
@@ -178,9 +180,32 @@ class ChatActivity : AppCompatActivity() {
                                 lastMessageId = newMessages.last().messageId.toInt()
                             }
                         }, {})
+                    disposeBag.add(checkNewMessageDisposable)
                 }
             }, {})
         disposeBag.add(updateMessagesDisposable)
+    }
+
+    private fun loadMessagesFromDatabase() {
+        val databaseDisposable = Single.fromCallable {
+            val db = Room.databaseBuilder(
+                this.applicationContext,
+                AppDatabase::class.java,
+                "database"
+            ).fallbackToDestructiveMigration().build()
+            db.messageDao().getAll() as ArrayList<Message>
+        }
+            .subscribeOn(Schedulers.io())
+            .observeOn((AndroidSchedulers.mainThread()))
+            .subscribe({ messagesFromDatabase ->
+                if (messagesFromDatabase.isNotEmpty()) {
+                    messages = messagesFromDatabase
+                    messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
+                    adapter.items = messageUis
+                    adapter.notifyDataSetChanged()
+                }
+            }, {})
+        disposeBag.add(databaseDisposable)
     }
 
     private fun restoreOrReceiveMessages(savedInstanceState: Bundle?) {
@@ -204,6 +229,7 @@ class ChatActivity : AppCompatActivity() {
 
                     currentFirstMessageId = messages[0].messageId
                     lastMessageId = messages.last().messageId.toInt()
+                    addMessagesToDatabase(messages)
                 }, {
                     Toast.makeText(
                         this,
@@ -214,9 +240,27 @@ class ChatActivity : AppCompatActivity() {
             disposeBag.add(messagesDisposable)
             messages = arrayListOf()
         } else {
+            findViewById<ProgressBar>(R.id.progressBarChat).visibility = View.GONE
             findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
             messages = savedInstanceState.getSerializable(MESSAGES_LIST_KEY) as ArrayList<Message>
         }
+    }
+
+    private fun addMessagesToDatabase(messages: ArrayList<Message>) {
+        val databaseDisposable = Single.just(true)
+            .observeOn(Schedulers.io())
+            .subscribe({
+                val db = Room.databaseBuilder(
+                    this.applicationContext,
+                    AppDatabase::class.java,
+                    "database"
+                ).fallbackToDestructiveMigration().build()
+                for (message in messages) {
+                    if (!(db.messageDao().getAll().map{it.messageId}.contains(message.messageId))){
+                        db.messageDao().insert(message)
+                    }
+                }
+            }, {})
     }
 
     private fun getActionForMessageViewGroups() : (View) -> Unit {
@@ -457,13 +501,15 @@ class ChatActivity : AppCompatActivity() {
         val reactions = arrayListOf<Reaction>()
 
         return Message(
-            text,
-            author,
-            date,
-            authorId,
-            messageId,
-            avatarUrl,
-            reactions
+            text = text,
+            author = author,
+            date = date,
+            authorId = authorId,
+            messageId = messageId,
+            avatarUrl = avatarUrl,
+            reactions = reactions,
+            channelName = channelName.substring(1),
+            topicName = topicName
         )
     }
 

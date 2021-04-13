@@ -89,7 +89,9 @@ object ZulipService {
                         authorId = zulipMessage.authorId.toLong(),
                         messageId = zulipMessage.messageId.toLong(),
                         avatarUrl = zulipMessage.avatarUrl,
-                        reactions = arrayListOf()
+                        reactions = arrayListOf(),
+                        channelName = channelName.substring(1),
+                        topicName = topicName
                     )
                     val reactions = arrayListOf<Reaction>()
                     for (zulipReaction in zulipMessage.reactions) {
@@ -138,7 +140,9 @@ object ZulipService {
                         authorId = zulipMessage.authorId.toLong(),
                         messageId = zulipMessage.messageId.toLong(),
                         avatarUrl = zulipMessage.avatarUrl,
-                        reactions = arrayListOf()
+                        reactions = arrayListOf(),
+                        channelName = channelName.substring(1),
+                        topicName = topicName
                     )
                     val reactions = arrayListOf<Reaction>()
                     for (zulipReaction in zulipMessage.reactions) {

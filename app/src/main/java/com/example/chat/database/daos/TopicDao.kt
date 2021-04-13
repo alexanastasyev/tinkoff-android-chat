@@ -19,4 +19,7 @@ interface TopicDao {
 
     @Delete
     fun delete(topic: Topic)
+
+    @Query("DELETE FROM messages")
+    fun deleteAll()
 }
