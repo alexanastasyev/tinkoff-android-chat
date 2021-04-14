@@ -86,7 +86,9 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                         .subscribeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             adapter.notifyDataSetChanged()
-                        }, {})
+                        }, {
+                            Toast.makeText(this.context, getString(R.string.cant_get_channels), Toast.LENGTH_SHORT).show()
+                        })
                     disposeBag.add(updateChannelsDisposable)
 
                     view.findViewById<ProgressBar>(R.id.progressBarChannels).visibility = View.GONE
@@ -98,7 +100,9 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                         .subscribeOn(Schedulers.io())
                         .subscribe({
                             addChannelsToDatabase(channels)
-                        }, {})
+                        }, {
+                            Toast.makeText(this.context, getString(R.string.cant_save_channels), Toast.LENGTH_SHORT).show()
+                        })
                     disposeBag.add(disposable)
                 }
             },
@@ -135,7 +139,9 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                         .subscribeOn(Schedulers.io())
                         .subscribe({
                             replaceChannelsInDatabase(channels)
-                        }, {})
+                        }, {
+                            Toast.makeText(this.context, getString(R.string.cant_save_channels), Toast.LENGTH_SHORT).show()
+                        })
                     disposeBag.add(disposable)
                 }
             },
@@ -186,7 +192,9 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                         myChannels.addAll(0, channelsFromDatabase)
                         adapter.notifyDataSetChanged()
                     }
-                }, {})
+                }, {
+                    Toast.makeText(this.context, getString(R.string.cant_load_channels), Toast.LENGTH_SHORT).show()
+                })
         disposeBag.add(disposableGetSubscribedFromDb)
 
         val disposableGetAllFromDb = Single.fromCallable { getAllChannelsFromDatabase() }
@@ -198,7 +206,9 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                     allChannels.addAll(0, channelsFromDatabase)
                     adapter.notifyDataSetChanged()
                 }
-            }, {})
+            }, {
+                Toast.makeText(this.context, getString(R.string.cant_load_channels), Toast.LENGTH_SHORT).show()
+            })
         disposeBag.add(disposableGetAllFromDb)
     }
 

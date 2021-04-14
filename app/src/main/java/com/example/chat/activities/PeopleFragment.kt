@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -58,7 +59,7 @@ class PeopleFragment : androidx.fragment.app.Fragment() {
                 }
             },
                 {
-
+                    Toast.makeText(this.context, getString(R.string.cant_get_contacts), Toast.LENGTH_SHORT).show()
                 })
         disposeBag.add(contactsDisposable)
     }

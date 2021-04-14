@@ -24,4 +24,15 @@
     <string name="all_channels">All streams</string>
     <string name="error_send_message">Error! Can\'t send message</string>
     <string name="idle">idle</string>
+    <string name="cant_get_channels">Can\'t get channels</string>
+    <string name="cant_save_channels">Can\'t save channels</string>
+    <string name="cant_load_channels">Can\'t load channels from database</string>
+    <string name="cant_update_messages">Can\'t update messages</string>
+    <string name="cant_load_messages">Can\'t load messages from database</string>
+    <string name="cant_save_messages">Can\'t save messages</string>
+    <string name="cant_unselect_emoji">Can\'t unselect emoji</string>
+    <string name="cant_select_emoji">Can\'t select emoji</string>
+    <string name="cant_send_reaction">Can\'t send reaction</string>
+    <string name="cant_get_contacts">Can\'t get contacts</string>
+    <string name="error_save_topics">Can\'t save topics</string>
 </resources>

@@ -130,7 +130,13 @@ class PagerAdapter(
                     currentAdapter.addItemsAtPosition(position + 1, topicUis)
                     currentAdapter.notifyDataSetChanged()
                 }
-            }, {})
+            }, {
+                Toast.makeText(
+                    view.context,
+                    view.context.getString(R.string.error_receive_topics),
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
 
         val topicsDisposable = Single.fromCallable { ZulipService.getTopics(channelId) }
             .subscribeOn(Schedulers.io())
@@ -146,7 +152,13 @@ class PagerAdapter(
                         .subscribeOn(Schedulers.io())
                         .subscribe({ topics ->
                            addTopicsToDatabase(topics)
-                        }, {})
+                        }, {
+                            Toast.makeText(
+                                view.context,
+                                view.context.getString(R.string.error_save_topics),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        })
                 },
                 {
                     Toast.makeText(

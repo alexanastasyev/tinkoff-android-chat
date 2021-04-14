@@ -136,10 +136,14 @@ class ChatActivity : AppCompatActivity() {
 
                                 lastMessageId = newMessages.last().messageId.toInt()
                             }
-                        }, {})
+                        }, {
+                            Toast.makeText(this.applicationContext, getString(R.string.cant_update_messages), Toast.LENGTH_SHORT).show()
+                        })
                     disposeBag.add(checkNewMessageDisposable)
                 }
-            }, {})
+            }, {
+                Toast.makeText(this.applicationContext, getString(R.string.cant_update_messages), Toast.LENGTH_SHORT).show()
+            })
         disposeBag.add(updateMessagesDisposable)
     }
 
@@ -210,7 +214,9 @@ class ChatActivity : AppCompatActivity() {
                     findViewById<ProgressBar>(R.id.progressBarChat).visibility = View.GONE
                 }
                 restoreOrReceiveMessages(savedInstanceState)
-            }, {})
+            }, {
+                Toast.makeText(this.applicationContext, getString(R.string.cant_load_messages), Toast.LENGTH_SHORT).show()
+            })
         disposeBag.add(databaseDisposable)
     }
 
@@ -267,7 +273,10 @@ class ChatActivity : AppCompatActivity() {
                         db.messageDao().insert(message)
                     }
                 }
-            }, {})
+            }, {
+                Toast.makeText(this.applicationContext, getString(R.string.cant_save_messages), Toast.LENGTH_SHORT).show()
+            })
+        disposeBag.add(databaseDisposable)
     }
 
     private fun getActionForMessageViewGroups() : (View) -> Unit {
@@ -336,7 +345,7 @@ class ChatActivity : AppCompatActivity() {
                     }
                 }
             }, {
-
+                Toast.makeText(this.applicationContext, getString(R.string.cant_unselect_emoji), Toast.LENGTH_SHORT).show()
             })
         disposeBag.add(removeReactionDisposable)
     }
@@ -371,7 +380,7 @@ class ChatActivity : AppCompatActivity() {
                     addReaction(messageViewGroup, emojiView)
                 }
             }, {
-
+                Toast.makeText(this.applicationContext, getString(R.string.cant_select_emoji), Toast.LENGTH_SHORT).show()
             })
         disposeBag.add(addReactionDisposable)
     }
@@ -571,7 +580,7 @@ class ChatActivity : AppCompatActivity() {
                         refreshSelectedEmojis(messageViewGroup)
                     }
                 }, {
-
+                    Toast.makeText(this.applicationContext, getString(R.string.cant_send_reaction), Toast.LENGTH_SHORT).show()
                 })
             disposeBag.add(createReactionDisposable)
         }
