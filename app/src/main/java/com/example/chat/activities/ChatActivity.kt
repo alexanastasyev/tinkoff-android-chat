@@ -49,7 +49,7 @@ class ChatActivity : AppCompatActivity() {
 
     private val disposeBag = CompositeDisposable()
 
-    private lateinit var messages: ArrayList<Message>
+    private var messages: ArrayList<Message> = arrayListOf()
     private lateinit var messageUis: ArrayList<ViewTyped>
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: Adapter<ViewTyped>
@@ -84,8 +84,7 @@ class ChatActivity : AppCompatActivity() {
             setSupportActionBar(toolbar)
         }
 
-        loadMessagesFromDatabase()
-        restoreOrReceiveMessages(savedInstanceState)
+        loadMessagesFromDatabase(savedInstanceState)
         messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
 
         holderFactory = ChatHolderFactory(
@@ -112,7 +111,40 @@ class ChatActivity : AppCompatActivity() {
         progressBar = findViewById(R.id.progressBarMessagesUploading)
         progressBar.visibility = View.GONE
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+        val updateMessagesDisposable = Single.just(true)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.newThread())
+            .subscribe({
+                while (!this.isDestroyed) {
+                    Thread.sleep(5000)
+                    val checkNewMessageDisposable = Single.fromCallable {
+                        ZulipService.checkNewMessages(
+                            topicName,
+                            channelName,
+                            lastMessageId
+                        )
+                    }
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ newMessages ->
+                            if (newMessages.size > 1) {
+                                messages.addAll(newMessages.subList(1, newMessages.size ))
+                                messageUis.addAll(convertMessageToUi(newMessages.subList(1, newMessages.size)))
+                                adapter.items = messageUis
+                                adapter.notifyDataSetChanged()
+                                recyclerView.scrollToPosition(adapter.itemCount - 1)
+
+                                lastMessageId = newMessages.last().messageId.toInt()
+                            }
+                        }, {})
+                    disposeBag.add(checkNewMessageDisposable)
+                }
+            }, {})
+        disposeBag.add(updateMessagesDisposable)
+    }
+
+    private fun getRecyclerScrollListener(): RecyclerView.OnScrollListener {
+        return object : RecyclerView.OnScrollListener(){
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy < -5) {
@@ -152,48 +184,17 @@ class ChatActivity : AppCompatActivity() {
                     disposeBag.add(messagesDisposable)
                 }
             }
-        })
-
-        val updateMessagesDisposable = Single.just(true)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.newThread())
-            .subscribe({
-                while (!this.isDestroyed) {
-                    Thread.sleep(5000)
-                    val checkNewMessageDisposable = Single.fromCallable {
-                        ZulipService.checkNewMessages(
-                            topicName,
-                            channelName,
-                            lastMessageId
-                        )
-                    }
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({ newMessages ->
-                            if (newMessages.size > 1) {
-                                messages.addAll(newMessages.subList(1, newMessages.size ))
-                                messageUis.addAll(convertMessageToUi(newMessages.subList(1, newMessages.size)))
-                                adapter.items = messageUis
-                                adapter.notifyDataSetChanged()
-                                recyclerView.scrollToPosition(adapter.itemCount - 1)
-
-                                lastMessageId = newMessages.last().messageId.toInt()
-                            }
-                        }, {})
-                    disposeBag.add(checkNewMessageDisposable)
-                }
-            }, {})
-        disposeBag.add(updateMessagesDisposable)
+        }
     }
 
-    private fun loadMessagesFromDatabase() {
+    private fun loadMessagesFromDatabase(savedInstanceState: Bundle?) {
         val databaseDisposable = Single.fromCallable {
             val db = Room.databaseBuilder(
                 this.applicationContext,
                 AppDatabase::class.java,
                 "database"
             ).fallbackToDestructiveMigration().build()
-            db.messageDao().getAll() as ArrayList<Message>
+            db.messageDao().getByChannelAndTopic(channelName.substring(1), topicName) as ArrayList<Message>
         }
             .subscribeOn(Schedulers.io())
             .observeOn((AndroidSchedulers.mainThread()))
@@ -202,8 +203,13 @@ class ChatActivity : AppCompatActivity() {
                     messages = messagesFromDatabase
                     messageUis = convertMessageToUi(messages) as ArrayList<ViewTyped>
                     adapter.items = messageUis
+                    lastMessageId = messages.last().messageId.toInt()
                     adapter.notifyDataSetChanged()
+                    recyclerView.scrollToPosition(adapter.itemCount - 1)
+                    findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE
+                    findViewById<ProgressBar>(R.id.progressBarChat).visibility = View.GONE
                 }
+                restoreOrReceiveMessages(savedInstanceState)
             }, {})
         disposeBag.add(databaseDisposable)
     }
@@ -230,6 +236,8 @@ class ChatActivity : AppCompatActivity() {
                     currentFirstMessageId = messages[0].messageId
                     lastMessageId = messages.last().messageId.toInt()
                     addMessagesToDatabase(messages)
+
+                    recyclerView.addOnScrollListener(getRecyclerScrollListener())
                 }, {
                     Toast.makeText(
                         this,
@@ -238,7 +246,6 @@ class ChatActivity : AppCompatActivity() {
                     ).show()
                 })
             disposeBag.add(messagesDisposable)
-            messages = arrayListOf()
         } else {
             findViewById<ProgressBar>(R.id.progressBarChat).visibility = View.GONE
             findViewById<ConstraintLayout>(R.id.layoutContent).visibility = View.VISIBLE

@@ -174,7 +174,7 @@ class PagerAdapter(
         ).fallbackToDestructiveMigration().build()
         if (topics != null) {
             for (topic in topics) {
-                if (!(db.topicDao().getAll().map { it.name }.contains(topic.name))) {
+                if (!(db.topicDao().contains(topic.name, topic.channelId))) {
                     db.topicDao().insert(topic)
                 }
             }

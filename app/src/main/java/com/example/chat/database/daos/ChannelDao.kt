@@ -17,6 +17,9 @@ interface ChannelDao {
     @Query("SELECT * FROM channels WHERE name = :name")
     fun getByName(name: String): Channel
 
+    @Query("SELECT EXISTS(SELECT * FROM channels WHERE id = :channelId)")
+    fun contains(channelId: Int): Boolean
+
     @Insert
     fun insert(vararg channels: Channel)
 

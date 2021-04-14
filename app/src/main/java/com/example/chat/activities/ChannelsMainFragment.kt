@@ -63,19 +63,36 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             tab.text = tabs[position]
         }.attach()
 
+        val db = Room.databaseBuilder(
+            requireContext(),
+            AppDatabase::class.java,
+            "database"
+        ).fallbackToDestructiveMigration().build()
+
         val myChannelsDisposable = Single.fromCallable { ZulipService.getMyChannels() }
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channels ->
                 if (channels != null) {
 
+                    val updateChannelsDisposable = Single.fromCallable{
+                        for (channel in channels) {
+                            if (!(db.channelDao().contains(channel.id))) {
+                                allChannels.add(channel)
+                            }
+                        }
+                    }
+                        .observeOn(Schedulers.newThread())
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            adapter.notifyDataSetChanged()
+                        }, {})
+                    disposeBag.add(updateChannelsDisposable)
+
                     view.findViewById<ProgressBar>(R.id.progressBarChannels).visibility = View.GONE
                     view.findViewById<ConstraintLayout>(R.id.channelsContentLayout).visibility =
                         View.VISIBLE
 
-                    myChannels.clear()
-                    myChannels.addAll(0, channels)
-                    adapter.notifyDataSetChanged()
 
                     val disposable = Observable.fromArray(channels)
                         .subscribeOn(Schedulers.io())
@@ -95,13 +112,24 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
         disposeBag.add(myChannelsDisposable)
 
         val allChannelsDisposable = Single.fromCallable { ZulipService.getAllChannels() }
-            .subscribeOn(Schedulers.newThread())
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ channels ->
                 if (channels != null) {
-                    allChannels.clear()
-                    allChannels.addAll(0, channels)
-                    adapter.notifyItemChanged(1)
+
+                    val updateChannelsDisposable = Single.fromCallable{
+                        for (channel in channels) {
+                            if (!(db.channelDao().contains(channel.id))) {
+                                allChannels.add(channel)
+                            }
+                        }
+                    }
+                        .observeOn(Schedulers.newThread())
+                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribe({
+                            adapter.notifyDataSetChanged()
+                        }, {})
+                    disposeBag.add(updateChannelsDisposable)
 
                     val disposable = Observable.fromArray(channels)
                         .subscribeOn(Schedulers.io())

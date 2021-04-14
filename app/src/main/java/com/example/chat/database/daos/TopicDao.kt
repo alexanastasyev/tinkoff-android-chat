@@ -14,6 +14,9 @@ interface TopicDao {
     @Query("SELECT * FROM topics WHERE name = :name AND channelId = :channelId")
     fun getByNameAndChannelId(name: String, channelId: Int): Topic
 
+    @Query("SELECT EXISTS(SELECT * FROM topics WHERE name = :name AND channelId = :channelId)")
+    fun contains(name: String, channelId: Int): Boolean
+
     @Insert
     fun insert(vararg topics: Topic)
 
