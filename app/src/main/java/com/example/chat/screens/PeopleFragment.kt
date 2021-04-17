@@ -1,4 +1,4 @@
-package com.example.chat.activities
+package com.example.chat.screens
 
 import android.os.Bundle
 import android.view.LayoutInflater

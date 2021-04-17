@@ -1,4 +1,4 @@
-package com.example.chat.activities
+package com.example.chat.screens
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -82,8 +82,8 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                             }
                         }
                     }
-                        .observeOn(Schedulers.newThread())
-                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             adapter.notifyDataSetChanged()
                         }, {
@@ -94,7 +94,6 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                     view.findViewById<ProgressBar>(R.id.progressBarChannels).visibility = View.GONE
                     view.findViewById<ConstraintLayout>(R.id.channelsContentLayout).visibility =
                         View.VISIBLE
-
 
                     val disposable = Observable.fromArray(channels)
                         .subscribeOn(Schedulers.io())
@@ -128,8 +127,8 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
                             }
                         }
                     }
-                        .observeOn(Schedulers.newThread())
-                        .subscribeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({
                             adapter.notifyDataSetChanged()
                         }, {})
@@ -219,7 +218,9 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment() {
             "database"
         ).fallbackToDestructiveMigration().build()
         for (channel in channels) {
-            db.channelDao().insert(channel)
+            if (!db.channelDao().contains(channel.id)) {
+                db.channelDao().insert(channel)
+            }
         }
     }
 

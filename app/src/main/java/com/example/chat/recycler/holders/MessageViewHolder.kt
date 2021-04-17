@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.example.chat.*
-import com.example.chat.activities.ChatActivity
+import com.example.chat.screens.ChatActivity
 import com.example.chat.entities.Emoji
 import com.example.chat.recycler.uis.MessageUi
 import com.example.chat.views.MessageViewGroup

@@ -1,4 +1,4 @@
-package com.example.chat.activities
+package com.example.chat.screens
 
 import android.os.Build
 import android.os.Bundle
