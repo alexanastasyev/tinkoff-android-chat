@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.chat.R
+import com.example.chat.screens.people.PeopleFragment
 import com.example.chat.screens.profile.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
