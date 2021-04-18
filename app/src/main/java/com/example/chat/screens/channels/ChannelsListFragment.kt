@@ -1,4 +1,4 @@
-package com.example.chat.screens
+package com.example.chat.screens.channels
 
 import android.os.Bundle
 import android.view.*

@@ -16,7 +16,7 @@ import com.example.chat.entities.Topic
     Channel::class,
     Topic::class,
     Message::class
-], version = 10, exportSchema = false)
+], version = 11, exportSchema = false)
 @TypeConverters(
     DateConverter::class,
     ReactionsConverter::class
