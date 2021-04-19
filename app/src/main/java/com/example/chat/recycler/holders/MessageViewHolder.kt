@@ -5,7 +5,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.example.chat.*
-import com.example.chat.screens.ChatActivity
+import com.example.chat.screens.chat.ChatActivity
 import com.example.chat.entities.Emoji
 import com.example.chat.recycler.uis.MessageUi
 import com.example.chat.views.MessageViewGroup
@@ -67,9 +67,9 @@ class MessageViewHolder(
     }
 
     private fun bindReactions(item: MessageUi) {
-        messageHolder.reactions = item.reactions as ArrayList<Pair<Emoji, Int>>
+        messageHolder.reactions = item.reactions.map { Pair(it.emoji, it.amount) } as ArrayList<Pair<Emoji, Int>>
         for (i in item.reactions.indices) {
-            if (item.isEmojiSelected[i]) {
+            if (item.reactions[i].reactedUsersId.contains<Long>(ThisUserInfo.THIS_USER_ID.toLong())) {
                 messageHolder.emojisLayout.getChildAt(i).isSelected = true
             }
         }

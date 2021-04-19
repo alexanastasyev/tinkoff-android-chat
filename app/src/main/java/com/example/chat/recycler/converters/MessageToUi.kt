@@ -1,6 +1,6 @@
 package com.example.chat.recycler.converters
 
-import com.example.chat.screens.ChatActivity
+import com.example.chat.screens.chat.ChatActivity
 import com.example.chat.entities.Emoji
 import com.example.chat.entities.Message
 import com.example.chat.recycler.ViewTyped
@@ -20,13 +20,7 @@ fun convertMessageToUi(messages: List<Message>): List<ViewTyped> {
                 author = message.author,
                 authorId = message.authorId,
                 avatarUrl = message.avatarUrl,
-                reactions = message.reactions.map {
-                    Pair(
-                        it.emoji,
-                        it.amount
-                    )
-                } as ArrayList<Pair<Emoji, Int>>,
-                isEmojiSelected = message.reactions.map { it.reactedUsersId.contains(ChatActivity.THIS_USER_ID) },
+                reactions = message.reactions,
                 date = SimpleDateFormat("d MMM", Locale.getDefault()).format(message.date)
             )
         }

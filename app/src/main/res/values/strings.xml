@@ -35,4 +35,5 @@
     <string name="cant_send_reaction">Can\'t send reaction</string>
     <string name="cant_get_contacts">Can\'t get contacts</string>
     <string name="error_save_topics">Can\'t save topics</string>
+    <string name="cannot_load_messages">Can\'t load messages</string>
 </resources>

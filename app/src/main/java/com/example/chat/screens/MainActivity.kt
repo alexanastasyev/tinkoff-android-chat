@@ -81,9 +81,4 @@ class MainActivity : AppCompatActivity() {
         }
         fragmentTransaction.commit()
     }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        onCreate(savedInstanceState)
-    }
 }

@@ -1,6 +1,5 @@
 package com.example.chat.entities
 
-import androidx.room.Entity
 import java.io.Serializable
 
 class Reaction (

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.chat.R
-import com.example.chat.screens.ChatActivity
+import com.example.chat.screens.chat.ChatActivity
 import com.example.chat.database.AppDatabase
 import com.example.chat.entities.Channel
 import com.example.chat.entities.Topic
