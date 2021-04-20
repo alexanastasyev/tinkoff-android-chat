@@ -1,7 +1,6 @@
 package com.example.chat.recycler.uis
 
 import com.example.chat.R
-import com.example.chat.entities.Emoji
 import com.example.chat.entities.Reaction
 import com.example.chat.recycler.ViewTyped
 

@@ -1,6 +1,5 @@
 package com.example.chat.internet.responses
 
-import com.example.chat.entities.Topic
 import com.example.chat.internet.zulip.entities.ZulipTopic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

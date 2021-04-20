@@ -1,7 +1,5 @@
 package com.example.chat.recycler.converters
 
-import com.example.chat.screens.chat.ChatActivity
-import com.example.chat.entities.Emoji
 import com.example.chat.entities.Message
 import com.example.chat.recycler.ViewTyped
 import com.example.chat.recycler.uis.MessageUi

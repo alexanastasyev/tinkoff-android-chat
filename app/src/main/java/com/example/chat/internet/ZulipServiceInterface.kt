@@ -24,15 +24,6 @@ interface ZulipServiceInterface {
 
     @GET("messages")
     fun getMessages(
-        @Query("anchor") anchor: String,
-        @Query("num_before") numBefore: Int,
-        @Query("num_after") numAfter: Int,
-        @Query("narrow") narrow: String,
-        @Query("apply_markdown") applyMarkDown: Boolean = false
-    ): Call<GetMessagesResponse>
-
-    @GET("messages")
-    fun getMessages(
         @Query("anchor") anchor: Long,
         @Query("num_before") numBefore: Int,
         @Query("num_after") numAfter: Int,

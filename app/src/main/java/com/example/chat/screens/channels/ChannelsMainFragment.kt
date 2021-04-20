@@ -51,7 +51,7 @@ class ChannelsMainFragment : androidx.fragment.app.Fragment(), ChannelsView {
         presenter = ChannelsFragmentPresenter(this, this.requireContext())
         val viewPager = view.findViewById<ViewPager2>(R.id.fragmentViewPager)
         viewPager.adapter = adapter
-        tabLayout = view.findViewById<TabLayout>(R.id.tabLayout)
+        tabLayout = view.findViewById(R.id.tabLayout)
         val tabs: List<String> = listOf(getString(R.string.subscribed), getString(R.string.all_channels))
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabs[position]

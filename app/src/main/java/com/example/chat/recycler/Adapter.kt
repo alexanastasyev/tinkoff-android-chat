@@ -2,8 +2,6 @@ package com.example.chat.recycler
 
 import androidx.recyclerview.widget.AsyncListDiffer
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 class Adapter<T: ViewTyped>(holderFactory: HolderFactory) : BaseAdapter<T>(holderFactory) {
     private val differ = AsyncListDiffer(this, DiffCallback())

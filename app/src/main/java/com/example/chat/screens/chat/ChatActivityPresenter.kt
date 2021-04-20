@@ -1,10 +1,8 @@
 package com.example.chat.screens.chat
 
-import android.widget.Toast
 import androidx.room.Room
 import com.example.chat.R
 import com.example.chat.database.AppDatabase
-import com.example.chat.entities.Reaction
 import com.example.chat.entities.Message
 import com.example.chat.internet.ZulipService
 import com.example.chat.views.EmojiView
@@ -127,7 +125,7 @@ class ChatActivityPresenter(private val chatView: ChatView, private val activity
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ newMessages ->
                             if (newMessages.size > 1) {
-                                chatView.addMessages(newMessages, false)
+                                chatView.addMessages(newMessages.subList(1, newMessages.size), false)
                                 lastMessageId = newMessages.last().messageId.toInt()
                             }
                         }, {
